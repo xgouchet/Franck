@@ -24,8 +24,8 @@ public class ToneTest extends TestCase {
 		Tone[] values = Tone.values();
 
 		for (Tone tone : values) {
-			assertEquals("Testing 4th/5th : " + tone.toString(), tone, tone
-					.fourth().fifth());
+			assertEquals("Testing 4th/5th : " + tone.toPrettyString(), tone,
+					tone.fourth().fifth());
 		}
 	}
 
@@ -71,5 +71,18 @@ public class ToneTest extends TestCase {
 		} catch (IllegalArgumentException e) {
 		}
 
+	}
+
+	/**
+	 * Tests that a tone pretty string (user friendly string value) is parsed
+	 * correctly
+	 */
+	public void testPrettyString() {
+		Tone[] values = Tone.values();
+
+		for (Tone tone : values) {
+			assertEquals("Testing pretty string : " + tone.toPrettyString(),
+					tone, Tone.parse(tone.toPrettyString()));
+		}
 	}
 }
