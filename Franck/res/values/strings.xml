@@ -11,5 +11,6 @@
     <string name="menu_minor">Minor</string>
     <string name="menu_diminished">Aug.</string>
     <string name="menu_augmented">Dim.</string>
+    <string name="menu_seventh">7th</string>
 
 </resources>

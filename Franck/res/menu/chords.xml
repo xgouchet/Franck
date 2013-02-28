@@ -18,6 +18,9 @@
             <item
                 android:id="@id/menu_augmented"
                 android:title="@string/menu_augmented"/>
+            <item
+                android:id="@id/menu_seventh"
+                android:title="@string/menu_seventh"/>
         </menu>
     </item>
 

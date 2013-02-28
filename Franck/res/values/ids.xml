@@ -7,5 +7,6 @@
     <item name="menu_minor" type="id"/>
     <item name="menu_diminished" type="id"/>
     <item name="menu_augmented" type="id"/>
+     <item name="menu_seventh" type="id"/>
 
 </resources>
