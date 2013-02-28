@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/Franck.Theme" >
         <activity
-            android:name="fr.xgouchet.musichelper.CircleActivity"
+            android:name="fr.xgouchet.musichelper.FranckActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

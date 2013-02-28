@@ -1,5 +1,8 @@
 package fr.xgouchet.musichelper;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
@@ -13,6 +16,7 @@ import android.view.View;
 import android.widget.TextView;
 import fr.xgouchet.musichelper.model.Chord;
 import fr.xgouchet.musichelper.model.Tone;
+import fr.xgouchet.musichelper.ui.view.StaffView;
 
 /**
  * 
@@ -178,6 +182,11 @@ public class FranckActivity extends Activity {
 		}
 
 		Chord chord = Chord.buildChord(mChordType, mDominant);
+
+		List<Chord> chords = new LinkedList<Chord>();
+		chords.add(chord);
+
+		((StaffView) findViewById(R.id.staffView)).setChords(chords);
 
 		((TextView) findViewById(R.id.textPlaceHolder)).setText(chord
 				.toString());

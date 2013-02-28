@@ -50,6 +50,58 @@ public enum Tone {
 	}
 
 	/**
+	 * @return the note's offset on a staff, starting on the lowest line
+	 */
+	public int offset(final Key key) {
+		int cToNote;
+
+		switch (this) {
+		case C:
+		case CSharp:
+			cToNote = 0;
+			break;
+		case D:
+			cToNote = 1;
+			break;
+		case E:
+		case EFlat:
+			cToNote = 2;
+			break;
+		case F:
+		case FSharp:
+			cToNote = 3;
+			break;
+		case G:
+		case GSharp:
+			cToNote = 4;
+			break;
+		case A:
+			cToNote = 5;
+			break;
+		case B:
+		case BFlat:
+			cToNote = 6;
+			break;
+		default:
+			throw new IllegalStateException();
+		}
+
+		switch (key) {
+		case treble:
+			cToNote -= 2;
+			break;
+		case bass:
+			cToNote += 5;
+			break;
+		case alto:
+			cToNote += 6;
+			break;
+		}
+
+		return cToNote;
+	}
+
+	/**
 	 * @return a user friendly string value for this tone
 	 */
 	public String toPrettyString() {

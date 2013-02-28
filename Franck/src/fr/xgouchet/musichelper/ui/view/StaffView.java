@@ -7,11 +7,14 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import fr.xgouchet.musichelper.R;
 import fr.xgouchet.musichelper.model.Chord;
+import fr.xgouchet.musichelper.model.Key;
+import fr.xgouchet.musichelper.model.Tone;
 
 public class StaffView extends View {
 
@@ -84,6 +87,15 @@ public class StaffView extends View {
 	}
 
 	/**
+	 * @param chords
+	 *            the chrods to display
+	 */
+	public void setChords(final List<Chord> chords) {
+		mChords = chords;
+		invalidate();
+	}
+
+	/**
 	 * @see android.view.View#onMeasure(int, int)
 	 */
 	@Override
@@ -98,11 +110,9 @@ public class StaffView extends View {
 		int neededWidth = 0, neededHeight = 0;
 
 		// staff height alone
-		neededHeight = (int) (((LINES - 1) * mLineSpacing)
-				+ (LINES * mLineWidth) + 0.5f);
+		neededHeight = (int) ((8 * mLineSpacing) + 0.5f);
 
-		// Treble key
-		neededHeight += mLineSpacing * 4;
+		// TODO measure width
 
 		neededWidth += getPaddingLeft() + getPaddingRight();
 		neededHeight += getPaddingTop() + getPaddingBottom();
@@ -143,6 +153,69 @@ public class StaffView extends View {
 	protected void onDraw(final Canvas canvas) {
 		super.onDraw(canvas);
 		drawLines(canvas);
+
+		if (mChords != null) {
+			drawChords(canvas);
+		}
+
+	}
+
+	/**
+	 * Draws the chords on the staff
+	 * 
+	 * @param canvas
+	 *            the canvas on which the view will be drawn
+	 */
+	private void drawChords(final Canvas canvas) {
+		float offsetX;
+
+		offsetX = getPaddingLeft() + (5f * mLineSpacing);
+		for (Chord chord : mChords) {
+			drawChord(canvas, chord, offsetX);
+			offsetX += mLineSpacing * 2;
+		}
+	}
+
+	/**
+	 * Draws the given chord on the staff at the given offset
+	 * 
+	 * @param canvas
+	 *            the canvas on which the view will be drawn
+	 * @param chord
+	 *            the chord to draw
+	 * @param offsetX
+	 *            the horizontal offset
+	 */
+	private void drawChord(final Canvas canvas, final Chord chord,
+			final float offsetX) {
+		float y;
+		int offset, prevOffset;
+		boolean overlap;
+
+		prevOffset = -256;
+		for (Tone note : chord.getNotes()) {
+			offset = note.offset(Key.treble);
+
+			while (prevOffset > offset) {
+				offset += 8;
+			}
+			overlap = ((offset - prevOffset) <= 1);
+			prevOffset = offset;
+
+			y = (getPaddingTop() + (mLineSpacing * 6f))
+					- (offset * mHalfSpacing);
+			canvas.drawCircle(offsetX + (overlap ? mHalfSpacing : 0), y,
+					mHalfSpacing, mStaffPaint);
+
+			if (offset < 0) {
+				for (int i = 0; i >= offset; i -= 2) {
+					y = (getPaddingTop() + (mLineSpacing * 6f))
+							- (i * mHalfSpacing);
+					canvas.drawLine(offsetX - mLineSpacing, y, offsetX
+							+ mLineSpacing, y, mStaffPaint);
+				}
+			}
+		}
 	}
 
 	/**
@@ -164,13 +237,13 @@ public class StaffView extends View {
 
 		// Draw Lines
 		for (int i = 0; i < LINES; ++i) {
-			y = offsetY + (i * mLineSpacing) + (mLineWidth / 2);
+			y = offsetY + (i * mLineSpacing);
 			canvas.drawLine(x1, y, x2, y, mStaffPaint);
 		}
 
 		if (!isInEditMode()) {
 			int height = (int) (mLineSpacing * 8);
-			int width = (int) (mLineSpacing * 3);
+			int width = (int) (mLineSpacing * 4);
 			mTrebbleDrawable.setBounds(getPaddingLeft(), getPaddingTop(),
 					getPaddingLeft() + width, height + getPaddingTop());
 			mTrebbleDrawable.draw(canvas);
@@ -185,6 +258,7 @@ public class StaffView extends View {
 
 		mStaffPaint = new Paint();
 		mStaffPaint.setColor(Color.BLACK);
+		mStaffPaint.setStyle(Style.STROKE);
 
 		if (!isInEditMode()) {
 			mTrebbleDrawable = getContext().getResources().getDrawable(
@@ -201,6 +275,7 @@ public class StaffView extends View {
 	private void readStaffViewAttributes(final AttributeSet attrs) {
 		if (isInEditMode()) {
 			mLineSpacing = mDipToPixel * 16;
+			mHalfSpacing = mLineSpacing / 2.0f;
 			mLineWidth = mDipToPixel * 2;
 			return;
 		}
@@ -212,6 +287,7 @@ public class StaffView extends View {
 		if (mLineSpacing == 0) {
 			mLineSpacing = mDipToPixel * 16;
 		}
+		mHalfSpacing = mLineSpacing / 2.0f;
 
 		mLineWidth = a.getDimension(R.styleable.StaffView_lineWidth, 0);
 		if (mLineWidth == 0) {
@@ -229,5 +305,5 @@ public class StaffView extends View {
 	private Drawable mTrebbleDrawable;
 	private Paint mStaffPaint;
 	private List<Chord> mChords;
-	private float mLineSpacing, mLineWidth;
+	private float mLineSpacing, mLineWidth, mHalfSpacing;
 }
