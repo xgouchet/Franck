@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@id/menu_current_chord"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_major">
+        <menu>
+            <item
+                android:id="@id/menu_major"
+                android:title="@string/menu_major"/>
+            <item
+                android:id="@id/menu_minor"
+                android:title="@string/menu_minor"/>
+            <item
+                android:id="@id/menu_diminished"
+                android:title="@string/menu_diminished"/>
+            <item
+                android:id="@id/menu_augmented"
+                android:title="@string/menu_augmented"/>
+        </menu>
+    </item>
+
+</menu>
