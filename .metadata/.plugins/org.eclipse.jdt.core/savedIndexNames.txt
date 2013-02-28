@@ -1,0 +1,5 @@
+INDEX VERSION 1.126+D:\DATA\GIT\Franck\.metadata\.plugins\org.eclipse.jdt.core
+1684785981.index
+3251891220.index
+667923079.index
+1986654363.index
