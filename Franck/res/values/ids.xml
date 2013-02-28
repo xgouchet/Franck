@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- VIEWS -->
+    <item name="textPlaceHolder" type="id"/>
+
     <!-- MENUS -->
     <item name="menu_current_chord" type="id"/>
     <item name="menu_major" type="id"/>
     <item name="menu_minor" type="id"/>
     <item name="menu_diminished" type="id"/>
     <item name="menu_augmented" type="id"/>
-     <item name="menu_seventh" type="id"/>
+    <item name="menu_seventh" type="id"/>
 
 </resources>

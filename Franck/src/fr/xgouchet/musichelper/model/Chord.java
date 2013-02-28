@@ -6,15 +6,61 @@ public class Chord {
 	 * TODO m7, 7dim, 7aug, halfdim7, minmaj7, maj7, augmaj7
 	 */
 	public enum Type {
-		major, minor, diminished, augmented, seventh
+		// triad chords
+		major, minor, diminished, augmented,
+		// common 7th chords
+		seventh, majorSeventh, minorSeventh, diminishedSeventh, augmentedSeventh,
+		// advanced 7th chords
+		halfDiminishedSeventh, minorMajorSeventh, augmentedMajorSeventh;
 	}
 
 	/**
-	 * TODO parse a string with a chord in it like A7, B#dim or Bbm
+	 * TODO Parses a string with a chord name
 	 * 
-	 * @return
+	 * Here are sample notations based on a C dominant. Replacing C by any note
+	 * will work accordingly.
+	 * <ul>
+	 * <li>Basic chords :
+	 * <dl>
+	 * <dt>Major</dt>
+	 * <dd>C, CM, Cma, Cmaj</dd>
+	 * <dt>Minor</dt>
+	 * <dd>Cm, Cmi, Cmin</dd>
+	 * <dt>Augmented</dt>
+	 * <dd>C+, Caug</dd>
+	 * <dt>Diminished</dt>
+	 * <dd>C°, Cdim</dd>
+	 * </dl>
+	 * </li>
+	 * 
+	 * <li>7th chords :
+	 * <dl>
+	 * <dt>Diminished 7th</dt>
+	 * <dd>C°7, Cdim7</dd>
+	 * <dt>Half Diminished 7th</dt>
+	 * <dd>Cm7b5</dd>
+	 * <dt>Minor 7th</dt>
+	 * <dd>Cm7, Cmin7</dd>
+	 * <dt>Minor Major 7th</dt>
+	 * <dd>Cm(M7), Cm maj7</dd>
+	 * <dt>Dominant 7th</dt>
+	 * <dd>C7</dd>
+	 * <dt>Major 7th</dt>
+	 * <dd>CM7, Cmaj7</dd>
+	 * <dt>Augmented 7th</dt>
+	 * <dd>C+7, Caug7, C7+5</dd>
+	 * <dt>Augmented Major 7th</dt>
+	 * <dd>C+(M7), CM7+5</dd>
+	 * </dl>
+	 * </li>
+	 * </ul>
+	 * 
+	 * @param value
+	 *            any non null String value (see examples above)
+	 * @return the parse Chord as a list of Tones
 	 */
-	public static Tone[] parse() {
+	public static Tone[] parse(final String value) {
+
 		return null;
 	}
 
@@ -34,8 +80,10 @@ public class Chord {
 			return buildDiminishedChord(dominant);
 		case seventh:
 			return buildSeventhChord(dominant);
+		default:
+			throw new IllegalArgumentException("Unable to build "
+					+ type.toString() + " chord : method not implemented");
 		}
-		return null;
 	}
 
 	/**

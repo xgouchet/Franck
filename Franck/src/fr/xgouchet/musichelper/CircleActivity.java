@@ -6,10 +6,8 @@ import android.app.ActionBar.TabListener;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import fr.xgouchet.musichelper.model.Chord;
 import fr.xgouchet.musichelper.model.Tone;
@@ -29,6 +27,7 @@ public class CircleActivity extends Activity {
 
 		generateTabs();
 		setChordType(Chord.Type.major);
+		setDominant(Tone.C);
 	}
 
 	/**
@@ -51,6 +50,9 @@ public class CircleActivity extends Activity {
 			break;
 		case diminished:
 			chordTitle = R.string.menu_diminished;
+			break;
+		case seventh:
+			chordTitle = R.string.menu_seventh;
 			break;
 		default:
 			chordTitle = R.string.menu_chord;
@@ -94,30 +96,22 @@ public class CircleActivity extends Activity {
 	}
 
 	private void generateTabs() {
-
 		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		addTab("C");
-		addTab("C#");
-		addTab("D");
-		addTab("Eb");
-		addTab("E");
-		addTab("F");
-		addTab("F#");
-		addTab("G");
-		addTab("C#");
-		addTab("A");
-		addTab("Bb");
-		addTab("B");
+		Tone[] values = Tone.values();
+		for (Tone tone : values) {
+			addTab(tone.toPrettyString());
+		}
 	}
 
 	private Tab addTab(final String name) {
 		Tab tab = getActionBar().newTab();
 		tab.setText(name);
 		tab.setTabListener(new ChordTabListener(name));
-		View view = LayoutInflater.from(this).inflate(R.layout.tab_label, null);
-		((TextView) view.findViewById(android.R.id.title)).setText(name);
-
-		tab.setCustomView(view);
+		// View view = LayoutInflater.from(this).inflate(R.layout.tab_label,
+		// null);
+		// ((TextView) view.findViewById(android.R.id.title)).setText(name);
+		//
+		// tab.setCustomView(view);
 
 		getActionBar().addTab(tab);
 		return tab;
@@ -138,10 +132,13 @@ public class CircleActivity extends Activity {
 
 		}
 
+		/**
+		 * @see android.app.ActionBar.TabListener#onTabSelected(android.app.ActionBar.Tab,
+		 *      android.app.FragmentTransaction)
+		 */
 		@Override
 		public void onTabSelected(final Tab tab, final FragmentTransaction ft) {
-			// TODO Auto-generated method stub
-
+			setDominant(Tone.parse(mTag));
 		}
 
 		@Override
@@ -153,9 +150,44 @@ public class CircleActivity extends Activity {
 		private final String mTag;
 	}
 
+	/**
+	 * 
+	 * @param chordType
+	 */
 	public void setChordType(final Chord.Type chordType) {
 		mChordType = chordType;
+		updateContent();
 		invalidateOptionsMenu();
+	}
+
+	/**
+	 * @param dominant
+	 */
+	public void setDominant(final Tone dominant) {
+		mDominant = dominant;
+		updateContent();
+	}
+
+	/**
+	 * 
+	 */
+	private void updateContent() {
+		if ((mChordType == null) || (mDominant == null)) {
+			return;
+		}
+
+		Tone[] chord = Chord.buildChord(mChordType, mDominant);
+
+		StringBuilder builder = new StringBuilder();
+		for (Tone tone : chord) {
+			builder.append(tone.toPrettyString());
+			builder.append(" - ");
+		}
+
+		builder.setLength(builder.length() - 3);
+
+		((TextView) findViewById(R.id.textPlaceHolder)).setText(builder
+				.toString());
 	}
 
 	private Tone mDominant;

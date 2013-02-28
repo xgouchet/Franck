@@ -50,6 +50,26 @@ public enum Tone {
 	}
 
 	/**
+	 * @return a user friendly string value for this tone
+	 */
+	public String toPrettyString() {
+		switch (this) {
+		case BFlat:
+			return "Bb";
+		case CSharp:
+			return "C#";
+		case EFlat:
+			return "Eb";
+		case FSharp:
+			return "F#";
+		case GSharp:
+			return "G#";
+		default:
+			return toString();
+		}
+	}
+
+	/**
 	 * @return the augmented tone for this dominant
 	 */
 	public Tone augmented() {

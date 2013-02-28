@@ -2,8 +2,6 @@
 <resources>
 
     <string name="app_name">Franck</string>
-    <string name="menu_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
 
     <!-- MENUS -->
     <string name="menu_chord">Chord</string>
