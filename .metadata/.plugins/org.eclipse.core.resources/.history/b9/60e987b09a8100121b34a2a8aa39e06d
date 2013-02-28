@@ -1,0 +1,25 @@
+package fr.xgouchet.musichelper.test;
+
+import fr.xgouchet.musichelper.model.ChordType;
+import fr.xgouchet.musichelper.model.Tone;
+import junit.framework.TestCase;
+
+public class ChordTest extends TestCase {
+
+	/**
+	 * Test that each static buildXXXChord method returns exactly the same thing
+	 * as the {@link ChordType#buildChord(Tone)} from the corresponding chord
+	 * type
+	 */
+	public void testStaticChords() {
+		Tone[] staticChord = ChordType.buildMajorChord(Tone.C);
+		Tone[] enumChord = ChordType.buildMajorChord(Tone.C);
+	}
+
+	/**
+	 * Tests the generation of known major chords
+	 */
+	public void testMajorChord() {
+		Tone[] majorChord = ChordType.major.buildChord(Tone.C);
+	}
+}

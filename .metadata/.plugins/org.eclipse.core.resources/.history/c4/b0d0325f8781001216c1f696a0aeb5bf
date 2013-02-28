@@ -1,5 +1,0 @@
-package fr.xgouchet.musichelper.model;
-
-public enum ChordType {
-
-}

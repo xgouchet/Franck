@@ -1077,3 +1077,30 @@ Caused by: java.lang.IllegalStateException: startLine (25) does not match endLin
 	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
 	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:135)
 	... 23 more
+!SESSION 2013-02-28 11:42:31.653 -----------------------------------------------
+eclipse.buildId=M20120914-1800
+java.version=1.6.0_37
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=fr_FR
+Command-line arguments:  -os win32 -ws win32 -arch x86
+
+!ENTRY org.eclipse.ui 2 2 2013-02-28 11:42:40.611
+!MESSAGE Invalid property category path: ValidationPropertiesPage (bundle: org.eclipse.wst.xml.ui, propertyPage: org.eclipse.wst.xml.ui.propertyPage.project.validation)
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-28 12:12:09.828
+!MESSAGE Failed to load properties file for project 'Franck-UT'
+
+!ENTRY org.eclipse.ui 4 4 2013-02-28 13:03:25.144
+!MESSAGE Referenced part does not exist yet: org.eclipse.ui.views.ProblemView.
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-28 14:29:05.730
+!MESSAGE activity_circle.xml: Failed to find style 'textViewStyle' in current theme
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-28 14:29:05.733
+!MESSAGE activity_circle.xml: Failed to find style 'textViewStyle' in current theme
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-28 14:29:05.735
+!MESSAGE activity_circle.xml: Failed to find style 'textViewStyle' in current theme
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-28 14:29:05.739
+!MESSAGE activity_circle.xml: Failed to find style 'textViewStyle' in current theme

@@ -1,0 +1,17 @@
+package fr.xgouchet.musichelper.test;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
+public class ModelTests {
+
+	public static Test suite() {
+		TestSuite suite = new TestSuite(ModelTests.class.getName());
+		// $JUnit-BEGIN$
+		suite.addTestSuite(ChordTest.class);
+		suite.addTestSuite(ToneTest.class);
+		// $JUnit-END$
+		return suite;
+	}
+
+}

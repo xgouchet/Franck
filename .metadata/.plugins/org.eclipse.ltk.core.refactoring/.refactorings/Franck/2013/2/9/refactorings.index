@@ -1,2 +1,7 @@
 1362038714360	Rename resource 'tab_label_1.xml'
 1362042909274	Rename type 'Chord'
+1362049621604	Rename type 'Tone'
+1362050185190	Rename type 'HalfTone'
+1362052707937	Rename type 'ChordType'
+1362056257012	Delete element
+1362058179736	Delete element

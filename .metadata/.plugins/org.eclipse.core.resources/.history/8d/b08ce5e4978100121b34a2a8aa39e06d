@@ -1,0 +1,41 @@
+package fr.xgouchet.musichelper.model;
+
+public enum HalfTone {
+	C, CSharp, D, EFlat, E, F, FSharp, G, GSharp, A, BFlat, B;
+
+	/**
+	 * @return the second tone for this dominant
+	 */
+	public HalfTone second() {
+		int tone = (ordinal() + 2) % values().length;
+
+		return values()[tone];
+	}
+
+	/**
+	 * @return the third tone for this dominant
+	 */
+	public HalfTone third() {
+		int tone = (ordinal() + 4) % values().length;
+
+		return values()[tone];
+	}
+
+	/**
+	 * @return the fourth tone for this dominant
+	 */
+	public HalfTone fourth() {
+		int tone = (ordinal() + 5) % values().length;
+
+		return values()[tone];
+	}
+
+	/**
+	 * @return the fifth tone for this dominant
+	 */
+	public HalfTone fifth() {
+		int tone = (ordinal() + 7) % values().length;
+
+		return values()[tone];
+	}
+}
