@@ -1,37 +1,41 @@
 package fr.xgouchet.musichelper;
 
-import fr.xgouchet.musichelper.model.ChordType;
-import android.os.Bundle;
+import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import fr.xgouchet.musichelper.model.Chord;
+import fr.xgouchet.musichelper.model.Tone;
 
+/**
+ * 
+ */
 public class CircleActivity extends Activity {
 
 	/**
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_circle);
 
 		generateTabs();
-		setChordType(ChordType.major);
+		setChordType(Chord.Type.major);
 	}
 
 	/**
 	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
 	 */
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(final Menu menu) {
 		getMenuInflater().inflate(R.menu.chords, menu);
 
 		int chordTitle;
@@ -61,22 +65,25 @@ public class CircleActivity extends Activity {
 	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
 	 */
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(final MenuItem item) {
 
 		boolean res = true;
 
 		switch (item.getItemId()) {
 		case R.id.menu_major:
-			setChordType(ChordType.major);
+			setChordType(Chord.Type.major);
 			break;
 		case R.id.menu_minor:
-			setChordType(ChordType.minor);
+			setChordType(Chord.Type.minor);
 			break;
 		case R.id.menu_augmented:
-			setChordType(ChordType.augmented);
+			setChordType(Chord.Type.augmented);
 			break;
 		case R.id.menu_diminished:
-			setChordType(ChordType.diminished);
+			setChordType(Chord.Type.diminished);
+			break;
+		case R.id.menu_seventh:
+			setChordType(Chord.Type.seventh);
 			break;
 		default:
 			res = super.onOptionsItemSelected(item);
@@ -103,7 +110,7 @@ public class CircleActivity extends Activity {
 		addTab("B");
 	}
 
-	private Tab addTab(String name) {
+	private Tab addTab(final String name) {
 		Tab tab = getActionBar().newTab();
 		tab.setText(name);
 		tab.setTabListener(new ChordTabListener(name));
@@ -116,26 +123,29 @@ public class CircleActivity extends Activity {
 		return tab;
 	}
 
+	/**
+	 * 
+	 */
 	private class ChordTabListener implements TabListener {
 
-		public ChordTabListener(String tag) {
+		public ChordTabListener(final String tag) {
 			mTag = tag;
 		}
 
 		@Override
-		public void onTabReselected(Tab tab, FragmentTransaction ft) {
+		public void onTabReselected(final Tab tab, final FragmentTransaction ft) {
 			// TODO Auto-generated method stub
 
 		}
 
 		@Override
-		public void onTabSelected(Tab tab, FragmentTransaction ft) {
+		public void onTabSelected(final Tab tab, final FragmentTransaction ft) {
 			// TODO Auto-generated method stub
 
 		}
 
 		@Override
-		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+		public void onTabUnselected(final Tab tab, final FragmentTransaction ft) {
 			// TODO Auto-generated method stub
 
 		}
@@ -143,10 +153,11 @@ public class CircleActivity extends Activity {
 		private final String mTag;
 	}
 
-	public void setChordType(ChordType chordType) {
+	public void setChordType(final Chord.Type chordType) {
 		mChordType = chordType;
 		invalidateOptionsMenu();
 	}
 
-	private ChordType mChordType;
+	private Tone mDominant;
+	private Chord.Type mChordType;
 }
