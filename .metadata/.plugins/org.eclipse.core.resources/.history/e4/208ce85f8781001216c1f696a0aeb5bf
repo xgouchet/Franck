@@ -1,0 +1,8 @@
+package fr.xgouchet.musichelper.model;
+
+public enum ChordType {
+	major, 
+	minor, 
+	diminished, 
+	augmented
+}

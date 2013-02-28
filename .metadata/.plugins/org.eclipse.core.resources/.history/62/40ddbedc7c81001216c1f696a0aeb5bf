@@ -1,0 +1,44 @@
+package fr.xgouchet.musichelper;
+
+import android.os.Bundle;
+import android.app.ActionBar.Tab;
+import android.app.Activity;
+import android.view.Menu;
+
+public class CircleActivity extends Activity {
+
+	/**
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_circle);
+
+	}
+
+	/**
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_circle, menu);
+		return true;
+	}
+
+	private void generateTabs() {
+		addTab("C");
+	}
+
+	private Tab addTab(String name) {
+		Tab tab = getActionBar().newTab();
+		tab.setText(name);
+		tab.setTabListener(new CalcTabListener(targetClass, tag));
+		getActionBar().addTab(tab);
+		return tab;
+	}
+
+	private class ChordTabListener implements TabListener {
+
+	}
+}

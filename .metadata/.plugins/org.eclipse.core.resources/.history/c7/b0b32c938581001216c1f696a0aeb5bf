@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Franck</string>
+    <string name="menu_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    
+    
+    <!-- MENUS -->
+    <string name="menu_major">Major</string>
+    <string name="menu_minor">Major</string>
+    <string name="menu_diminished">Major</string>
+    <string name="menu_augmented">Major</string>
+    
+
+</resources>
