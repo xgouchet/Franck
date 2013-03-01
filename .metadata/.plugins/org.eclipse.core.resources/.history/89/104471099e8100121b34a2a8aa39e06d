@@ -1,8 +1,0 @@
-package fr.xgouchet.musichelper.test;
-
-
-@RunWith(Suite.class)
-@SuiteClasses({ ChordTest.class, ToneTest.class })
-public class ModelTests {
-
-}

@@ -1,6 +1,0 @@
-INDEX VERSION 1.126+E:\PERSO\git\Franck\.metadata\.plugins\org.eclipse.jdt.core
-3045744507.index
-1684785981.index
-1706294775.index
-1071289092.index
-1986654363.index
