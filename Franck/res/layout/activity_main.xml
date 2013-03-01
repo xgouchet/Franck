@@ -23,6 +23,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
+        
+        android:background="#FFF8F0"
         android:layout_below="@id/textPlaceHolder" />
+
+
 
 </RelativeLayout>
