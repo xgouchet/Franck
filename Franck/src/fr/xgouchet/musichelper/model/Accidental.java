@@ -35,4 +35,25 @@ public enum Accidental {
 					+ halftones);
 		}
 	}
+
+	/**
+	 * @see java.lang.Enum#toString()
+	 */
+	@Override
+	public String toString() {
+		switch (this) {
+		case natural:
+			return "";
+		case sharp:
+			return "#";
+		case doubleSharp:
+			return "##";
+		case flat:
+			return "♭";
+		case doubleFlat:
+			return "♭♭";
+		default:
+			throw new IllegalArgumentException("Unknown alteration");
+		}
+	}
 }

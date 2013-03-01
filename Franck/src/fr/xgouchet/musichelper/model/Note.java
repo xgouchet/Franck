@@ -224,7 +224,20 @@ public class Note {
 	}
 
 	/**
-	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(mPitch.name());
+		builder.append(mAccidental.toString());
+		builder.append("(1/");
+		builder.append(mFraction);
+		builder.append(')');
+		return super.toString();
+	}
+
+	/**
 	 * An implementation of equals which is lenient according to
 	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -245,6 +258,18 @@ public class Note {
 		Note note = (Note) other;
 		return (note.mFraction == mFraction)
 				&& (note.halfTones() == halfTones());
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		int hash = 11;
+		hash = (41 * hash) + mPitch.ordinal();
+		hash = (41 * hash) + mAccidental.ordinal();
+		hash = (41 * hash) + mOctave;
+		return hash;
 	}
 
 	private Pitch mPitch;
