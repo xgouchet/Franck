@@ -3,6 +3,9 @@ package fr.xgouchet.musichelper.test.model;
 import junit.framework.TestCase;
 import fr.xgouchet.musichelper.model.Tone;
 
+/**
+ * TODO test offset, isAltered
+ */
 public class ToneTest extends TestCase {
 
 	/**
