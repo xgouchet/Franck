@@ -19,9 +19,9 @@ public class Chord {
 	 */
 	public enum Type {
 		// triad chords
-		major, minor, diminished, augmented,
+		major, minor, augmented, diminished,
 		// common 7th chords
-		seventh, majorSeventh, minorSeventh, diminishedSeventh, augmentedSeventh,
+		dominant7, major7, minor7, augmented7, diminished7,
 		// advanced 7th chords
 		halfDiminishedSeventh, minorMajorSeventh, augmentedMajorSeventh;
 
@@ -35,8 +35,16 @@ public class Chord {
 				return "aug";
 			case diminished:
 				return "dim";
-			case seventh:
+			case dominant7:
 				return "7";
+			case major7:
+				return "M7";
+			case minor7:
+				return "m7";
+			case diminished7:
+				return "dim7";
+			case augmented7:
+				return "aug7";
 			default:
 				return toString();
 			}
@@ -107,8 +115,16 @@ public class Chord {
 			return buildAugmentedChord(dominant);
 		case diminished:
 			return buildDiminishedChord(dominant);
-		case seventh:
-			return buildSeventhChord(dominant);
+		case dominant7:
+			return buildDominant7thChord(dominant);
+		case major7:
+			return buildMajor7thChord(dominant);
+		case minor7:
+			return buildMinor7thChord(dominant);
+		case augmented7:
+			return buildAugmented7thChord(dominant);
+		case diminished7:
+			return buildDiminished7thChord(dominant);
 		default:
 			throw new IllegalArgumentException("Unable to build "
 					+ type.toString() + " chord : method not implemented");
@@ -172,13 +188,69 @@ public class Chord {
 	 *            the dominant tone for this chord
 	 * @return the dominant seventh chord corresponidng to the dominant
 	 */
-	public static Chord buildSeventhChord(final Tone dominant) {
+	public static Chord buildDominant7thChord(final Tone dominant) {
 		Tone[] chord = new Tone[4];
 		chord[0] = dominant;
 		chord[1] = dominant.third();
 		chord[2] = dominant.fifth();
 		chord[3] = dominant.seventh().diminished();
-		return new Chord(dominant, Type.seventh, chord);
+		return new Chord(dominant, Type.dominant7, chord);
+	}
+
+	/**
+	 * @param dominant
+	 *            the dominant tone for this chord
+	 * @return the major chord corresponidng to the dominant
+	 */
+	public static Chord buildMajor7thChord(final Tone dominant) {
+		Tone[] chord = new Tone[4];
+		chord[0] = dominant;
+		chord[1] = dominant.third();
+		chord[2] = dominant.fifth();
+		chord[3] = dominant.seventh();
+		return new Chord(dominant, Type.major7, chord);
+	}
+
+	/**
+	 * @param dominant
+	 *            the dominant tone for this chord
+	 * @return the minor chord corresponidng to the dominant
+	 */
+	public static Chord buildMinor7thChord(final Tone dominant) {
+		Tone[] chord = new Tone[4];
+		chord[0] = dominant;
+		chord[1] = dominant.third().diminished();
+		chord[2] = dominant.fifth();
+		chord[3] = dominant.seventh().diminished();
+		return new Chord(dominant, Type.minor7, chord);
+	}
+
+	/**
+	 * @param dominant
+	 *            the dominant tone for this chord
+	 * @return the major augmented chord corresponidng to the dominant
+	 */
+	public static Chord buildAugmented7thChord(final Tone dominant) {
+		Tone[] chord = new Tone[4];
+		chord[0] = dominant;
+		chord[1] = dominant.third();
+		chord[2] = dominant.fifth().augmented();
+		chord[3] = dominant.seventh().diminished();
+		return new Chord(dominant, Type.augmented7, chord);
+	}
+
+	/**
+	 * @param dominant
+	 *            the dominant tone for this chord
+	 * @return the minor diminished chord corresponidng to the dominant
+	 */
+	public static Chord buildDiminished7thChord(final Tone dominant) {
+		Tone[] chord = new Tone[4];
+		chord[0] = dominant;
+		chord[1] = dominant.third().diminished();
+		chord[2] = dominant.fifth().diminished();
+		chord[3] = dominant.seventh().diminished().diminished();
+		return new Chord(dominant, Type.diminished7, chord);
 	}
 
 	/**
@@ -233,16 +305,18 @@ public class Chord {
 	}
 
 	/**
-	 * @return a user friendly String
+	 * @return a user friendly String (eg: "Am", "E7")
 	 */
 	public String toPrettyString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(mDominant.toPrettyString());
 		builder.append(mType.asSuffix());
-		return null;
+		return builder.toString();
 	}
 
 	/**
+	 * Describes this chord (eg: "Am [A - C - E]", "E7 [E - G# - B - D]"
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

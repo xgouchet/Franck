@@ -103,7 +103,7 @@ public class StaffView extends View {
 			for (Tone note : chord.getNotes()) {
 				offset = note.offsetFromC() + mKey.cOffset();
 				while (prevOffset > offset) {
-					offset += 8;
+					offset += 7;
 				}
 				prevOffset = offset;
 
@@ -281,7 +281,7 @@ public class StaffView extends View {
 	 */
 	private void drawChord(final Canvas canvas, final Chord chord,
 			final float offsetX) {
-		float offsetY, y;
+		float offsetY, y, overlapOffset;
 		int offset, prevOffset;
 		boolean overlap, previousIsAltered;
 
@@ -292,13 +292,14 @@ public class StaffView extends View {
 			offset = note.offsetFromC() + Key.treble.cOffset();
 
 			while (prevOffset > offset) {
-				offset += 8;
+				offset += 7;
 			}
 			overlap = ((offset - prevOffset) <= 1);
+			overlapOffset = (overlap ? mLineSpacing : 0);
 			prevOffset = offset;
 
 			y = offsetY - (offset * mHalfSpacing);
-			drawWhole(canvas, offsetX + (overlap ? mLineSpacing : 0), y);
+			drawWhole(canvas, offsetX + overlapOffset, y);
 
 			if (note.isAltered()) {
 				if (note.isSharp()) {
@@ -313,14 +314,16 @@ public class StaffView extends View {
 			if (offset < 0) {
 				for (int i = 0; i >= (offset - 1); i -= 2) {
 					y = offsetY - (i * mHalfSpacing);
-					canvas.drawLine(offsetX - mLineSpacing, y, offsetX
-							+ mLineSpacing, y, mLinePaint);
+					canvas.drawLine((offsetX + overlapOffset) - mLineSpacing,
+							y, offsetX + overlapOffset + mLineSpacing
+							+ mHalfSpacing, y, mLinePaint);
 				}
 			} else if (offset > 8) {
 				for (int i = 8; i <= (offset + 1); i += 2) {
 					y = offsetY - (i * mHalfSpacing);
-					canvas.drawLine(offsetX - mLineSpacing, y, offsetX
-							+ mLineSpacing, y, mLinePaint);
+					canvas.drawLine((offsetX + overlapOffset) - mLineSpacing,
+							y, offsetX + overlapOffset + mLineSpacing
+							+ mHalfSpacing, y, mLinePaint);
 				}
 			}
 		}

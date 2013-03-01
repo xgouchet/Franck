@@ -3,6 +3,7 @@
 
     <!-- VIEWS -->
     <item name="textPlaceHolder" type="id"/>
+    <item name="staffView" type="id"/>
 
     <!-- MENUS -->
     <item name="menu_current_chord" type="id"/>
@@ -10,6 +11,10 @@
     <item name="menu_minor" type="id"/>
     <item name="menu_diminished" type="id"/>
     <item name="menu_augmented" type="id"/>
-    <item name="menu_seventh" type="id"/>
+    <item name="menu_dominant7" type="id"/>
+    <item name="menu_major7" type="id"/>
+    <item name="menu_minor7" type="id"/>
+    <item name="menu_diminished7" type="id"/>
+    <item name="menu_augmented7" type="id"/>
 
 </resources>

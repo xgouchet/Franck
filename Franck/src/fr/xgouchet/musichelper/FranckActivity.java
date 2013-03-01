@@ -1,8 +1,5 @@
 package fr.xgouchet.musichelper;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
@@ -15,8 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import fr.xgouchet.musichelper.model.Chord;
+import fr.xgouchet.musichelper.model.Note;
 import fr.xgouchet.musichelper.model.Tone;
-import fr.xgouchet.musichelper.ui.view.StaffView;
 
 /**
  * 
@@ -33,7 +30,7 @@ public class FranckActivity extends Activity {
 
 		generateTabs();
 		setChordType(Chord.Type.major);
-		setDominant(Tone.C);
+		setDominant(new Note());
 	}
 
 	/**
@@ -42,30 +39,6 @@ public class FranckActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu) {
 		getMenuInflater().inflate(R.menu.chords, menu);
-
-		int chordTitle;
-		switch (mChordType) {
-		case major:
-			chordTitle = R.string.menu_major;
-			break;
-		case minor:
-			chordTitle = R.string.menu_minor;
-			break;
-		case augmented:
-			chordTitle = R.string.menu_augmented;
-			break;
-		case diminished:
-			chordTitle = R.string.menu_diminished;
-			break;
-		case seventh:
-			chordTitle = R.string.menu_seventh;
-			break;
-		default:
-			chordTitle = R.string.menu_chord;
-			break;
-		}
-		menu.findItem(R.id.menu_current_chord).setTitle(chordTitle);
-
 		return true;
 	}
 
@@ -90,8 +63,20 @@ public class FranckActivity extends Activity {
 		case R.id.menu_diminished:
 			setChordType(Chord.Type.diminished);
 			break;
-		case R.id.menu_seventh:
-			setChordType(Chord.Type.seventh);
+		case R.id.menu_dominant7:
+			setChordType(Chord.Type.dominant7);
+			break;
+		case R.id.menu_major7:
+			setChordType(Chord.Type.major7);
+			break;
+		case R.id.menu_minor7:
+			setChordType(Chord.Type.minor7);
+			break;
+		case R.id.menu_augmented7:
+			setChordType(Chord.Type.augmented7);
+			break;
+		case R.id.menu_diminished7:
+			setChordType(Chord.Type.diminished7);
 			break;
 		default:
 			res = super.onOptionsItemSelected(item);
@@ -123,18 +108,24 @@ public class FranckActivity extends Activity {
 	}
 
 	/**
-	 * 
+	 * Listens to change in the dominant note
 	 */
 	private class ChordTabListener implements TabListener {
 
+		/**
+		 * @param tag
+		 *            the name of the dominant
+		 */
 		public ChordTabListener(final String tag) {
 			mTag = tag;
 		}
 
+		/**
+		 * @see android.app.ActionBar.TabListener#onTabReselected(android.app.ActionBar.Tab,
+		 *      android.app.FragmentTransaction)
+		 */
 		@Override
 		public void onTabReselected(final Tab tab, final FragmentTransaction ft) {
-			// TODO Auto-generated method stub
-
 		}
 
 		/**
@@ -143,13 +134,15 @@ public class FranckActivity extends Activity {
 		 */
 		@Override
 		public void onTabSelected(final Tab tab, final FragmentTransaction ft) {
-			setDominant(Tone.parse(mTag));
+			// TODO setDominant(Tone.parse(mTag));
 		}
 
+		/**
+		 * @see android.app.ActionBar.TabListener#onTabUnselected(android.app.ActionBar.Tab,
+		 *      android.app.FragmentTransaction)
+		 */
 		@Override
 		public void onTabUnselected(final Tab tab, final FragmentTransaction ft) {
-			// TODO Auto-generated method stub
-
 		}
 
 		private final String mTag;
@@ -162,36 +155,44 @@ public class FranckActivity extends Activity {
 	public void setChordType(final Chord.Type chordType) {
 		mChordType = chordType;
 		updateContent();
-		invalidateOptionsMenu();
 	}
 
 	/**
 	 * @param dominant
 	 */
-	public void setDominant(final Tone dominant) {
+	public void setDominant(final Note dominant) {
 		mDominant = dominant;
 		updateContent();
 	}
 
 	/**
-	 * 
+	 * Update all views content to display the current chord
 	 */
 	private void updateContent() {
 		if ((mChordType == null) || (mDominant == null)) {
 			return;
 		}
 
-		Chord chord = Chord.buildChord(mChordType, mDominant);
+		// mChord = Chord.buildChord(mChordType, mDominant);
+		//
+		// List<Chord> chords = new LinkedList<Chord>();
+		// chords.add(mChord);
+		//
+		// ((StaffView) findViewById(R.id.staffView)).setChords(chords);
 
-		List<Chord> chords = new LinkedList<Chord>();
-		chords.add(chord);
-
-		((StaffView) findViewById(R.id.staffView)).setChords(chords);
-
-		((TextView) findViewById(R.id.textPlaceHolder)).setText(chord
-				.toString());
+		// updateTitle();
 	}
 
-	private Tone mDominant;
+	/**
+	 * Update the action bar title with the current chord name
+	 */
+	private void updateTitle() {
+		// ((TextView) findViewById(R.id.textPlaceHolder)).setText(mChord
+		// .toString());
+		// setTitle(getString(R.string.title_chord, mChord.toPrettyString()));
+	}
+
+	private Note mDominant;
 	private Chord.Type mChordType;
+	private Chord mChord;
 }

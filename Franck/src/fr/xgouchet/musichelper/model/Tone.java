@@ -6,6 +6,7 @@ package fr.xgouchet.musichelper.model;
  * 
  * For instance, there's no DFlat (use {@link #CSharp} instead).
  */
+@Deprecated
 public enum Tone {
 	C, CSharp, D, EFlat, E, F, FSharp, G, GSharp, A, BFlat, B;
 
@@ -131,6 +132,30 @@ public enum Tone {
 		case CSharp:
 		case FSharp:
 		case GSharp:
+			return true;
+		default:
+			throw new IllegalStateException();
+		}
+	}
+
+	/**
+	 * @return if this note has a sharp
+	 */
+	public boolean isFlat() {
+		switch (this) {
+		case C:
+		case CSharp:
+		case D:
+		case E:
+		case F:
+		case FSharp:
+		case G:
+		case GSharp:
+		case A:
+		case B:
+			return false;
+		case EFlat:
+		case BFlat:
 			return true;
 		default:
 			throw new IllegalStateException();

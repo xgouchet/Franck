@@ -4,23 +4,35 @@
     <item
         android:id="@id/menu_current_chord"
         android:showAsAction="ifRoom"
-        android:title="@string/menu_major">
+        android:title="@string/menu_chord">
         <menu>
             <item
                 android:id="@id/menu_major"
-                android:title="@string/menu_major"/>
+                android:title="@string/major"/>
             <item
                 android:id="@id/menu_minor"
-                android:title="@string/menu_minor"/>
+                android:title="@string/minor"/>
             <item
                 android:id="@id/menu_augmented"
-                android:title="@string/menu_augmented"/>
+                android:title="@string/augmented"/>
             <item
                 android:id="@id/menu_diminished"
-                android:title="@string/menu_diminished"/>
+                android:title="@string/diminished"/>
             <item
-                android:id="@id/menu_seventh"
-                android:title="@string/menu_seventh"/>
+                android:id="@id/menu_dominant7"
+                android:title="@string/dominant7"/>
+            <item
+                android:id="@id/menu_major7"
+                android:title="@string/major7"/>
+            <item
+                android:id="@id/menu_minor7"
+                android:title="@string/minor7"/>
+            <item
+                android:id="@id/menu_augmented7"
+                android:title="@string/augmented7"/>
+            <item
+                android:id="@id/menu_diminished7"
+                android:title="@string/diminished7"/>
         </menu>
     </item>
 
