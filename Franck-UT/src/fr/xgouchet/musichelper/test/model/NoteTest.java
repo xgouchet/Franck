@@ -30,10 +30,8 @@ public class NoteTest extends TestCase {
 	}
 
 	public void testCircleOf5th() {
-
 		// Test on Middle C
 		Note middleC = new Note(Pitch.C, Accidental.natural, 4, 1);
-
 		assertEquals("Circle of 5th : C 4th", middleC.fourth(), new Note(
 				Pitch.F, Accidental.natural, 4, 1));
 		assertEquals("Circle of 5th : C 5th", middleC.fifth(), new Note(
@@ -42,10 +40,40 @@ public class NoteTest extends TestCase {
 				Pitch.D, Accidental.natural, 4, 1));
 		assertEquals("Circle of 5th : C 6th", middleC.sixth(), new Note(
 				Pitch.A, Accidental.natural, 4, 1));
-		assertEquals("Circle of 5th : C 6rd", middleC.thirdMajor(), new Note(
+		assertEquals("Circle of 5th : C 3rd", middleC.thirdMajor(), new Note(
 				Pitch.E, Accidental.natural, 4, 1));
 		assertEquals("Circle of 5th : C 7th", middleC.seventhMajor(), new Note(
 				Pitch.B, Accidental.natural, 4, 1));
+
+		// Test on Middle F
+		Note middleF = new Note(Pitch.F, Accidental.natural, 4, 1);
+		assertEquals("Circle of 5th : F 4th", middleF.fourth(), new Note(
+				Pitch.B, Accidental.flat, 4, 1));
+		assertEquals("Circle of 5th : F 5th", middleF.fifth(), new Note(
+				Pitch.C, Accidental.natural, 5, 1));
+		assertEquals("Circle of 5th : F 2nd", middleF.secondMajor(), new Note(
+				Pitch.G, Accidental.natural, 4, 1));
+		assertEquals("Circle of 5th : F 6th", middleF.sixth(), new Note(
+				Pitch.D, Accidental.natural, 5, 1));
+		assertEquals("Circle of 5th : F 3rd", middleF.thirdMajor(), new Note(
+				Pitch.A, Accidental.natural, 4, 1));
+		assertEquals("Circle of 5th : F 7th", middleF.seventhMajor(), new Note(
+				Pitch.E, Accidental.natural, 5, 1));
+
+		// Test on Middle Bb
+		Note middleBb = new Note(Pitch.B, Accidental.flat, 4, 1);
+		assertEquals("Circle of 5th : Bb 4th", middleBb.fourth(), new Note(
+				Pitch.E, Accidental.flat, 5, 1));
+		assertEquals("Circle of 5th : Bb 5th", middleBb.fifth(), new Note(
+				Pitch.F, Accidental.natural, 5, 1));
+		assertEquals("Circle of 5th : Bb 2nd", middleBb.secondMajor(),
+				new Note(Pitch.C, Accidental.natural, 5, 1));
+		assertEquals("Circle of 5th : Bb 6th", middleBb.sixth(), new Note(
+				Pitch.G, Accidental.natural, 5, 1));
+		assertEquals("Circle of 5th : Bb 3rd", middleBb.thirdMajor(), new Note(
+				Pitch.D, Accidental.natural, 5, 1));
+		assertEquals("Circle of 5th : Bb 7th", middleBb.seventhMajor(),
+				new Note(Pitch.A, Accidental.natural, 5, 1));
 
 	}
 }

@@ -3,7 +3,7 @@ package fr.xgouchet.musichelper.test;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import fr.xgouchet.musichelper.test.model.ChordTest;
-import fr.xgouchet.musichelper.test.model.ToneTest;
+import fr.xgouchet.musichelper.test.model.NoteTest;
 
 public class ModelSuiteTests {
 
@@ -12,7 +12,7 @@ public class ModelSuiteTests {
 
 		// $JUnit-BEGIN$
 		suite.addTestSuite(ChordTest.class);
-		suite.addTestSuite(ToneTest.class);
+		suite.addTestSuite(NoteTest.class);
 		// $JUnit-END$
 
 		return suite;
