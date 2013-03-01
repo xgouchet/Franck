@@ -1,3 +1,4 @@
+![Franck icon](https://github.com/xgouchet/Franck/raw/master/Franck/res/drawable-xxhdpi/ic_launcher.png)
 
 # ABOUT
 
