@@ -4,8 +4,9 @@ import junit.framework.TestCase;
 import fr.xgouchet.musichelper.model.Tone;
 
 /**
- * TODO test offset, isAltered
+ * TODO test offset
  */
+@Deprecated
 public class ToneTest extends TestCase {
 
 	/**
@@ -43,8 +44,25 @@ public class ToneTest extends TestCase {
 		assertEquals("E# == F ?", Tone.E.augmented(), Tone.F);
 		assertEquals("F# == Gb ?", Tone.F.augmented(), Tone.G.diminished());
 		assertEquals("G# == Ab ?", Tone.G.augmented(), Tone.A.diminished());
+
+		for (Tone tone : Tone.values()) {
+			String name = tone.toPrettyString();
+			if (tone.isAltered()) {
+				assertTrue(name + " isAltered", name.length() > 1);
+				if (tone.isSharp()) {
+					assertTrue(name + " isSharp", name.contains("#"));
+				} else if (tone.isFlat()) {
+					assertTrue(name + " isFlat", name.contains("b"));
+				}
+			} else {
+				assertTrue(name + " is not altered", name.length() == 1);
+			}
+		}
 	}
 
+	/**
+	 * Test parsing values from strings
+	 */
 	public void testToneParsing() {
 		// Existing values
 		assertEquals("Parsing : \"A\"", Tone.parse("A"), Tone.A);
@@ -88,4 +106,5 @@ public class ToneTest extends TestCase {
 					tone, Tone.parse(tone.toPrettyString()));
 		}
 	}
+
 }

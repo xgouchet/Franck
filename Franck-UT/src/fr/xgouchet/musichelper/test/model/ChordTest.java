@@ -41,9 +41,33 @@ public class ChordTest extends TestCase {
 				enumChord);
 
 		// 7th
-		staticChord = Chord.buildSeventhChord(Tone.C);
-		enumChord = Chord.buildChord(Chord.Type.seventh, Tone.C);
+		staticChord = Chord.buildDominant7thChord(Tone.C);
+		enumChord = Chord.buildChord(Chord.Type.dominant7, Tone.C);
 		assertEquals("Static vs Enum build chords : 7th", staticChord,
+				enumChord);
+
+		// Major 7th
+		staticChord = Chord.buildMajor7thChord(Tone.C);
+		enumChord = Chord.buildChord(Chord.Type.major7, Tone.C);
+		assertEquals("Static vs Enum build chords : Maj 7th", staticChord,
+				enumChord);
+
+		// Minor 7th
+		staticChord = Chord.buildMinor7thChord(Tone.C);
+		enumChord = Chord.buildChord(Chord.Type.minor7, Tone.C);
+		assertEquals("Static vs Enum build chords : min 7th", staticChord,
+				enumChord);
+
+		// Augmented 7th
+		staticChord = Chord.buildAugmented7thChord(Tone.C);
+		enumChord = Chord.buildChord(Chord.Type.augmented7, Tone.C);
+		assertEquals("Static vs Enum build chords : Aug 7th", staticChord,
+				enumChord);
+
+		// Diminished 7th
+		staticChord = Chord.buildDiminished7thChord(Tone.C);
+		enumChord = Chord.buildChord(Chord.Type.diminished7, Tone.C);
+		assertEquals("Static vs Enum build chords : dim 7th", staticChord,
 				enumChord);
 	}
 
@@ -78,9 +102,34 @@ public class ChordTest extends TestCase {
 		assertEquals("Chord Ddim", value, expected);
 
 		// E dominant 7th
-		value = Chord.buildChord(Chord.Type.seventh, Tone.E);
-		expected = new Chord(Tone.E, Chord.Type.seventh, new Tone[] { Tone.E,
+		value = Chord.buildChord(Chord.Type.dominant7, Tone.E);
+		expected = new Chord(Tone.E, Chord.Type.dominant7, new Tone[] { Tone.E,
 				Tone.GSharp, Tone.B, Tone.D });
 		assertEquals("Chord E7", value, expected);
+
+		// C major 7th
+		value = Chord.buildChord(Chord.Type.major7, Tone.C);
+		expected = new Chord(Tone.C, Chord.Type.major7, new Tone[] { Tone.C,
+				Tone.E, Tone.G, Tone.B });
+		assertEquals("Chord CM7", value, expected);
+
+		// C minor 7th
+		value = Chord.buildChord(Chord.Type.minor7, Tone.C);
+		expected = new Chord(Tone.C, Chord.Type.minor7, new Tone[] { Tone.C,
+				Tone.EFlat, Tone.G, Tone.BFlat });
+		assertEquals("Chord CM7", value, expected);
+
+		// C augmented 7th
+		value = Chord.buildChord(Chord.Type.augmented7, Tone.C);
+		expected = new Chord(Tone.C, Chord.Type.augmented7, new Tone[] {
+				Tone.C, Tone.E, Tone.GSharp, Tone.BFlat });
+		assertEquals("Chord CM7", value, expected);
+
+		// C diminished 7th
+		value = Chord.buildChord(Chord.Type.diminished7, Tone.C);
+		expected = new Chord(Tone.C, Chord.Type.diminished7, new Tone[] {
+				Tone.C, Tone.EFlat, Tone.FSharp, Tone.A });
+		assertEquals("Chord CM7", value, expected);
+
 	}
 }
