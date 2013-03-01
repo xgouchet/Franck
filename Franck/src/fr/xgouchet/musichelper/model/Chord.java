@@ -7,7 +7,7 @@ import java.util.Arrays;
  * 
  * A chord has 3 elements :
  * <ul>
- * <li>a dominant tone;</li>
+ * <li>a dominant Note;</li>
  * <li>a chord type (major, minor, ...);</li>
  * <li>a corresponding list of notes</li>
  * </ul>
@@ -66,14 +66,14 @@ public class Chord {
 	 * <dt>Augmented</dt>
 	 * <dd>C+, Caug</dd>
 	 * <dt>Diminished</dt>
-	 * <dd>C°, Cdim</dd>
+	 * <dd>Cï¿½, Cdim</dd>
 	 * </dl>
 	 * </li>
 	 * 
 	 * <li>7th chords :
 	 * <dl>
 	 * <dt>Diminished 7th</dt>
-	 * <dd>C°7, Cdim7</dd>
+	 * <dd>Cï¿½7, Cdim7</dd>
 	 * <dt>Half Diminished 7th</dt>
 	 * <dd>Cm7b5</dd>
 	 * <dt>Minor 7th</dt>
@@ -105,7 +105,7 @@ public class Chord {
 	 * Given a dominant tone, builds a chord (ie : a list of tones)
 	 * corresponding to this chord type
 	 */
-	public static Chord buildChord(final Type type, final Tone dominant) {
+	public static Chord buildChord(final Type type, final Note dominant) {
 		switch (type) {
 		case major:
 			return buildMajorChord(dominant);
@@ -134,12 +134,12 @@ public class Chord {
 	/**
 	 * @param dominant
 	 *            the dominant tone for this chord
-	 * @return the major chord corresponidng to the dominant
+	 * @return the major chord corresponding to the dominant
 	 */
-	public static Chord buildMajorChord(final Tone dominant) {
-		Tone[] chord = new Tone[3];
+	public static Chord buildMajorChord(final Note dominant) {
+		Note[] chord = new Note[3];
 		chord[0] = dominant;
-		chord[1] = dominant.third();
+		chord[1] = dominant.thirdMajor();
 		chord[2] = dominant.fifth();
 		return new Chord(dominant, Type.major, chord);
 	}
@@ -147,12 +147,12 @@ public class Chord {
 	/**
 	 * @param dominant
 	 *            the dominant tone for this chord
-	 * @return the minor chord corresponidng to the dominant
+	 * @return the minor chord corresponding to the dominant
 	 */
-	public static Chord buildMinorChord(final Tone dominant) {
-		Tone[] chord = new Tone[3];
+	public static Chord buildMinorChord(final Note dominant) {
+		Note[] chord = new Note[3];
 		chord[0] = dominant;
-		chord[1] = dominant.third().diminished();
+		chord[1] = dominant.thirdMinor();
 		chord[2] = dominant.fifth();
 		return new Chord(dominant, Type.minor, chord);
 	}
@@ -160,12 +160,12 @@ public class Chord {
 	/**
 	 * @param dominant
 	 *            the dominant tone for this chord
-	 * @return the major augmented chord corresponidng to the dominant
+	 * @return the major augmented chord corresponding to the dominant
 	 */
-	public static Chord buildAugmentedChord(final Tone dominant) {
-		Tone[] chord = new Tone[3];
+	public static Chord buildAugmentedChord(final Note dominant) {
+		Note[] chord = new Note[3];
 		chord[0] = dominant;
-		chord[1] = dominant.third();
+		chord[1] = dominant.thirdMajor();
 		chord[2] = dominant.fifth().augmented();
 		return new Chord(dominant, Type.augmented, chord);
 	}
@@ -173,12 +173,12 @@ public class Chord {
 	/**
 	 * @param dominant
 	 *            the dominant tone for this chord
-	 * @return the minor diminished chord corresponidng to the dominant
+	 * @return the minor diminished chord corresponding to the dominant
 	 */
-	public static Chord buildDiminishedChord(final Tone dominant) {
-		Tone[] chord = new Tone[3];
+	public static Chord buildDiminishedChord(final Note dominant) {
+		Note[] chord = new Note[3];
 		chord[0] = dominant;
-		chord[1] = dominant.third().diminished();
+		chord[1] = dominant.thirdMinor();
 		chord[2] = dominant.fifth().diminished();
 		return new Chord(dominant, Type.diminished, chord);
 	}
@@ -186,70 +186,70 @@ public class Chord {
 	/**
 	 * @param dominant
 	 *            the dominant tone for this chord
-	 * @return the dominant seventh chord corresponidng to the dominant
+	 * @return the dominant seventh chord corresponding to the dominant
 	 */
-	public static Chord buildDominant7thChord(final Tone dominant) {
-		Tone[] chord = new Tone[4];
+	public static Chord buildDominant7thChord(final Note dominant) {
+		Note[] chord = new Note[4];
 		chord[0] = dominant;
-		chord[1] = dominant.third();
+		chord[1] = dominant.thirdMajor();
 		chord[2] = dominant.fifth();
-		chord[3] = dominant.seventh().diminished();
+		chord[3] = dominant.seventhMinor();
 		return new Chord(dominant, Type.dominant7, chord);
 	}
 
 	/**
 	 * @param dominant
 	 *            the dominant tone for this chord
-	 * @return the major chord corresponidng to the dominant
+	 * @return the major chord corresponding to the dominant
 	 */
-	public static Chord buildMajor7thChord(final Tone dominant) {
-		Tone[] chord = new Tone[4];
+	public static Chord buildMajor7thChord(final Note dominant) {
+		Note[] chord = new Note[4];
 		chord[0] = dominant;
-		chord[1] = dominant.third();
+		chord[1] = dominant.thirdMajor();
 		chord[2] = dominant.fifth();
-		chord[3] = dominant.seventh();
+		chord[3] = dominant.seventhMajor();
 		return new Chord(dominant, Type.major7, chord);
 	}
 
 	/**
 	 * @param dominant
 	 *            the dominant tone for this chord
-	 * @return the minor chord corresponidng to the dominant
+	 * @return the minor chord corresponding to the dominant
 	 */
-	public static Chord buildMinor7thChord(final Tone dominant) {
-		Tone[] chord = new Tone[4];
+	public static Chord buildMinor7thChord(final Note dominant) {
+		Note[] chord = new Note[4];
 		chord[0] = dominant;
-		chord[1] = dominant.third().diminished();
+		chord[1] = dominant.thirdMinor();
 		chord[2] = dominant.fifth();
-		chord[3] = dominant.seventh().diminished();
+		chord[3] = dominant.seventhMinor();
 		return new Chord(dominant, Type.minor7, chord);
 	}
 
 	/**
 	 * @param dominant
 	 *            the dominant tone for this chord
-	 * @return the major augmented chord corresponidng to the dominant
+	 * @return the major augmented chord corresponding to the dominant
 	 */
-	public static Chord buildAugmented7thChord(final Tone dominant) {
-		Tone[] chord = new Tone[4];
+	public static Chord buildAugmented7thChord(final Note dominant) {
+		Note[] chord = new Note[4];
 		chord[0] = dominant;
-		chord[1] = dominant.third();
+		chord[1] = dominant.thirdMajor();
 		chord[2] = dominant.fifth().augmented();
-		chord[3] = dominant.seventh().diminished();
+		chord[3] = dominant.seventhMinor();
 		return new Chord(dominant, Type.augmented7, chord);
 	}
 
 	/**
 	 * @param dominant
 	 *            the dominant tone for this chord
-	 * @return the minor diminished chord corresponidng to the dominant
+	 * @return the minor diminished chord corresponding to the dominant
 	 */
-	public static Chord buildDiminished7thChord(final Tone dominant) {
-		Tone[] chord = new Tone[4];
+	public static Chord buildDiminished7thChord(final Note dominant) {
+		Note[] chord = new Note[4];
 		chord[0] = dominant;
-		chord[1] = dominant.third().diminished();
+		chord[1] = dominant.thirdMinor();
 		chord[2] = dominant.fifth().diminished();
-		chord[3] = dominant.seventh().diminished().diminished();
+		chord[3] = dominant.seventhMinor().diminished().diminished();
 		return new Chord(dominant, Type.diminished7, chord);
 	}
 
@@ -263,7 +263,7 @@ public class Chord {
 	 * @param notes
 	 *            the list of notes in the chord
 	 */
-	public Chord(final Tone dominant, final Type type, final Tone[] notes) {
+	public Chord(final Note dominant, final Type type, final Note[] notes) {
 		mDominant = dominant;
 		mType = type;
 		mNotes = notes;
@@ -272,14 +272,14 @@ public class Chord {
 	/**
 	 * @return the notes
 	 */
-	public Tone[] getNotes() {
+	public Note[] getNotes() {
 		return mNotes;
 	}
 
 	/**
 	 * @return the dominant
 	 */
-	public Tone getDominant() {
+	public Note getDominant() {
 		return mDominant;
 	}
 
@@ -295,7 +295,7 @@ public class Chord {
 	 */
 	public boolean hasAlteration() {
 
-		for (Tone note : mNotes) {
+		for (Note note : mNotes) {
 			if (note.isAltered()) {
 				return true;
 			}
@@ -307,9 +307,9 @@ public class Chord {
 	/**
 	 * @return a user friendly String (eg: "Am", "E7")
 	 */
-	public String toPrettyString() {
+	public String toDisplayString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append(mDominant.toPrettyString());
+		builder.append(mDominant.toDisplayString());
 		builder.append(mType.asSuffix());
 		return builder.toString();
 	}
@@ -322,11 +322,11 @@ public class Chord {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append(mDominant.toPrettyString());
+		builder.append(mDominant.toDisplayString());
 		builder.append(mType.asSuffix());
 		builder.append(" [");
-		for (Tone tone : mNotes) {
-			builder.append(tone.toPrettyString());
+		for (Note tone : mNotes) {
+			builder.append(tone.toDisplayString());
 			builder.append(" - ");
 		}
 		builder.setLength(builder.length() - 3);
@@ -361,14 +361,13 @@ public class Chord {
 	@Override
 	public int hashCode() {
 		int hash = 13;
-		hash = (37 * hash) + mDominant.ordinal();
 		hash = (37 * hash) + mType.ordinal();
+		hash = (37 * hash) + mDominant.hashCode();
 		hash = (37 * hash) + Arrays.hashCode(mNotes);
-
 		return hash;
 	}
 
-	private final Tone[] mNotes;
-	private final Tone mDominant;
+	private final Note[] mNotes;
+	private final Note mDominant;
 	private final Type mType;
 }

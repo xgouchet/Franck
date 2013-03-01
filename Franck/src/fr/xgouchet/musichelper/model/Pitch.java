@@ -5,6 +5,8 @@ public enum Pitch {
 
 	private static final int[] NATURAL_HALFTONES = new int[] { 0, 2, 4, 5, 7,
 		9, 11 };
+	private static final Pitch[] NEAREST_PITCH = new Pitch[] { C, C, D, E, E,
+		F, F, G, G, A, B, B };
 
 	/**
 	 * @return the halftones from a natural C to this unaltered pitch
@@ -18,19 +20,11 @@ public enum Pitch {
 	 *         C)
 	 */
 	public static Pitch nearestPitch(final int halfTones) {
-		int index, half;
+		int half;
 
-		half = halfTones % 12;
+		half = halfTones % NEAREST_PITCH.length;
 
-		for (index = 0; index < NATURAL_HALFTONES.length; index++) {
-			if (NATURAL_HALFTONES[index] >= half) {
-				break;
-			}
-		}
-
-		index = index % NATURAL_HALFTONES.length;
-
-		return values()[index];
+		return NEAREST_PITCH[half];
 
 	}
 }

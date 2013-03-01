@@ -15,7 +15,7 @@ import android.view.View;
 import fr.xgouchet.musichelper.R;
 import fr.xgouchet.musichelper.model.Chord;
 import fr.xgouchet.musichelper.model.Key;
-import fr.xgouchet.musichelper.model.Tone;
+import fr.xgouchet.musichelper.model.Note;
 
 public class StaffView extends View {
 
@@ -89,23 +89,18 @@ public class StaffView extends View {
 
 	/**
 	 * @param chords
-	 *            the chrods to display
+	 *            the chords to display
 	 */
 	public void setChords(final List<Chord> chords) {
 		mChords = chords;
 
-		int highestOffset, lowestOffset, offset, prevOffset;
+		int highestOffset, lowestOffset, offset;
 		lowestOffset = 0;
 		highestOffset = 8;
 
 		for (Chord chord : mChords) {
-			prevOffset = -256;
-			for (Tone note : chord.getNotes()) {
-				offset = note.offsetFromC() + mKey.cOffset();
-				while (prevOffset > offset) {
-					offset += 7;
-				}
-				prevOffset = offset;
+			for (Note note : chord.getNotes()) {
+				offset = note.offsetFromC4() + mKey.c4Offset();
 
 				if (offset < lowestOffset) {
 					lowestOffset = offset;
@@ -143,6 +138,9 @@ public class StaffView extends View {
 
 		neededWidth += getPaddingLeft() + getPaddingRight();
 		neededHeight += getPaddingTop() + getPaddingBottom();
+
+		mTopOffsetToBottomLine = getPaddingTop()
+				+ ((mSpacesBeforeStaff + 4f) * mLineSpacing);
 
 		// Adapt width to constraints
 		switch (widthSpecMode) {
@@ -281,50 +279,51 @@ public class StaffView extends View {
 	 */
 	private void drawChord(final Canvas canvas, final Chord chord,
 			final float offsetX) {
-		float offsetY, y, overlapOffset;
+		float y, overlapOffset;
 		int offset, prevOffset;
-		boolean overlap, previousIsAltered;
-
-		offsetY = getPaddingTop() + ((mSpacesBeforeStaff + 4f) * mLineSpacing);
+		boolean overlap;
 
 		prevOffset = -256;
-		for (Tone note : chord.getNotes()) {
-			offset = note.offsetFromC() + Key.treble.cOffset();
+		for (Note note : chord.getNotes()) {
+			offset = note.offsetFromC4() + Key.treble.c4Offset();
 
-			while (prevOffset > offset) {
-				offset += 7;
-			}
 			overlap = ((offset - prevOffset) <= 1);
 			overlapOffset = (overlap ? mLineSpacing : 0);
 			prevOffset = offset;
 
-			y = offsetY - (offset * mHalfSpacing);
+			drawExtraLines(canvas, offsetX + overlapOffset, offset);
+
+			y = mTopOffsetToBottomLine - (offset * mHalfSpacing);
 			drawWhole(canvas, offsetX + overlapOffset, y);
 
-			if (note.isAltered()) {
-				if (note.isSharp()) {
-					drawSharp(canvas, offsetX - mLineSpacing - mHalfSpacing, y);
-				} else {
-					drawFlat(canvas, offsetX - mLineSpacing - mHalfSpacing, y);
-				}
+		}
+	}
 
-				previousIsAltered = true;
+	/**
+	 * Draws extra lines, needed for a note outside of the staff
+	 * 
+	 * 
+	 * @param canvas
+	 *            the canvas on which the view will be drawn
+	 * @param offsetX
+	 *            the horizontal offset
+	 * @param offset
+	 *            the line offset
+	 */
+	private void drawExtraLines(final Canvas canvas, final float offsetX,
+			final int offset) {
+		float y;
+		if (offset < 0) {
+			for (int i = 0; i >= (offset - 1); i -= 2) {
+				y = mTopOffsetToBottomLine - (i * mHalfSpacing);
+				canvas.drawLine(offsetX - mLineSpacing, y, offsetX
+						+ mLineSpacing + mHalfSpacing, y, mLinePaint);
 			}
-
-			if (offset < 0) {
-				for (int i = 0; i >= (offset - 1); i -= 2) {
-					y = offsetY - (i * mHalfSpacing);
-					canvas.drawLine((offsetX + overlapOffset) - mLineSpacing,
-							y, offsetX + overlapOffset + mLineSpacing
-							+ mHalfSpacing, y, mLinePaint);
-				}
-			} else if (offset > 8) {
-				for (int i = 8; i <= (offset + 1); i += 2) {
-					y = offsetY - (i * mHalfSpacing);
-					canvas.drawLine((offsetX + overlapOffset) - mLineSpacing,
-							y, offsetX + overlapOffset + mLineSpacing
-							+ mHalfSpacing, y, mLinePaint);
-				}
+		} else if (offset > 8) {
+			for (int i = 8; i <= (offset + 1); i += 2) {
+				y = mTopOffsetToBottomLine - (i * mHalfSpacing);
+				canvas.drawLine(offsetX - mLineSpacing, y, offsetX
+						+ mLineSpacing + mHalfSpacing, y, mLinePaint);
 			}
 		}
 	}
@@ -448,6 +447,7 @@ public class StaffView extends View {
 	private Paint mLinePaint;
 	private float mLineSpacing, mLineWidth, mHalfSpacing;
 	private int mSpacesBeforeStaff, mSpacesAfterStaff;
+	private float mTopOffsetToBottomLine;
 
 	// Data
 	private List<Chord> mChords;

@@ -83,7 +83,8 @@ public class Note {
 	 * @return the number of half tone from a Natural C to this note
 	 */
 	public int halfTones() {
-		return mPitch.halfTones() + mAccidental.halfTones();
+		return mPitch.halfTones() + mAccidental.halfTones()
+				+ ((mOctave - 4) * 12);
 	}
 
 	/**
@@ -153,14 +154,56 @@ public class Note {
 	 * @return the augmented note based on this dominant
 	 */
 	public Note augmented() {
-		return new Note(halfTones() + 1, mOctave, mFraction);
+		switch (mAccidental) {
+		case sharp:
+			return new Note(mPitch, Accidental.doubleSharp, mOctave, mFraction);
+		case natural:
+			return new Note(mPitch, Accidental.sharp, mOctave, mFraction);
+		case flat:
+			return new Note(mPitch, Accidental.natural, mOctave, mFraction);
+		case doubleFlat:
+			return new Note(mPitch, Accidental.flat, mOctave, mFraction);
+		case doubleSharp:
+		default:
+			return new Note(halfTones() + 1, mOctave, mFraction);
+		}
 	}
 
 	/**
 	 * @return the diminished note based on this dominant
 	 */
 	public Note diminished() {
-		return new Note(halfTones() - 1, mOctave, mFraction);
+		switch (mAccidental) {
+		case doubleSharp:
+			return new Note(mPitch, Accidental.sharp, mOctave, mFraction);
+		case sharp:
+			return new Note(mPitch, Accidental.natural, mOctave, mFraction);
+		case natural:
+			return new Note(mPitch, Accidental.flat, mOctave, mFraction);
+		case flat:
+			return new Note(mPitch, Accidental.doubleFlat, mOctave, mFraction);
+		case doubleFlat:
+		default:
+			return new Note(halfTones() - 1, mOctave, mFraction);
+		}
+	}
+
+	/**
+	 * @return the staff position (assuming middle C is 0, middle D is 1, middle
+	 *         E 2 and so forth)
+	 */
+	public int offsetFromC4() {
+		int octaveDiff = mOctave - 4;
+
+		int pitchDiff = mPitch.ordinal();
+		return pitchDiff + (octaveDiff * 7);
+	}
+
+	/**
+	 * @return if the current note should display an alteration
+	 */
+	public boolean isAltered() {
+		return (!mAccidental.equals(Accidental.natural));
 	}
 
 	/**
@@ -224,17 +267,27 @@ public class Note {
 	}
 
 	/**
+	 * @return a user friendly display string
+	 */
+	public String toDisplayString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(mPitch.name());
+		builder.append(mAccidental.toString());
+		return builder.toString();
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(mPitch.name());
-		builder.append(mAccidental.toString());
+		builder.append(mAccidental.name());
 		builder.append("(1/");
 		builder.append(mFraction);
 		builder.append(')');
-		return super.toString();
+		return builder.toString();
 	}
 
 	/**
@@ -266,9 +319,8 @@ public class Note {
 	@Override
 	public int hashCode() {
 		int hash = 11;
-		hash = (41 * hash) + mPitch.ordinal();
-		hash = (41 * hash) + mAccidental.ordinal();
-		hash = (41 * hash) + mOctave;
+		hash = (41 * hash) + halfTones();
+		hash = (41 * hash) + mFraction;
 		return hash;
 	}
 

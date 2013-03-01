@@ -1,5 +1,8 @@
 package fr.xgouchet.musichelper;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
@@ -11,9 +14,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import fr.xgouchet.musichelper.model.Accidental;
 import fr.xgouchet.musichelper.model.Chord;
 import fr.xgouchet.musichelper.model.Note;
-import fr.xgouchet.musichelper.model.Tone;
+import fr.xgouchet.musichelper.model.Pitch;
+import fr.xgouchet.musichelper.ui.view.StaffView;
 
 /**
  * 
@@ -86,21 +91,35 @@ public class FranckActivity extends Activity {
 		return res;
 	}
 
+	/**
+	 * Generate all the Dominant note tabs
+	 */
 	private void generateTabs() {
 		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		Tone[] values = Tone.values();
-		for (Tone tone : values) {
-			addTab(tone.toPrettyString());
-		}
+		addTab(new Note(Pitch.C, Accidental.natural, 4));
+		addTab(new Note(Pitch.D, Accidental.natural, 4));
+		addTab(new Note(Pitch.E, Accidental.natural, 4));
+		addTab(new Note(Pitch.F, Accidental.natural, 4));
+		addTab(new Note(Pitch.G, Accidental.natural, 4));
+		addTab(new Note(Pitch.A, Accidental.natural, 4));
+		addTab(new Note(Pitch.B, Accidental.natural, 4));
 	}
 
-	private Tab addTab(final String name) {
+	/**
+	 * Add a tab to the action bar
+	 * 
+	 * @param note
+	 *            the dominant note for this tab
+	 * @return the created tab
+	 */
+	private Tab addTab(final Note note) {
+		String name = note.toDisplayString();
+
 		Tab tab = getActionBar().newTab();
 		tab.setText(name);
-		tab.setTabListener(new ChordTabListener(name));
+		tab.setTabListener(new ChordTabListener(note));
 		View view = LayoutInflater.from(this).inflate(R.layout.tab_label, null);
 		((TextView) view.findViewById(android.R.id.title)).setText(name);
-
 		tab.setCustomView(view);
 
 		getActionBar().addTab(tab);
@@ -116,8 +135,8 @@ public class FranckActivity extends Activity {
 		 * @param tag
 		 *            the name of the dominant
 		 */
-		public ChordTabListener(final String tag) {
-			mTag = tag;
+		public ChordTabListener(final Note note) {
+			mNote = note;
 		}
 
 		/**
@@ -134,7 +153,7 @@ public class FranckActivity extends Activity {
 		 */
 		@Override
 		public void onTabSelected(final Tab tab, final FragmentTransaction ft) {
-			// TODO setDominant(Tone.parse(mTag));
+			setDominant(mNote);
 		}
 
 		/**
@@ -145,7 +164,7 @@ public class FranckActivity extends Activity {
 		public void onTabUnselected(final Tab tab, final FragmentTransaction ft) {
 		}
 
-		private final String mTag;
+		private final Note mNote;
 	}
 
 	/**
@@ -173,23 +192,23 @@ public class FranckActivity extends Activity {
 			return;
 		}
 
-		// mChord = Chord.buildChord(mChordType, mDominant);
-		//
-		// List<Chord> chords = new LinkedList<Chord>();
-		// chords.add(mChord);
-		//
-		// ((StaffView) findViewById(R.id.staffView)).setChords(chords);
+		mChord = Chord.buildChord(mChordType, mDominant);
 
-		// updateTitle();
+		List<Chord> chords = new LinkedList<Chord>();
+		chords.add(mChord);
+
+		((StaffView) findViewById(R.id.staffView)).setChords(chords);
+
+		updateTitle();
 	}
 
 	/**
 	 * Update the action bar title with the current chord name
 	 */
 	private void updateTitle() {
-		// ((TextView) findViewById(R.id.textPlaceHolder)).setText(mChord
-		// .toString());
-		// setTitle(getString(R.string.title_chord, mChord.toPrettyString()));
+		((TextView) findViewById(R.id.textPlaceHolder)).setText(mChord
+				.toString());
+		setTitle(getString(R.string.title_chord, mChord.toDisplayString()));
 	}
 
 	private Note mDominant;

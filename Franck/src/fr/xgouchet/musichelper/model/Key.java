@@ -6,12 +6,15 @@ package fr.xgouchet.musichelper.model;
 public enum Key {
 	treble, bass, alto;
 
-	public int cOffset() {
+	/**
+	 * @return the offset from the 5th line of the staff to the middle C (C 4)
+	 */
+	public int c4Offset() {
 		switch (this) {
 		case treble:
 			return -2;
 		case bass:
-			return 3;
+			return 10;
 		case alto:
 			return 4;
 		default:
