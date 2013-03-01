@@ -3,6 +3,7 @@ package fr.xgouchet.musichelper.ui.view;
 import java.util.List;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -92,6 +93,31 @@ public class StaffView extends View {
 	 */
 	public void setChords(final List<Chord> chords) {
 		mChords = chords;
+
+		int highestOffset, lowestOffset, offset, prevOffset;
+		lowestOffset = 0;
+		highestOffset = 8;
+
+		for (Chord chord : mChords) {
+			prevOffset = -256;
+			for (Tone note : chord.getNotes()) {
+				offset = note.offsetFromC() + mKey.cOffset();
+				while (prevOffset > offset) {
+					offset += 8;
+				}
+				prevOffset = offset;
+
+				if (offset < lowestOffset) {
+					lowestOffset = offset;
+				} else if (offset > highestOffset) {
+					highestOffset = offset;
+				}
+			}
+		}
+
+		mSpacesAfterStaff = 1 + Math.max(1, (1 - lowestOffset) / 2);
+		mSpacesBeforeStaff = 1 + Math.max(1, (highestOffset - 7) / 2);
+
 		invalidate();
 	}
 
@@ -109,8 +135,9 @@ public class StaffView extends View {
 		// Compute needed width
 		int neededWidth = 0, neededHeight = 0;
 
-		// staff height alone
-		neededHeight = (int) ((8 * mLineSpacing) + 0.5f);
+		// staff height + spaces above and below
+		int spaces = mSpacesBeforeStaff + 4 + mSpacesAfterStaff;
+		neededHeight = (int) ((spaces * mLineSpacing) + 0.5f);
 
 		// TODO measure width
 
@@ -152,12 +179,75 @@ public class StaffView extends View {
 	@Override
 	protected void onDraw(final Canvas canvas) {
 		super.onDraw(canvas);
-		drawLines(canvas);
 
+		// draw the staff
+		drawLines(canvas);
+		drawKey(canvas);
+
+		// draw the chords
 		if (mChords != null) {
 			drawChords(canvas);
 		}
 
+	}
+
+	/**
+	 * Draws the staff lines
+	 * 
+	 * @param canvas
+	 *            the canvas on which the view will be drawn
+	 */
+	private void drawLines(final Canvas canvas) {
+		float offsetY = getPaddingTop();
+
+		// treble key
+		offsetY += mSpacesBeforeStaff * mLineSpacing;
+
+		float x1, x2, y;
+
+		x1 = getPaddingLeft();
+		x2 = getWidth() - getPaddingRight();
+
+		// Draw Lines
+		for (int i = 0; i < LINES; ++i) {
+			y = offsetY + (i * mLineSpacing);
+			canvas.drawLine(x1, y, x2, y, mLinePaint);
+		}
+	}
+
+	/**
+	 * Draws the staff key
+	 * 
+	 * @param canvas
+	 *            the canvas on which the view will be drawn
+	 */
+	private void drawKey(final Canvas canvas) {
+
+		int topOffset = getPaddingTop()
+				+ (int) ((mSpacesBeforeStaff - 2) * mLineSpacing);
+
+		Drawable drawable;
+		switch (mKey) {
+		case treble:
+			drawable = mTrebble;
+			break;
+		case alto:
+			drawable = mAlto;
+			break;
+		case bass:
+			drawable = mBass;
+			break;
+		default:
+			drawable = null;
+		}
+
+		if (drawable != null) {
+			int height = (int) (mLineSpacing * 8);
+			int width = (int) (mLineSpacing * 4);
+			mTrebble.setBounds(getPaddingLeft(), topOffset, getPaddingLeft()
+					+ width, topOffset + height);
+			mTrebble.draw(canvas);
+		}
 	}
 
 	/**
@@ -171,6 +261,9 @@ public class StaffView extends View {
 
 		offsetX = getPaddingLeft() + (5f * mLineSpacing);
 		for (Chord chord : mChords) {
+			if (chord.hasAlteration()) {
+				offsetX += mLineSpacing + mHalfSpacing;
+			}
 			drawChord(canvas, chord, offsetX);
 			offsetX += mLineSpacing * 2;
 		}
@@ -188,13 +281,15 @@ public class StaffView extends View {
 	 */
 	private void drawChord(final Canvas canvas, final Chord chord,
 			final float offsetX) {
-		float y;
+		float offsetY, y;
 		int offset, prevOffset;
-		boolean overlap;
+		boolean overlap, previousIsAltered;
+
+		offsetY = getPaddingTop() + ((mSpacesBeforeStaff + 4f) * mLineSpacing);
 
 		prevOffset = -256;
 		for (Tone note : chord.getNotes()) {
-			offset = note.offset(Key.treble);
+			offset = note.offsetFromC() + Key.treble.cOffset();
 
 			while (prevOffset > offset) {
 				offset += 8;
@@ -202,67 +297,107 @@ public class StaffView extends View {
 			overlap = ((offset - prevOffset) <= 1);
 			prevOffset = offset;
 
-			y = (getPaddingTop() + (mLineSpacing * 6f))
-					- (offset * mHalfSpacing);
-			canvas.drawCircle(offsetX + (overlap ? mHalfSpacing : 0), y,
-					mHalfSpacing, mStaffPaint);
+			y = offsetY - (offset * mHalfSpacing);
+			drawWhole(canvas, offsetX + (overlap ? mLineSpacing : 0), y);
+
+			if (note.isAltered()) {
+				if (note.isSharp()) {
+					drawSharp(canvas, offsetX - mLineSpacing - mHalfSpacing, y);
+				} else {
+					drawFlat(canvas, offsetX - mLineSpacing - mHalfSpacing, y);
+				}
+
+				previousIsAltered = true;
+			}
 
 			if (offset < 0) {
-				for (int i = 0; i >= offset; i -= 2) {
-					y = (getPaddingTop() + (mLineSpacing * 6f))
-							- (i * mHalfSpacing);
+				for (int i = 0; i >= (offset - 1); i -= 2) {
+					y = offsetY - (i * mHalfSpacing);
 					canvas.drawLine(offsetX - mLineSpacing, y, offsetX
-							+ mLineSpacing, y, mStaffPaint);
+							+ mLineSpacing, y, mLinePaint);
+				}
+			} else if (offset > 8) {
+				for (int i = 8; i <= (offset + 1); i += 2) {
+					y = offsetY - (i * mHalfSpacing);
+					canvas.drawLine(offsetX - mLineSpacing, y, offsetX
+							+ mLineSpacing, y, mLinePaint);
 				}
 			}
 		}
 	}
 
 	/**
-	 * Draws the staff lines and treble key
+	 * Draws a whole note at the given position
 	 * 
 	 * @param canvas
 	 *            the canvas on which the view will be drawn
+	 * @param x
+	 * @param y
 	 */
-	private void drawLines(final Canvas canvas) {
-		float offsetY = getPaddingTop();
+	private void drawWhole(final Canvas canvas, final float x, final float y) {
+		mWhole.setBounds((int) (x - mLineSpacing), (int) (y - mLineSpacing),
+				(int) (x + mLineSpacing), (int) (y + mLineSpacing));
+		mWhole.draw(canvas);
+	}
 
-		// treble key
-		offsetY += 2 * mLineSpacing;
+	/**
+	 * Draws a Sharp at the given position
+	 * 
+	 * @param canvas
+	 *            the canvas on which the view will be drawn
+	 * @param x
+	 * @param y
+	 */
+	private void drawSharp(final Canvas canvas, final float x, final float y) {
+		mSharp.setBounds((int) (x - mLineSpacing), (int) (y - mLineSpacing),
+				(int) (x + mLineSpacing), (int) (y + mLineSpacing));
+		mSharp.draw(canvas);
+	}
 
-		float x1, x2, y;
-
-		x1 = getPaddingLeft();
-		x2 = getWidth() - getPaddingRight();
-
-		// Draw Lines
-		for (int i = 0; i < LINES; ++i) {
-			y = offsetY + (i * mLineSpacing);
-			canvas.drawLine(x1, y, x2, y, mStaffPaint);
-		}
-
-		if (!isInEditMode()) {
-			int height = (int) (mLineSpacing * 8);
-			int width = (int) (mLineSpacing * 4);
-			mTrebbleDrawable.setBounds(getPaddingLeft(), getPaddingTop(),
-					getPaddingLeft() + width, height + getPaddingTop());
-			mTrebbleDrawable.draw(canvas);
-		}
+	/**
+	 * Draws a Flat at the given position
+	 * 
+	 * @param canvas
+	 *            the canvas on which the view will be drawn
+	 * @param x
+	 * @param y
+	 */
+	private void drawFlat(final Canvas canvas, final float x, final float y) {
+		mFlat.setBounds((int) (x - mLineSpacing), (int) (y - mLineSpacing),
+				(int) (x + mLineSpacing), (int) (y + mLineSpacing));
+		mFlat.draw(canvas);
 	}
 
 	/**
 	 * Initialiser the Staff view
 	 */
 	private void initStaffView() {
-		mDipToPixel = getContext().getResources().getDisplayMetrics().density;
+		Resources res = getContext().getResources();
 
-		mStaffPaint = new Paint();
-		mStaffPaint.setColor(Color.BLACK);
-		mStaffPaint.setStyle(Style.STROKE);
+		mDipToPixel = res.getDisplayMetrics().density;
+
+		mLinePaint = new Paint();
+		mLinePaint.setColor(Color.DKGRAY);
+		mLinePaint.setStyle(Style.STROKE);
+
+		// Default space above and below staff (for treble key mainly)
+		mSpacesAfterStaff = 2;
+		mSpacesBeforeStaff = 2;
+
+		mKey = Key.treble;
 
 		if (!isInEditMode()) {
-			mTrebbleDrawable = getContext().getResources().getDrawable(
-					R.drawable.treble);
+			// keys
+			mTrebble = res.getDrawable(R.drawable.treble);
+			mAlto = res.getDrawable(R.drawable.alto);
+			mBass = res.getDrawable(R.drawable.bass);
+
+			// notes
+			mWhole = res.getDrawable(R.drawable.whole);
+
+			// alterations
+			mSharp = res.getDrawable(R.drawable.sharp);
+			mFlat = res.getDrawable(R.drawable.flat);
 		}
 	}
 
@@ -294,7 +429,7 @@ public class StaffView extends View {
 			mLineWidth = mDipToPixel * 2;
 		}
 
-		mStaffPaint.setStrokeWidth(mLineWidth);
+		mLinePaint.setStrokeWidth(mLineWidth);
 
 		a.recycle();
 	}
@@ -302,8 +437,17 @@ public class StaffView extends View {
 	/** Utility to convert Dip values to Pixel */
 	private float mDipToPixel;
 
-	private Drawable mTrebbleDrawable;
-	private Paint mStaffPaint;
-	private List<Chord> mChords;
+	// Drawables
+	private Drawable mTrebble, mAlto, mBass;
+	private Drawable mWhole, mHalf, mQuarter;
+	private Drawable mSharp, mFlat;
+
+	private Paint mLinePaint;
 	private float mLineSpacing, mLineWidth, mHalfSpacing;
+	private int mSpacesBeforeStaff, mSpacesAfterStaff;
+
+	// Data
+	private List<Chord> mChords;
+	private Key mKey;
+
 }

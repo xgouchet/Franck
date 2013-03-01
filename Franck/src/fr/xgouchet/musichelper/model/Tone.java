@@ -50,55 +50,91 @@ public enum Tone {
 	}
 
 	/**
-	 * @return the note's offset on a staff, starting on the lowest line
+	 * @return the note's offset on a staff from the C note
 	 */
-	public int offset(final Key key) {
-		int cToNote;
+	public int offsetFromC() {
+		int offsetFromC;
 
 		switch (this) {
 		case C:
 		case CSharp:
-			cToNote = 0;
+			offsetFromC = 0;
 			break;
 		case D:
-			cToNote = 1;
+			offsetFromC = 1;
 			break;
 		case E:
 		case EFlat:
-			cToNote = 2;
+			offsetFromC = 2;
 			break;
 		case F:
 		case FSharp:
-			cToNote = 3;
+			offsetFromC = 3;
 			break;
 		case G:
 		case GSharp:
-			cToNote = 4;
+			offsetFromC = 4;
 			break;
 		case A:
-			cToNote = 5;
+			offsetFromC = 5;
 			break;
 		case B:
 		case BFlat:
-			cToNote = 6;
+			offsetFromC = 6;
 			break;
 		default:
 			throw new IllegalStateException();
 		}
 
-		switch (key) {
-		case treble:
-			cToNote -= 2;
-			break;
-		case bass:
-			cToNote += 5;
-			break;
-		case alto:
-			cToNote += 6;
-			break;
-		}
+		return offsetFromC;
+	}
 
-		return cToNote;
+	/**
+	 * @return if this note has an alteration (sharp or flat)
+	 */
+	public boolean isAltered() {
+		switch (this) {
+		case C:
+		case D:
+		case E:
+		case F:
+		case G:
+		case A:
+		case B:
+			return false;
+		case CSharp:
+		case EFlat:
+		case FSharp:
+		case GSharp:
+		case BFlat:
+			return true;
+		default:
+			throw new IllegalStateException();
+		}
+	}
+
+	/**
+	 * @return if this note has a sharp
+	 */
+	public boolean isSharp() {
+		switch (this) {
+		case C:
+		case D:
+		case E:
+		case EFlat:
+		case F:
+		case G:
+		case A:
+		case B:
+		case BFlat:
+			return false;
+		case CSharp:
+		case FSharp:
+		case GSharp:
+			return true;
+		default:
+			throw new IllegalStateException();
+		}
 	}
 
 	/**

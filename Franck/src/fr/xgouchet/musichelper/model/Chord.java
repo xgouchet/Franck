@@ -219,6 +219,20 @@ public class Chord {
 	}
 
 	/**
+	 * @return if any note in this chord is altered (Flat or Sharp)
+	 */
+	public boolean hasAlteration() {
+
+		for (Tone note : mNotes) {
+			if (note.isAltered()) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * @return a user friendly String
 	 */
 	public String toPrettyString() {
