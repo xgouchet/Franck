@@ -212,8 +212,7 @@ public class NoteTest extends TestCase {
 	}
 
 	/**
-	 * Run the same tests as {@link #testEquals()} but comparing
-	 * hashcodes
+	 * Run the same tests as {@link #testEquals()} but comparing hashcodes
 	 */
 	public void testHashCode() {
 		int middleC = new Note(Pitch.C, Accidental.natural, 4, 1).hashCode();
@@ -265,6 +264,21 @@ public class NoteTest extends TestCase {
 		assertEquals("Altered C", 0, new Note().diminished().diminished()
 				.diminished().augmented().augmented().augmented()
 				.getHalfTones());
+	}
+
+	public void testParse() {
+		assertEquals("Parse E♭", Note.parse("E♭"), new Note(Pitch.E,
+				Accidental.flat, 4));
+		assertEquals("Parse Bb", Note.parse("Bb"), new Note(Pitch.B,
+				Accidental.flat, 4));
+		assertEquals("Parse C#", Note.parse("C#"), new Note(Pitch.C,
+				Accidental.sharp, 4));
+		assertEquals("Parse F##", Note.parse("F##"), new Note(Pitch.F,
+				Accidental.doubleSharp, 4));
+		assertEquals("Parse B♭♭", Note.parse("B♭♭"), new Note(Pitch.B,
+				Accidental.doubleFlat, 4));
+		assertEquals("Parse Dbb", Note.parse("Dbb"), new Note(Pitch.D,
+				Accidental.doubleFlat, 4));
 	}
 
 }

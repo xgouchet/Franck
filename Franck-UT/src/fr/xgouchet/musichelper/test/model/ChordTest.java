@@ -136,6 +136,74 @@ public class ChordTest extends TestCase {
 	}
 
 	/**
+	 * Tests the generation of known chords hashcodes (including some simplified
+	 */
+	public void testChordHascode() {
+		Chord value, expected;
+
+		Note middleC = new Note();
+
+		// C major
+		value = Chord.buildChord(Chord.Type.major, middleC);
+		expected = new Chord(middleC, Chord.Type.major, new Note[] {
+				new Note(0), new Note(4), new Note(7) });
+		assertEquals("Chord C", value.hashCode(), expected.hashCode());
+
+		// C minor
+		value = Chord.buildChord(Chord.Type.minor, middleC);
+		expected = new Chord(middleC, Chord.Type.minor, new Note[] {
+				new Note(0), new Note(3), new Note(7) });
+		assertEquals("Chord Cm", value.hashCode(), expected.hashCode());
+
+		// C Aug
+		value = Chord.buildChord(Chord.Type.augmented, middleC);
+		expected = new Chord(middleC, Chord.Type.augmented, new Note[] {
+				new Note(0), new Note(4), new Note(8) });
+		assertEquals("Chord Caug", value.hashCode(), expected.hashCode());
+
+		// C Dim
+		value = Chord.buildChord(Chord.Type.diminished, middleC);
+		expected = new Chord(middleC, Chord.Type.diminished, new Note[] {
+				new Note(0), new Note(3), new Note(6) });
+		assertEquals("Chord Cdim", value.hashCode(), expected.hashCode());
+
+		// C dominant 7th
+		value = Chord.buildChord(Chord.Type.dominant7, middleC);
+		expected = new Chord(middleC, Chord.Type.dominant7, new Note[] {
+				new Note(0), new Note(4), new Note(7), new Note(10) });
+		expected.simplify();
+		assertEquals("Chord C7", value.hashCode(), expected.hashCode());
+
+		// C major 7th
+		value = Chord.buildChord(Chord.Type.major7, middleC);
+		expected = new Chord(middleC, Chord.Type.major7, new Note[] {
+				new Note(0), new Note(4), new Note(7), new Note(11) });
+		expected.simplify();
+		assertEquals("Chord CM7 ", value.hashCode(), expected.hashCode());
+
+		// C minor 7th
+		value = Chord.buildChord(Chord.Type.minor7, middleC);
+		expected = new Chord(middleC, Chord.Type.minor7, new Note[] {
+				new Note(0), new Note(3), new Note(7), new Note(10) });
+		expected.simplify();
+		assertEquals("Chord Cm7", value.hashCode(), expected.hashCode());
+
+		// C augmented 7th
+		value = Chord.buildChord(Chord.Type.augmented7, middleC);
+		expected = new Chord(middleC, Chord.Type.augmented7, new Note[] {
+				new Note(0), new Note(4), new Note(8), new Note(10) });
+		expected.simplify();
+		assertEquals("Chord Caug7", value.hashCode(), expected.hashCode());
+
+		// C diminished 7th
+		value = Chord.buildChord(Chord.Type.diminished7, middleC);
+		expected = new Chord(middleC, Chord.Type.diminished7, new Note[] {
+				new Note(0), new Note(3), new Note(6), new Note(9) });
+		expected.simplify();
+		assertEquals("Chord Cdim7", value.hashCode(), expected.hashCode());
+	}
+
+	/**
 	 * Tests the generation of known chords simplified
 	 */
 	public void testChordSimplifiedValues() {
@@ -215,14 +283,65 @@ public class ChordTest extends TestCase {
 		Note middleC = new Note();
 
 		// C augmented 7th
-		Chord chord = Chord.buildChord(Chord.Type.augmented7, middleC);
+		Chord chord = Chord.buildAugmented7thChord(middleC);
 
 		assertEquals("getDominant", middleC, chord.getDominant());
 		assertEquals("getType", Chord.Type.augmented7, chord.getType());
-
+		assertTrue("hasAlteration", chord.hasAlteration());
 		Note[] notes = chord.getNotes();
 		assertEquals("getNotes lenght", 4, notes.length);
 
-		assertTrue("hasAlteration", chord.hasAlteration());
+		// F Major 7th
+		Note middleF = new Note(5);
+		chord = Chord.buildMajor7thChord(middleF);
+		assertEquals("getDominant", middleF, chord.getDominant());
+		assertEquals("getType", Chord.Type.major7, chord.getType());
+		assertFalse("hasAlteration", chord.hasAlteration());
+
+	}
+
+	/**
+	 * 
+	 */
+	public void testParsing() {
+		Note middleC = new Note();
+
+		Chord chord, parsed;
+
+		chord = Chord.buildChord(Chord.Type.major, middleC);
+		parsed = Chord.parse(chord.toDisplayString());
+		assertEquals("Parsed chord " + chord.toString(), chord, parsed);
+
+		chord = Chord.buildChord(Chord.Type.minor, middleC);
+		parsed = Chord.parse(chord.toDisplayString());
+		assertEquals("Parsed chord " + chord.toString(), chord, parsed);
+
+		chord = Chord.buildChord(Chord.Type.augmented, middleC);
+		parsed = Chord.parse(chord.toDisplayString());
+		assertEquals("Parsed chord " + chord.toString(), chord, parsed);
+
+		chord = Chord.buildChord(Chord.Type.diminished, middleC);
+		parsed = Chord.parse(chord.toDisplayString());
+		assertEquals("Parsed chord " + chord.toString(), chord, parsed);
+
+		chord = Chord.buildChord(Chord.Type.dominant7, middleC);
+		parsed = Chord.parse(chord.toDisplayString());
+		assertEquals("Parsed chord " + chord.toString(), chord, parsed);
+
+		chord = Chord.buildChord(Chord.Type.major7, middleC);
+		parsed = Chord.parse(chord.toDisplayString());
+		assertEquals("Parsed chord " + chord.toString(), chord, parsed);
+
+		chord = Chord.buildChord(Chord.Type.minor, middleC);
+		parsed = Chord.parse(chord.toDisplayString());
+		assertEquals("Parsed chord " + chord.toString(), chord, parsed);
+
+		chord = Chord.buildChord(Chord.Type.augmented7, middleC);
+		parsed = Chord.parse(chord.toDisplayString());
+		assertEquals("Parsed chord " + chord.toString(), chord, parsed);
+
+		chord = Chord.buildChord(Chord.Type.diminished7, middleC);
+		parsed = Chord.parse(chord.toDisplayString());
+		assertEquals("Parsed chord " + chord.toString(), chord, parsed);
 	}
 }
