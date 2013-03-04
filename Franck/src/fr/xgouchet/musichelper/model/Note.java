@@ -309,8 +309,11 @@ public class Note {
 
 		// check fields
 		Note note = (Note) other;
-		return (note.mFraction == mFraction)
-				&& (note.halfTones() == halfTones());
+		int ht, oht;
+		ht = halfTones();
+		oht = note.halfTones();
+
+		return (note.mFraction == mFraction) && (oht == ht);
 	}
 
 	/**

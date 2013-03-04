@@ -249,7 +249,7 @@ public class Chord {
 		chord[0] = dominant;
 		chord[1] = dominant.thirdMinor();
 		chord[2] = dominant.fifth().diminished();
-		chord[3] = dominant.seventhMinor().diminished().diminished();
+		chord[3] = dominant.seventhMinor().diminished();
 		return new Chord(dominant, Type.diminished7, chord);
 	}
 

@@ -29,6 +29,19 @@ public class NoteTest extends TestCase {
 		assertEquals("Note(int, int, int)", middleC, new Note(0, 4, 1));
 	}
 
+	/**
+	 * Test that, for any note x and its fourth y, the fifth of y is x
+	 */
+	public void testFifthFourth() {
+		Note note;
+
+		for (int i = 0; i < 12; i++) {
+			note = new Note(i);
+			assertEquals("Testing 4th/5th : " + note.toDisplayString(),
+					note.getPitch(), note.fourth().fifth().getPitch());
+		}
+	}
+
 	public void testCircleOf5th() {
 		// Test on Middle C
 		Note middleC = new Note(Pitch.C, Accidental.natural, 4, 1);
@@ -74,6 +87,13 @@ public class NoteTest extends TestCase {
 				Pitch.D, Accidental.natural, 5, 1));
 		assertEquals("Circle of 5th : Bb 7th", middleBb.seventhMajor(),
 				new Note(Pitch.A, Accidental.natural, 5, 1));
+	}
 
+	public void testToDisplayString() {
+		assertEquals("Note.toString() C", "C", new Note().toDisplayString());
+		assertEquals("Note.toString() E♭", "E♭", new Note(Pitch.E,
+				Accidental.flat, 4, 1).toDisplayString());
+		assertEquals("Note.toString() F#", "F#", new Note(Pitch.F,
+				Accidental.sharp, 4, 1).toDisplayString());
 	}
 }
