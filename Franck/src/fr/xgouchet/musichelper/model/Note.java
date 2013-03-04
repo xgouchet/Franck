@@ -18,14 +18,37 @@ package fr.xgouchet.musichelper.model;
 public final class Note {
 
 	/**
-	 * TODO
+	 * Parses a note from string
 	 * 
 	 * @param noteName
-	 * @return
+	 *            the note name (eg : "C#", "Eb", "B♭", "F", "D##", "G♭♭")
+	 * @return a Note instance of the given note, at the 4th octave, as a whole
 	 */
 	public static Note parse(final String noteName) {
 
-		return null;
+		Pitch pitch = Pitch.valueOf(noteName.substring(0, 1));
+
+		int alterations = 0, length = noteName.length();
+		char alt;
+		for (int i = 1; i < length; ++i) {
+			alt = noteName.charAt(i);
+			switch (alt) {
+			case '#':
+				alterations++;
+				break;
+			case 'b':
+			case '♭':
+				alterations--;
+				break;
+			default:
+				throw new IllegalArgumentException("Unknown alteration : "
+						+ alt);
+			}
+		}
+
+		Accidental acc = Accidental.fromHalfTones(alterations);
+
+		return new Note(pitch, acc);
 	}
 
 	/**
@@ -41,10 +64,21 @@ public final class Note {
 	 * 
 	 * @param pitch
 	 * @param accidental
+	 */
+	public Note(final Pitch pitch, final Accidental accidental) {
+		this(pitch, accidental, 4);
+	}
+
+	/**
+	 * Constructs a note by the given pitch and accidental alteration, at the
+	 * given octave and duration of a whole
+	 * 
+	 * @param pitch
+	 * @param accidental
 	 * @param octave
 	 */
 	public Note(final Pitch pitch, final Accidental accidental, final int octave) {
-		this(pitch, accidental, 4, 1);
+		this(pitch, accidental, octave, 1);
 	}
 
 	/**
