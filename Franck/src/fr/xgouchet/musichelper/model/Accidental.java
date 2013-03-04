@@ -1,5 +1,8 @@
 package fr.xgouchet.musichelper.model;
 
+/**
+ * 
+ */
 public enum Accidental {
 	natural, sharp, flat, doubleSharp, doubleFlat;
 

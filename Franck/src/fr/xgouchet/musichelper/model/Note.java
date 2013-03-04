@@ -1,6 +1,32 @@
 package fr.xgouchet.musichelper.model;
 
-public class Note {
+/**
+ * <p>
+ * An immutable class representing a Note, including a Pitch (ie : the "name" of
+ * the note), an accidental alteration (flat, sharp, ...) an octave and a
+ * duration.
+ * </p>
+ * 
+ * <p>
+ * New notes can be constructed as derived from a dominant note, using the
+ * {@link #secondMajor()}, {@link #secondMinor()}, {@link #thirdMajor()},
+ * {@link #thirdMinor()}, {@link #fourth()}, {@link #fifth()}, {@link #sixth()},
+ * {@link #seventhMajor()} and {@link #seventhMinor()} method, as well as the
+ * {@link #diminished()} and {@link #augmented()} methods.
+ * </p>
+ */
+public final class Note {
+
+	/**
+	 * TODO
+	 * 
+	 * @param noteName
+	 * @return
+	 */
+	public static Note parse(final String noteName) {
+
+		return null;
+	}
 
 	/**
 	 * Constructs a Whole Natural Middle C (4th octave)
@@ -49,14 +75,14 @@ public class Note {
 	}
 
 	/**
-	 * Constructs a note by the number of halftones from a natural C, at the
-	 * given octave
+	 * Constructs a note by the number of halftones from a natural C 4, at the
+	 * given duration
 	 * 
 	 * @param halfTones
-	 * @param octave
+	 * @param fraction
 	 */
-	public Note(final int halfTones, final int octave) {
-		this(halfTones, octave, 1);
+	public Note(final int halfTones, final int fraction) {
+		this(halfTones, 4, fraction);
 	}
 
 	/**
@@ -73,6 +99,11 @@ public class Note {
 		int hto = ((halfTones - (halfTones % 12)) / 12);
 		int ht = halfTones - (hto * 12);
 
+		while (ht < 0) {
+			ht += 12;
+			hto -= 1;
+		}
+
 		mPitch = Pitch.nearestPitch(ht);
 		mAccidental = Accidental.fromHalfTones(ht - mPitch.halfTones());
 
@@ -80,9 +111,9 @@ public class Note {
 	}
 
 	/**
-	 * @return the number of half tone from a Natural C to this note
+	 * @return the number of half tone from a Natural C4 to this note
 	 */
-	public int halfTones() {
+	public int getHalfTones() {
 		return mPitch.halfTones() + mAccidental.halfTones()
 				+ ((mOctave - 4) * 12);
 	}
@@ -91,63 +122,63 @@ public class Note {
 	 * @return the major 2nd note based on this dominant
 	 */
 	public Note secondMajor() {
-		return new Note(halfTones() + 2, mOctave, mFraction);
+		return new Note(getHalfTones() + 2, mFraction);
 	}
 
 	/**
 	 * @return the minor 2nd note based on this dominant
 	 */
 	public Note secondMinor() {
-		return new Note(halfTones() + 1, mOctave, mFraction);
+		return secondMajor().diminished();
 	}
 
 	/**
 	 * @return the major 3rd note based on this dominant
 	 */
 	public Note thirdMajor() {
-		return new Note(halfTones() + 4, mOctave, mFraction);
+		return new Note(getHalfTones() + 4, mFraction);
 	}
 
 	/**
 	 * @return the minor 3rd note based on this dominant
 	 */
 	public Note thirdMinor() {
-		return new Note(halfTones() + 3, mOctave, mFraction);
+		return thirdMajor().diminished();
 	}
 
 	/**
 	 * @return the 4th note based on this dominant
 	 */
 	public Note fourth() {
-		return new Note(halfTones() + 5, mOctave, mFraction);
+		return new Note(getHalfTones() + 5, mFraction);
 	}
 
 	/**
 	 * @return the perfect 5th note based on this dominant
 	 */
 	public Note fifth() {
-		return new Note(halfTones() + 7, mOctave, mFraction);
+		return new Note(getHalfTones() + 7, mFraction);
 	}
 
 	/**
 	 * @return the 6th note based on this dominant
 	 */
 	public Note sixth() {
-		return new Note(halfTones() + 9, mOctave, mFraction);
+		return new Note(getHalfTones() + 9, mFraction);
 	}
 
 	/**
 	 * @return the major 7th note based on this dominant
 	 */
 	public Note seventhMajor() {
-		return new Note(halfTones() + 11, mOctave, mFraction);
+		return new Note(getHalfTones() + 11, mFraction);
 	}
 
 	/**
 	 * @return the minor 7th note based on this dominant
 	 */
 	public Note seventhMinor() {
-		return new Note(halfTones() + 10, mOctave, mFraction);
+		return seventhMajor().diminished();
 	}
 
 	/**
@@ -165,7 +196,7 @@ public class Note {
 			return new Note(mPitch, Accidental.flat, mOctave, mFraction);
 		case doubleSharp:
 		default:
-			return new Note(halfTones() + 1, mOctave, mFraction);
+			return new Note(getHalfTones() + 1, mFraction);
 		}
 	}
 
@@ -184,15 +215,53 @@ public class Note {
 			return new Note(mPitch, Accidental.doubleFlat, mOctave, mFraction);
 		case doubleFlat:
 		default:
-			return new Note(halfTones() - 1, mOctave, mFraction);
+			return new Note(getHalfTones() - 1, mFraction);
 		}
+	}
+
+	/**
+	 * @return the same note at a lower octave (eg : C4 -> C3)
+	 */
+	public Note lowerOctave() {
+		return new Note(mPitch, mAccidental, mOctave - 1, mFraction);
+	}
+
+	/**
+	 * @return the same note at a lower octave (eg : C4 -> C5)
+	 */
+	public Note higherOctave() {
+		return new Note(mPitch, mAccidental, mOctave + 1, mFraction);
+	}
+
+	/**
+	 * @return a new Note with a simplified representation of the current note
+	 *         (eg : E# -> F, Cbb -> Bb)
+	 */
+	public Note simplify() {
+		switch (mAccidental) {
+		case doubleFlat:
+		case doubleSharp:
+			return new Note(getHalfTones(), mFraction);
+		default:
+			break;
+		}
+
+		switch (mPitch) {
+		case E:
+		case B:
+			return new Note(getHalfTones(), mFraction);
+		default:
+			break;
+		}
+
+		return this;
 	}
 
 	/**
 	 * @return the staff position (assuming middle C is 0, middle D is 1, middle
 	 *         E 2 and so forth)
 	 */
-	public int offsetFromC4() {
+	public int getOffsetFromC4() {
 		int octaveDiff = mOctave - 4;
 
 		int pitchDiff = mPitch.ordinal();
@@ -235,38 +304,6 @@ public class Note {
 	}
 
 	/**
-	 * @param accidental
-	 *            the accidental to set
-	 */
-	public void setAccidental(final Accidental accidental) {
-		mAccidental = accidental;
-	}
-
-	/**
-	 * @param fraction
-	 *            the fraction to set
-	 */
-	public void setFraction(final int fraction) {
-		mFraction = fraction;
-	}
-
-	/**
-	 * @param octave
-	 *            the octave to set
-	 */
-	public void setOctave(final int octave) {
-		mOctave = octave;
-	}
-
-	/**
-	 * @param pitch
-	 *            the pitch to set
-	 */
-	public void setPitch(final Pitch pitch) {
-		mPitch = pitch;
-	}
-
-	/**
 	 * @return a user friendly display string
 	 */
 	public String toDisplayString() {
@@ -283,9 +320,12 @@ public class Note {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(mPitch.name());
+		builder.append(' ');
 		builder.append(mAccidental.name());
 		builder.append("(1/");
 		builder.append(mFraction);
+		builder.append(" - ");
+		builder.append(mOctave);
 		builder.append(')');
 		return builder.toString();
 	}
@@ -310,8 +350,8 @@ public class Note {
 		// check fields
 		Note note = (Note) other;
 		int ht, oht;
-		ht = halfTones();
-		oht = note.halfTones();
+		ht = getHalfTones();
+		oht = note.getHalfTones();
 
 		return (note.mFraction == mFraction) && (oht == ht);
 	}
@@ -322,16 +362,16 @@ public class Note {
 	@Override
 	public int hashCode() {
 		int hash = 11;
-		hash = (41 * hash) + halfTones();
+		hash = (41 * hash) + getHalfTones();
 		hash = (41 * hash) + mFraction;
 		return hash;
 	}
 
-	private Pitch mPitch;
-	private Accidental mAccidental;
-	private int mOctave;
+	private final Pitch mPitch;
+	private final Accidental mAccidental;
+	private final int mOctave;
 
 	// whole is 1, half is 2, quarter is 4 etc...
-	private int mFraction;
+	private final int mFraction;
 
 }

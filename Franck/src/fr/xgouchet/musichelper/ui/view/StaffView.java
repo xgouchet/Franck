@@ -100,7 +100,7 @@ public class StaffView extends View {
 
 		for (Chord chord : mChords) {
 			for (Note note : chord.getNotes()) {
-				offset = note.offsetFromC4() + mKey.c4Offset();
+				offset = note.getOffsetFromC4() + mKey.c4Offset();
 
 				if (offset < lowestOffset) {
 					lowestOffset = offset;
@@ -242,9 +242,9 @@ public class StaffView extends View {
 		if (drawable != null) {
 			int height = (int) (mLineSpacing * 8);
 			int width = (int) (mLineSpacing * 4);
-			mTrebble.setBounds(getPaddingLeft(), topOffset, getPaddingLeft()
+			drawable.setBounds(getPaddingLeft(), topOffset, getPaddingLeft()
 					+ width, topOffset + height);
-			mTrebble.draw(canvas);
+			drawable.draw(canvas);
 		}
 	}
 
@@ -260,7 +260,7 @@ public class StaffView extends View {
 		offsetX = getPaddingLeft() + (5f * mLineSpacing);
 		for (Chord chord : mChords) {
 			if (chord.hasAlteration()) {
-				offsetX += mLineSpacing + mHalfSpacing;
+				offsetX += 2 * mLineSpacing;
 			}
 			drawChord(canvas, chord, offsetX);
 			offsetX += mLineSpacing * 2;
@@ -279,23 +279,64 @@ public class StaffView extends View {
 	 */
 	private void drawChord(final Canvas canvas, final Chord chord,
 			final float offsetX) {
-		float y, overlapOffset;
 		int offset, prevOffset;
-		boolean overlap;
+
+		boolean overlap, overlapAlt, previousAlt, previousOverlap;
+
+		previousAlt = previousOverlap = false;
 
 		prevOffset = -256;
 		for (Note note : chord.getNotes()) {
-			offset = note.offsetFromC4() + Key.treble.c4Offset();
+			offset = note.getOffsetFromC4() + mKey.c4Offset();
 
 			overlap = ((offset - prevOffset) <= 1);
-			overlapOffset = (overlap ? mLineSpacing : 0);
+
 			prevOffset = offset;
 
-			drawExtraLines(canvas, offsetX + overlapOffset, offset);
+			overlapAlt = note.isAltered() & previousAlt & (!previousOverlap);
 
-			y = mTopOffsetToBottomLine - (offset * mHalfSpacing);
-			drawWhole(canvas, offsetX + overlapOffset, y);
+			drawNote(canvas, note, offsetX, offset, overlap, overlapAlt);
 
+			previousAlt = note.isAltered();
+			previousOverlap = overlapAlt;
+		}
+	}
+
+	/**
+	 * 
+	 * @param canvas
+	 * @param note
+	 * @param x
+	 * @param offset
+	 * @param overlap
+	 * @param overlapAlt
+	 */
+	private void drawNote(final Canvas canvas, final Note note, final float x,
+			final int offset, final boolean overlap, final boolean overlapAlt) {
+
+		float y = mTopOffsetToBottomLine - (offset * mHalfSpacing);
+		float overlapOffset = (overlap ? mLineSpacing : 0);
+
+		drawExtraLines(canvas, x + overlapOffset, offset);
+		drawWhole(canvas, x + overlapOffset, y);
+
+		overlapOffset = (overlapAlt ? mLineSpacing : 0);
+		if (note.isAltered()) {
+			switch (note.getAccidental()) {
+			case doubleSharp:
+				drawSharp(canvas, x - (2 * mLineSpacing) - overlapOffset, y);
+			case sharp:
+				drawSharp(canvas, x - mLineSpacing - overlapOffset, y);
+				break;
+			case doubleFlat:
+				drawFlat(canvas, x - (2 * mLineSpacing) - overlapOffset, y);
+			case flat:
+				drawFlat(canvas, x - mLineSpacing - overlapOffset, y);
+				break;
+			case natural:
+			default:
+				break;
+			}
 		}
 	}
 
@@ -379,14 +420,14 @@ public class StaffView extends View {
 		mDipToPixel = res.getDisplayMetrics().density;
 
 		mLinePaint = new Paint();
-		mLinePaint.setColor(Color.DKGRAY);
+		mLinePaint.setColor(Color.BLACK);
 		mLinePaint.setStyle(Style.STROKE);
 
 		// Default space above and below staff (for treble key mainly)
 		mSpacesAfterStaff = 2;
 		mSpacesBeforeStaff = 2;
 
-		mKey = Key.treble;
+		mKey = Key.bass;
 
 		if (!isInEditMode()) {
 			// keys
@@ -428,7 +469,7 @@ public class StaffView extends View {
 
 		mLineWidth = a.getDimension(R.styleable.StaffView_lineWidth, 0);
 		if (mLineWidth == 0) {
-			mLineWidth = mDipToPixel * 2;
+			mLineWidth = mDipToPixel * 1;
 		}
 
 		mLinePaint.setStrokeWidth(mLineWidth);

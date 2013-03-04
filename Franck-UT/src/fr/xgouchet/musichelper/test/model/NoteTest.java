@@ -21,12 +21,17 @@ public class NoteTest extends TestCase {
 
 		// by halftones
 		assertEquals("Note(int)", middleC, new Note(0));
-		assertEquals("Note(int, int) // 4th octave", middleC, new Note(0, 4));
-		assertEquals("Note(int, int) // 0th octave", middleC, new Note(48, 0));
-		assertEquals("Note(int, int) // 3rd octave", middleC, new Note(12, 3));
-		assertEquals("Note(int, int) // 5th octave", middleC, new Note(-12, 5));
-		assertEquals("Note(int, int) // 8th octave", middleC, new Note(-48, 8));
-		assertEquals("Note(int, int, int)", middleC, new Note(0, 4, 1));
+		assertEquals("Note(int, int)", middleC, new Note(0, 1));
+		assertEquals("Note(int, int, int) // 4th octave", middleC, new Note(0,
+				4, 1));
+		assertEquals("Note(int, int, int) // 0th octave", middleC, new Note(48,
+				0, 1));
+		assertEquals("Note(int, int, int) // 3rd octave", middleC, new Note(12,
+				3, 1));
+		assertEquals("Note(int, int, int) // 5th octave", middleC, new Note(
+				-12, 5, 1));
+		assertEquals("Note(int, int, int) // 8th octave", middleC, new Note(
+				-48, 8, 1));
 	}
 
 	/**
@@ -96,4 +101,5 @@ public class NoteTest extends TestCase {
 		assertEquals("Note.toString() F#", "F#", new Note(Pitch.F,
 				Accidental.sharp, 4, 1).toDisplayString());
 	}
+
 }

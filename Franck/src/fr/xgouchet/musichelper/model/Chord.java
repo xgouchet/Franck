@@ -270,6 +270,15 @@ public class Chord {
 	}
 
 	/**
+	 * Simplifies the note used in this chord
+	 */
+	public void simplify() {
+		for (int i = 0; i < mNotes.length; ++i) {
+			mNotes[i] = mNotes[i].simplify();
+		}
+	}
+
+	/**
 	 * @return the notes
 	 */
 	public Note[] getNotes() {

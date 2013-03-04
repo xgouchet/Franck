@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import fr.xgouchet.musichelper.common.Settings;
 import fr.xgouchet.musichelper.model.Accidental;
 import fr.xgouchet.musichelper.model.Chord;
 import fr.xgouchet.musichelper.model.Note;
@@ -192,7 +193,11 @@ public class FranckActivity extends Activity {
 			return;
 		}
 
-		mChord = Chord.buildChord(mChordType, mDominant);
+		mChord = Chord.buildChord(mChordType, mDominant.lowerOctave()
+				.lowerOctave());
+		if (Settings.shouldSimplify()) {
+			mChord.simplify();
+		}
 
 		List<Chord> chords = new LinkedList<Chord>();
 		chords.add(mChord);
