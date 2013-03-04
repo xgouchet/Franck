@@ -1,12 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project name="franck" default="help">
 
-    <!-- The local.properties file is created and updated by the 'android' tool.
+  <!-- The keystore.properties files sets up the keystore for automatic signing -->
+	<property file="../../keystore.properties" />
+
+  <!-- The local.properties file is created and updated by the 'android' tool.
          It contains the path to the SDK. It should *NOT* be checked into
          Version Control Systems. -->
-    <property file="local.properties" />
+  <property file="local.properties" />
 
-    <!-- The ant.properties file can be created by you. It is only edited by the
+  <!-- The ant.properties file can be created by you. It is only edited by the
          'android' tool to add properties to it.
          This is the place to change some Ant specific build properties.
          Here are some properties you may want to change/update:
@@ -88,5 +91,8 @@
     -->
     <!-- version-tag: 1 -->
     <import file="${sdk.dir}/tools/ant/build.xml" />
+
+  <!-- Ant scripts used to rename APK files from the manifest version -->
+	<import file="apk-version.build.xml" />
 
 </project>
