@@ -10,7 +10,7 @@ import fr.xgouchet.musichelper.model.Pitch;
  */
 public class NoteTest extends TestCase {
 
-	public void testMiddleCConstructors() {
+	public void testEquals() {
 		Note middleC = new Note(Pitch.C, Accidental.natural, 4, 1);
 
 		assertEquals("Note()", middleC, new Note());
@@ -32,6 +32,73 @@ public class NoteTest extends TestCase {
 				-12, 5, 1));
 		assertEquals("Note(int, int, int) // 8th octave", middleC, new Note(
 				-48, 8, 1));
+
+		assertFalse("Not equals",
+				new Note().equals(new Note().toDisplayString()));
+
+	}
+
+	/**
+	 * Test field getters
+	 */
+	public void testGetters() {
+		Note middleC = new Note();
+
+		assertEquals("getPitch", Pitch.C, middleC.getPitch());
+		assertEquals("getAccidental", Accidental.natural,
+				middleC.getAccidental());
+		assertEquals("getOctave", 4, middleC.getOctave());
+		assertEquals("getFraction", 1, middleC.getFraction());
+
+		assertFalse("isAltered (natural C)", middleC.isAltered());
+		assertTrue("isAltered (C#)", middleC.augmented().isAltered());
+		assertTrue("isAltered (C♭)", middleC.diminished().isAltered());
+		assertTrue("isAltered (C##)", middleC.augmented().augmented()
+				.isAltered());
+		assertTrue("isAltered (C♭♭)", middleC.diminished().diminished()
+				.isAltered());
+
+		assertFalse("isAltered (C## simplified)", middleC.augmented()
+				.augmented().simplify().isAltered());
+		assertTrue("isAltered (C♭♭ simplified)", middleC.diminished()
+				.diminished().simplify().isAltered());
+
+		assertTrue("isAltered (C### = D#)", middleC.augmented().augmented()
+				.augmented().isAltered());
+		assertFalse("isAltered (C♭♭♭ = A)", middleC.diminished().diminished()
+				.diminished().isAltered());
+	}
+
+	/**
+	 * Test constructors and derivators
+	 */
+	public void testConstructorsAndDerivators() {
+		Note middleC = new Note(Pitch.C, Accidental.natural, 4, 1);
+
+		assertEquals("Note(int, int, int)", middleC,
+				new Note(-1, 4, 1).secondMinor());
+		assertEquals("Note(int, int, int)", middleC,
+				new Note(-2, 4, 1).secondMajor());
+		assertEquals("Note(int, int, int)", middleC,
+				new Note(-3, 4, 1).thirdMinor());
+		assertEquals("Note(int, int, int)", middleC,
+				new Note(-4, 4, 1).thirdMajor());
+		assertEquals("Note(int, int, int)", middleC,
+				new Note(-5, 4, 1).fourth());
+		assertEquals("Note(int, int, int)", middleC, new Note(-6, 4, 1).fifth()
+				.diminished());
+		assertEquals("Note(int, int, int)", middleC, new Note(-7, 4, 1).fifth());
+		assertEquals("Note(int, int, int)", middleC, new Note(-8, 4, 1).fifth()
+				.augmented());
+		assertEquals("Note(int, int, int)", middleC, new Note(-9, 4, 1).sixth());
+		assertEquals("Note(int, int, int)", middleC,
+				new Note(-10, 4, 1).seventhMinor());
+		assertEquals("Note(int, int, int)", middleC,
+				new Note(-11, 4, 1).seventhMajor());
+		assertEquals("Note(int, int, int)", middleC,
+				new Note(12, 4, 1).lowerOctave());
+		assertEquals("Note(int, int, int)", middleC,
+				new Note(-12, 4, 1).higherOctave());
 	}
 
 	/**
@@ -42,12 +109,15 @@ public class NoteTest extends TestCase {
 
 		for (int i = 0; i < 12; i++) {
 			note = new Note(i);
-			assertEquals("Testing 4th/5th : " + note.toDisplayString(),
+			assertEquals("Testing 4th/5th : " + note.toString(),
 					note.getPitch(), note.fourth().fifth().getPitch());
 		}
 	}
 
-	public void testCircleOf5th() {
+	/**
+	 * Test known derivation (circle of fifth) from natural middle C
+	 */
+	public void testCircleOf5thOnC() {
 		// Test on Middle C
 		Note middleC = new Note(Pitch.C, Accidental.natural, 4, 1);
 		assertEquals("Circle of 5th : C 4th", middleC.fourth(), new Note(
@@ -63,6 +133,12 @@ public class NoteTest extends TestCase {
 		assertEquals("Circle of 5th : C 7th", middleC.seventhMajor(), new Note(
 				Pitch.B, Accidental.natural, 4, 1));
 
+	}
+
+	/**
+	 * Test known derivation (circle of fifth) from natural middle F
+	 */
+	public void testCircleOf5thOnF() {
 		// Test on Middle F
 		Note middleF = new Note(Pitch.F, Accidental.natural, 4, 1);
 		assertEquals("Circle of 5th : F 4th", middleF.fourth(), new Note(
@@ -77,7 +153,12 @@ public class NoteTest extends TestCase {
 				Pitch.A, Accidental.natural, 4, 1));
 		assertEquals("Circle of 5th : F 7th", middleF.seventhMajor(), new Note(
 				Pitch.E, Accidental.natural, 5, 1));
+	}
 
+	/**
+	 * Test known derivation (circle of fifth) from middle B flat
+	 */
+	public void testCircleOf5thOnBb() {
 		// Test on Middle Bb
 		Note middleBb = new Note(Pitch.B, Accidental.flat, 4, 1);
 		assertEquals("Circle of 5th : Bb 4th", middleBb.fourth(), new Note(
@@ -94,12 +175,96 @@ public class NoteTest extends TestCase {
 				new Note(Pitch.A, Accidental.natural, 5, 1));
 	}
 
+	/**
+	 * Test the generation of String
+	 */
 	public void testToDisplayString() {
 		assertEquals("Note.toString() C", "C", new Note().toDisplayString());
 		assertEquals("Note.toString() E♭", "E♭", new Note(Pitch.E,
 				Accidental.flat, 4, 1).toDisplayString());
 		assertEquals("Note.toString() F#", "F#", new Note(Pitch.F,
 				Accidental.sharp, 4, 1).toDisplayString());
+		assertEquals("Note.toString() B♭♭", "B♭♭", new Note(Pitch.B,
+				Accidental.doubleFlat, 4, 1).toDisplayString());
+		assertEquals("Note.toString() G##", "G##", new Note(Pitch.G,
+				Accidental.doubleSharp, 4, 1).toDisplayString());
+	}
+
+	/**
+	 * Test note simplification
+	 */
+	public void testSimplify() {
+		assertEquals("Simplify E#", "F", new Note(Pitch.E, Accidental.sharp, 4)
+		.simplify().toDisplayString());
+
+		assertEquals("Simplify B#", "C", new Note(Pitch.B, Accidental.sharp, 4)
+		.simplify().toDisplayString());
+
+		assertEquals("Simplify C#", "C#",
+				new Note(Pitch.C, Accidental.sharp, 4).simplify()
+				.toDisplayString());
+
+		assertEquals("Simplify F##", "G", new Note(Pitch.F,
+				Accidental.doubleSharp, 4).simplify().toDisplayString());
+
+		assertEquals("Simplify D♭♭", "C", new Note(Pitch.D,
+				Accidental.doubleFlat, 4).simplify().toDisplayString());
+	}
+
+	/**
+	 * Run the same tests as {@link #testEquals()} but comparing
+	 * hashcodes
+	 */
+	public void testHashCode() {
+		int middleC = new Note(Pitch.C, Accidental.natural, 4, 1).hashCode();
+
+		assertEquals("hashcode", middleC, new Note(-1, 4, 1).secondMinor()
+				.hashCode());
+		assertEquals("hashcode", middleC, new Note(-2, 4, 1).secondMajor()
+				.hashCode());
+		assertEquals("hashcode", middleC, new Note(-3, 4, 1).thirdMinor()
+				.hashCode());
+		assertEquals("hashcode", middleC, new Note(-4, 4, 1).thirdMajor()
+				.hashCode());
+		assertEquals("hashcode", middleC, new Note(-5, 4, 1).fourth()
+				.hashCode());
+		assertEquals("hashcode", middleC, new Note(-6, 4, 1).fifth()
+				.diminished().hashCode());
+		assertEquals("hashcode", middleC, new Note(-7, 4, 1).fifth().hashCode());
+		assertEquals("hashcode", middleC, new Note(-8, 4, 1).fifth()
+				.augmented().hashCode());
+		assertEquals("hashcode", middleC, new Note(-9, 4, 1).sixth().hashCode());
+		assertEquals("hashcode", middleC, new Note(-10, 4, 1).seventhMinor()
+				.hashCode());
+		assertEquals("hashcode", middleC, new Note(-11, 4, 1).seventhMajor()
+				.hashCode());
+		assertEquals("hashcode", middleC, new Note(12, 4, 1).lowerOctave()
+				.hashCode());
+		assertEquals("hashcode", middleC, new Note(-12, 4, 1).higherOctave()
+				.hashCode());
+
+	}
+
+	public void testAlterations() {
+		assertEquals("Altered C#", 1, new Note().augmented().getHalfTones());
+		assertEquals("Altered C##", 2, new Note().augmented().augmented()
+				.getHalfTones());
+		assertEquals("Altered C♭", -1, new Note().diminished().getHalfTones());
+		assertEquals("Altered C♭♭", -2, new Note().diminished().diminished()
+				.getHalfTones());
+		assertEquals("Altered C", 0, new Note().augmented().diminished()
+				.getHalfTones());
+		assertEquals("Altered C", 0, new Note().augmented().augmented()
+				.diminished().diminished().getHalfTones());
+		assertEquals("Altered C", 0, new Note().augmented().augmented()
+				.augmented().diminished().diminished().diminished()
+				.getHalfTones());
+		assertEquals("Altered C", 0, new Note().getHalfTones());
+		assertEquals("Altered C", 0, new Note().diminished().diminished()
+				.augmented().augmented().getHalfTones());
+		assertEquals("Altered C", 0, new Note().diminished().diminished()
+				.diminished().augmented().augmented().augmented()
+				.getHalfTones());
 	}
 
 }

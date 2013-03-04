@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<project name="emma-reports" default="emma-reports">
+
+	<!-- This is meant to be imported after the generic android build.xml given in the Android SDK -->
+	
+	<!-- Release apk (usually signed) -->
+	<target name="emma-reports" description="Copy the Emma coverage reports to the reports dir">
+		<mkdir dir="${basedir}/../reports"/>
+		<mkdir dir="${basedir}/../reports/_files"/>
+		
+		<copy file="${out.absolute.dir}/coverage.xml" tofile="${basedir}/../reports/coverage.xml"/>
+		<copy file="${out.absolute.dir}/coverage.txt" tofile="${basedir}/../reports/coverage.txt"/>
+		<copy file="${out.absolute.dir}/coverage.html" tofile="${basedir}/../reports/coverage.html"/>
+		
+		<copy todir="${basedir}/../reports/_files">
+			<fileset dir="${out.absolute.dir}/_files"/>
+		</copy>
+	</target>
+
+</project>

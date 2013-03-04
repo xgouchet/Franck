@@ -3,7 +3,6 @@ package fr.xgouchet.musichelper.test.model;
 import junit.framework.TestCase;
 import fr.xgouchet.musichelper.model.Chord;
 import fr.xgouchet.musichelper.model.Note;
-import fr.xgouchet.musichelper.model.Tone;
 
 /**
  * TODO test Parse, tostring->parse

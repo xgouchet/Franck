@@ -88,5 +88,8 @@
     -->
     <!-- version-tag: 1 -->
     <import file="${sdk.dir}/tools/ant/build.xml" />
+	
+	<!-- Import emma reports utility -->
+	<import file="emma-reports.build.xml"/>
 
 </project>
