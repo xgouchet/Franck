@@ -14,6 +14,7 @@ IF %size% LEQ 0 goto okay
 	echo msgbox "Some Unit Tests failed",vbOKOnly,"Franck UT" > %tmp%\tmp.vbs
 	wscript %tmp%\tmp.vbs
 	del %tmp%\tmp.vbs
+	mv test-failures.log ..\reports\failures.log
 :okay
 
 rm -f "test.log"
