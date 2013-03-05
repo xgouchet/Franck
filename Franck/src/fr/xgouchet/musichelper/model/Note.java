@@ -283,6 +283,8 @@ public final class Note {
 		switch (mPitch) {
 		case E:
 		case B:
+		case C:
+		case F:
 			return new Note(getHalfTones(), mFraction);
 		default:
 			break;

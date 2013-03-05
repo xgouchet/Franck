@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="PianoView">
+        <attr name="keyWidth" format="dimension" />
+        <attr name="keyHeight" format="dimension" />
+    </declare-styleable>
+
+</resources>

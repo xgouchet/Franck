@@ -19,6 +19,7 @@ import fr.xgouchet.musichelper.model.Accidental;
 import fr.xgouchet.musichelper.model.Chord;
 import fr.xgouchet.musichelper.model.Note;
 import fr.xgouchet.musichelper.model.Pitch;
+import fr.xgouchet.musichelper.ui.view.PianoView;
 import fr.xgouchet.musichelper.ui.view.StaffView;
 
 /**
@@ -193,8 +194,7 @@ public class FranckActivity extends Activity {
 			return;
 		}
 
-		mChord = Chord.buildChord(mChordType, mDominant.lowerOctave()
-				.lowerOctave());
+		mChord = Chord.buildChord(mChordType, mDominant);
 		if (Settings.shouldSimplify()) {
 			mChord.simplify();
 		}
@@ -203,6 +203,7 @@ public class FranckActivity extends Activity {
 		chords.add(mChord);
 
 		((StaffView) findViewById(R.id.staffView)).setChords(chords);
+		((PianoView) findViewById(R.id.pianoView)).setChord(mChord);
 
 		updateTitle();
 	}

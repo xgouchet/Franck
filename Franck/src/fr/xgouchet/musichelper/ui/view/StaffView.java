@@ -427,7 +427,7 @@ public class StaffView extends View {
 		mSpacesAfterStaff = 2;
 		mSpacesBeforeStaff = 2;
 
-		mKey = Key.bass;
+		mKey = Key.treble;
 
 		if (!isInEditMode()) {
 			// keys

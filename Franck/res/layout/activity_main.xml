@@ -23,10 +23,17 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        
+        android:layout_below="@id/textPlaceHolder"
         android:background="#FFF8F0"
-        android:layout_below="@id/textPlaceHolder" />
+        android:padding="8dp" />
 
-
+    <fr.xgouchet.musichelper.ui.view.PianoView
+        android:id="@id/pianoView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/staffView"
+        android:layout_centerHorizontal="true"
+        android:background="#F0F8FF"
+        android:padding="8dp" />
 
 </RelativeLayout>
