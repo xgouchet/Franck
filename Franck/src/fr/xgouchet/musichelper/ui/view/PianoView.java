@@ -3,21 +3,23 @@ package fr.xgouchet.musichelper.ui.view;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.BlurMaskFilter;
-import android.graphics.BlurMaskFilter.Blur;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.View;
 import fr.xgouchet.musichelper.R;
+import fr.xgouchet.musichelper.model.Accidental;
 import fr.xgouchet.musichelper.model.Chord;
 import fr.xgouchet.musichelper.model.Note;
 
 public class PianoView extends View {
 
 	private static final int[] BLACK_KEYS_OFFSET = new int[] { 0, 1, 3, 4, 5 };
+
+	private static Path sPathC, sPathD, sPathE, sPathBlack;
 
 	/**
 	 * Simple constructor to use when creating a view from code.
@@ -100,11 +102,6 @@ public class PianoView extends View {
 		// Compute needed width
 		int neededWidth = 0, neededHeight = 0;
 
-		// update black keys size
-		mBlackKeyHeight = mKeyHeight * 0.75f;
-		mBlackKeyWidth = mKeyWidth * 0.75f;
-		mBlackKeyDecal = mKeyWidth * 0.625f; // (2 - 0.75) / 2
-
 		// piano needed width / height
 		neededWidth = (int) (((mMaxOffset - mMinOffset) + 4) * mKeyWidth);
 		neededHeight = (int) (mKeyHeight);
@@ -150,6 +147,9 @@ public class PianoView extends View {
 			return;
 		}
 
+		canvas.clipRect(getPaddingLeft(), getPaddingTop(), getWidth()
+				- getPaddingRight(), getHeight() - getPaddingBottom());
+
 		int keysCount = (int) (getWidth() / mKeyWidth);
 		float decal = (getWidth() - getPaddingLeft() - getPaddingRight() - (keysCount * mKeyWidth)) / 2f;
 		float x, y;
@@ -166,12 +166,14 @@ public class PianoView extends View {
 
 		for (int xPos = startXPos; xPos < (keysCount + 7); xPos += 7) {
 			x = getPaddingLeft() + decal + (xPos * mKeyWidth);
+
 			drawOctave(canvas, x, y);
 
 			if ((xPos <= maxPos) && ((xPos + 7) > minPos)) {
 				offset = (xPos - midPos) + mMediumOffset;
 				drawHighlights(canvas, offset, x, y);
 			}
+
 		}
 
 	}
@@ -230,27 +232,28 @@ public class PianoView extends View {
 			noteOffset = simpleNote.getOffsetFromC4();
 			if ((noteOffset >= firstNoteOffset) && (noteOffset < maxNoteOffset)) {
 				notePos = noteOffset - firstNoteOffset;
+				offsetX = x + (notePos * mKeyWidth);
 
 				if (simpleNote.isAltered()) {
-					switch (simpleNote.getAccidental()) {
-					case sharp:
-						offsetX = x + (notePos * mKeyWidth) + mBlackKeyDecal;
-						break;
-					case flat:
-						offsetX = x + ((notePos - 1) * mKeyWidth)
-								+ mBlackKeyDecal;
-						break;
-					default:
-						throw new IllegalStateException(
-								"Simple note cannot be altered with anything except simple flat or simple sharp");
+					if (simpleNote.getAccidental() == Accidental.flat) {
+						offsetX -= mKeyWidth;
 					}
-					canvas.drawRect(offsetX, y, offsetX + mBlackKeyWidth, y
-							+ mBlackKeyHeight, mHighlight);
+					canvas.save();
+					canvas.translate(offsetX, y);
+					canvas.drawPath(getPathBlack(), mHighlight);
+					canvas.restore();
 				} else {
-
-					offsetX = x + (notePos * mKeyWidth);
-					canvas.drawRect(offsetX, y, offsetX + mKeyWidth, y
-							+ mKeyHeight, mHighlight);
+					canvas.save();
+					canvas.translate(offsetX, y);
+					if ((notePos == 0) || (notePos == 3)) {
+						canvas.drawPath(getPathC(), mHighlight);
+					} else if ((notePos == 1) || (notePos == 4)
+							|| (notePos == 5)) {
+						canvas.drawPath(getPathD(), mHighlight);
+					} else if ((notePos == 2) || (notePos == 6)) {
+						canvas.drawPath(getPathE(), mHighlight);
+					}
+					canvas.restore();
 				}
 
 			}
@@ -288,6 +291,7 @@ public class PianoView extends View {
 	 * Initialiser the Staff view
 	 */
 	private void initPianoView() {
+		setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 		Resources res = getContext().getResources();
 
 		mDipToPixel = res.getDisplayMetrics().density;
@@ -297,16 +301,13 @@ public class PianoView extends View {
 		mBlack.setStyle(Style.FILL);
 
 		mWhite = new Paint();
-		mWhite.setColor(Color.BLACK);
+		mWhite.setColor(Color.DKGRAY);
 		mWhite.setStyle(Style.STROKE);
 		mWhite.setStrokeWidth(2 * mDipToPixel);
 
 		mHighlight = new Paint();
 		mHighlight.setColor(Color.argb(128, 255, 64, 64));
-		mHighlight.setAntiAlias(true);
 		mHighlight.setStyle(Paint.Style.FILL);
-		mHighlight.setMaskFilter(new BlurMaskFilter(5 * mDipToPixel,
-				Blur.NORMAL));
 
 		if (!isInEditMode()) {
 			// Get drawables
@@ -339,7 +340,77 @@ public class PianoView extends View {
 			mKeyWidth = mDipToPixel * 16;
 		}
 
+		// update black keys size
+		mBlackKeyHeight = mKeyHeight * 0.75f;
+		mBlackKeyWidth = mKeyWidth * 0.75f;
+		mBlackKeyDecal = mKeyWidth * 0.625f; // (2 - 0.75) / 2
+
 		a.recycle();
+	}
+
+	/**
+	 * @return
+	 */
+	private Path getPathC() {
+		if (sPathC == null) {
+			sPathC = new Path();
+			sPathC.moveTo(0, 0);
+			sPathC.lineTo(mBlackKeyDecal, 0);
+			sPathC.lineTo(mBlackKeyDecal, mBlackKeyHeight);
+			sPathC.lineTo(mKeyWidth, mBlackKeyHeight);
+			sPathC.lineTo(mKeyWidth, mKeyHeight);
+			sPathC.lineTo(0, mKeyHeight);
+			sPathC.close();
+		}
+		return sPathC;
+	}
+
+	/**
+	 * @return
+	 */
+	private Path getPathD() {
+		if (sPathD == null) {
+			sPathD = new Path();
+			sPathD.moveTo(mKeyWidth - mBlackKeyDecal, 0);
+			sPathD.lineTo(mBlackKeyDecal, 0);
+			sPathD.lineTo(mBlackKeyDecal, mBlackKeyHeight);
+			sPathD.lineTo(mKeyWidth, mBlackKeyHeight);
+			sPathD.lineTo(mKeyWidth, mKeyHeight);
+			sPathD.lineTo(0, mKeyHeight);
+			sPathD.lineTo(0, mBlackKeyHeight);
+			sPathD.lineTo(mKeyWidth - mBlackKeyDecal, mBlackKeyHeight);
+			sPathD.close();
+		}
+		return sPathD;
+	}
+
+	/**
+	 * @return
+	 */
+	private Path getPathE() {
+		if (sPathE == null) {
+			sPathE = new Path();
+			sPathE.moveTo(mKeyWidth - mBlackKeyDecal, 0);
+			sPathE.lineTo(mKeyWidth, 0);
+			sPathE.lineTo(mKeyWidth, mKeyHeight);
+			sPathE.lineTo(0, mKeyHeight);
+			sPathE.lineTo(0, mBlackKeyHeight);
+			sPathE.lineTo(mKeyWidth - mBlackKeyDecal, mBlackKeyHeight);
+			sPathE.close();
+		}
+		return sPathE;
+	}
+
+	/**
+	 * @return the path to draw black Key's highlight
+	 */
+	private Path getPathBlack() {
+		if (sPathBlack == null) {
+			sPathBlack = new Path();
+			sPathBlack.addRect(mBlackKeyDecal, 0, mBlackKeyDecal
+					+ mBlackKeyWidth, mBlackKeyHeight, Path.Direction.CCW);
+		}
+		return sPathBlack;
 	}
 
 	/** Utility to convert Dip values to Pixel */
