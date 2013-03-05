@@ -1,6 +1,10 @@
 package fr.xgouchet.musichelper.model;
 
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import android.text.TextUtils;
 
 /**
  * TODO write equals / hash
@@ -49,10 +53,56 @@ public class Chord {
 				return toString();
 			}
 		}
+
+		public static Type fromString(final String value) {
+			if (TextUtils.isEmpty(value)) {
+				return major;
+			} else if ("M".equals(value)) {
+				return major;
+			} else if ("ma".equalsIgnoreCase(value)) {
+				return major;
+			} else if ("maj".equalsIgnoreCase(value)) {
+				return major;
+			} else if ("m".equals(value)) {
+				return minor;
+			} else if ("mi".equals(value)) {
+				return minor;
+			} else if ("min".equals(value)) {
+				return minor;
+			} else if ("aug".equals(value)) {
+				return augmented;
+			} else if ("+".equals(value)) {
+				return augmented;
+			} else if ("dim".equals(value)) {
+				return diminished;
+			} else if ("°".equals(value)) {
+				return diminished;
+			} else if ("7".equals(value)) {
+				return dominant7;
+			} else if ("M7".equals(value)) {
+				return major7;
+			} else if ("maj7".equalsIgnoreCase(value)) {
+				return major7;
+			} else if ("m7".equals(value)) {
+				return minor7;
+			} else if ("min7".equals(value)) {
+				return minor7;
+			} else if ("aug7".equals(value)) {
+				return augmented7;
+			} else if ("+7".equals(value)) {
+				return augmented7;
+			} else if ("dim7".equals(value)) {
+				return diminished7;
+			} else if ("°7".equals(value)) {
+				return diminished7;
+			}
+
+			throw new IllegalArgumentException("Unknown chord type " + value);
+		}
 	}
 
 	/**
-	 * TODO Parses a string with a chord name
+	 * Parses a string with a chord name
 	 * 
 	 * Here are sample notations based on a C dominant. Replacing C by any note
 	 * will work accordingly.
@@ -66,14 +116,14 @@ public class Chord {
 	 * <dt>Augmented</dt>
 	 * <dd>C+, Caug</dd>
 	 * <dt>Diminished</dt>
-	 * <dd>C�, Cdim</dd>
+	 * <dd>C°, Cdim</dd>
 	 * </dl>
 	 * </li>
 	 * 
 	 * <li>7th chords :
 	 * <dl>
 	 * <dt>Diminished 7th</dt>
-	 * <dd>C�7, Cdim7</dd>
+	 * <dd>C°7, Cdim7</dd>
 	 * <dt>Half Diminished 7th</dt>
 	 * <dd>Cm7b5</dd>
 	 * <dt>Minor 7th</dt>
@@ -98,7 +148,15 @@ public class Chord {
 	 */
 	public static Chord parse(final String value) {
 
-		return null;
+		Pattern pattern = Pattern.compile("^[A-G]([#b♭])*");
+		Matcher matcher = pattern.matcher(value);
+		matcher.find();
+
+		Note dominant = Note.parse(matcher.group());
+		String typeStr = value.substring(matcher.group().length());
+		Type type = Type.fromString(typeStr);
+
+		return buildChord(type, dominant);
 	}
 
 	/**

@@ -2,6 +2,7 @@ package fr.xgouchet.musichelper.test.model;
 
 import junit.framework.TestCase;
 import fr.xgouchet.musichelper.model.Chord;
+import fr.xgouchet.musichelper.model.Chord.Type;
 import fr.xgouchet.musichelper.model.Note;
 
 /**
@@ -133,6 +134,12 @@ public class ChordTest extends TestCase {
 		expected = new Chord(middleC, Chord.Type.diminished7, new Note[] {
 				new Note(0), new Note(3), new Note(6), new Note(9) });
 		assertEquals("Chord Cdim7", value, expected);
+
+		try {
+			Chord.buildChord(Type.halfDiminishedSeventh, new Note());
+			fail("Exception should have been raised in Chord.buildChord(null, null)");
+		} catch (IllegalArgumentException e) {
+		}
 	}
 
 	/**
@@ -303,45 +310,108 @@ public class ChordTest extends TestCase {
 	/**
 	 * 
 	 */
-	public void testParsing() {
+	public void testParse() {
+		Note middleC = new Note();
+
+		Chord chord;
+
+		// MAJOR
+		chord = Chord.buildChord(Chord.Type.major, middleC);
+		assertEquals("Parsed C", chord, Chord.parse("C"));
+		assertEquals("Parsed CM", chord, Chord.parse("CM"));
+		assertEquals("Parsed Cma", chord, Chord.parse("Cma"));
+		assertEquals("Parsed Cmaj", chord, Chord.parse("Cmaj"));
+
+		// MINOR
+		chord = Chord.buildChord(Chord.Type.minor, middleC);
+		assertEquals("Parsed Cm", chord, Chord.parse("Cm"));
+		assertEquals("Parsed Cmi", chord, Chord.parse("Cmi"));
+		assertEquals("Parsed Cmin", chord, Chord.parse("Cmin"));
+
+		// AUGMENTED
+		chord = Chord.buildChord(Chord.Type.augmented, middleC);
+		assertEquals("Parsed C+", chord, Chord.parse("C+"));
+		assertEquals("Parsed Caug", chord, Chord.parse("Caug"));
+
+		// DIMINISHED
+		chord = Chord.buildChord(Chord.Type.diminished, middleC);
+		assertEquals("Parsed C°", chord, Chord.parse("C°"));
+		assertEquals("Parsed Cdim", chord, Chord.parse("Cdim"));
+
+		// DOMINANT 7th
+		chord = Chord.buildChord(Chord.Type.dominant7, middleC);
+		assertEquals("Parsed C7", chord, Chord.parse("C7"));
+
+		// MAJOR 7th
+		chord = Chord.buildChord(Chord.Type.major7, middleC);
+		assertEquals("Parsed CM7", chord, Chord.parse("CM7"));
+		assertEquals("Parsed Cmaj7", chord, Chord.parse("Cmaj7"));
+
+		// MINOR 7th
+		chord = Chord.buildChord(Chord.Type.minor7, middleC);
+		assertEquals("Parsed Cm7", chord, Chord.parse("Cm7"));
+		assertEquals("Parsed Cmin7", chord, Chord.parse("Cmin7"));
+
+		// AUGMENTED 7th
+		chord = Chord.buildChord(Chord.Type.augmented7, middleC);
+		assertEquals("Parsed C+7", chord, Chord.parse("C+7"));
+		assertEquals("Parsed Caug7", chord, Chord.parse("Caug7"));
+
+		// DIMINISHED 7th
+		chord = Chord.buildChord(Chord.Type.diminished7, middleC);
+		assertEquals("Parsed C°7", chord, Chord.parse("C°7"));
+		assertEquals("Parsed Cdim7", chord, Chord.parse("Cdim7"));
+
+		try {
+			Chord.parse("C0");
+			fail("An exception should have been thrown");
+		} catch (IllegalArgumentException e) {
+		}
+
+	}
+
+	/**
+	 * Test that the display string is parsed correctly
+	 */
+	public void testDisplayStringParseCoherence() {
 		Note middleC = new Note();
 
 		Chord chord, parsed;
 
 		chord = Chord.buildChord(Chord.Type.major, middleC);
 		parsed = Chord.parse(chord.toDisplayString());
-		assertEquals("Parsed chord " + chord.toString(), chord, parsed);
+		assertEquals("DisplayString parsed " + chord.toString(), chord, parsed);
 
 		chord = Chord.buildChord(Chord.Type.minor, middleC);
 		parsed = Chord.parse(chord.toDisplayString());
-		assertEquals("Parsed chord " + chord.toString(), chord, parsed);
+		assertEquals("DisplayString parsed " + chord.toString(), chord, parsed);
 
 		chord = Chord.buildChord(Chord.Type.augmented, middleC);
 		parsed = Chord.parse(chord.toDisplayString());
-		assertEquals("Parsed chord " + chord.toString(), chord, parsed);
+		assertEquals("DisplayString parsed " + chord.toString(), chord, parsed);
 
 		chord = Chord.buildChord(Chord.Type.diminished, middleC);
 		parsed = Chord.parse(chord.toDisplayString());
-		assertEquals("Parsed chord " + chord.toString(), chord, parsed);
+		assertEquals("DisplayString parsed " + chord.toString(), chord, parsed);
 
 		chord = Chord.buildChord(Chord.Type.dominant7, middleC);
 		parsed = Chord.parse(chord.toDisplayString());
-		assertEquals("Parsed chord " + chord.toString(), chord, parsed);
+		assertEquals("DisplayString parsed " + chord.toString(), chord, parsed);
 
 		chord = Chord.buildChord(Chord.Type.major7, middleC);
 		parsed = Chord.parse(chord.toDisplayString());
-		assertEquals("Parsed chord " + chord.toString(), chord, parsed);
+		assertEquals("DisplayString parsed " + chord.toString(), chord, parsed);
 
-		chord = Chord.buildChord(Chord.Type.minor, middleC);
+		chord = Chord.buildChord(Chord.Type.minor7, middleC);
 		parsed = Chord.parse(chord.toDisplayString());
-		assertEquals("Parsed chord " + chord.toString(), chord, parsed);
+		assertEquals("DisplayString parsed " + chord.toString(), chord, parsed);
 
 		chord = Chord.buildChord(Chord.Type.augmented7, middleC);
 		parsed = Chord.parse(chord.toDisplayString());
-		assertEquals("Parsed chord " + chord.toString(), chord, parsed);
+		assertEquals("DisplayString parsed " + chord.toString(), chord, parsed);
 
 		chord = Chord.buildChord(Chord.Type.diminished7, middleC);
 		parsed = Chord.parse(chord.toDisplayString());
-		assertEquals("Parsed chord " + chord.toString(), chord, parsed);
+		assertEquals("DisplayString parsed " + chord.toString(), chord, parsed);
 	}
 }

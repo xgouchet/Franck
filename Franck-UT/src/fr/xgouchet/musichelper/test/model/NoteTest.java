@@ -244,6 +244,9 @@ public class NoteTest extends TestCase {
 
 	}
 
+	/**
+	 * Test some correspondance in alterations
+	 */
 	public void testAlterations() {
 		assertEquals("Altered C#", 1, new Note().augmented().getHalfTones());
 		assertEquals("Altered C##", 2, new Note().augmented().augmented()
@@ -266,6 +269,9 @@ public class NoteTest extends TestCase {
 				.getHalfTones());
 	}
 
+	/**
+	 * Test some note parsing
+	 */
 	public void testParse() {
 		assertEquals("Parse E♭", Note.parse("E♭"), new Note(Pitch.E,
 				Accidental.flat, 4));
@@ -279,6 +285,72 @@ public class NoteTest extends TestCase {
 				Accidental.doubleFlat, 4));
 		assertEquals("Parse Dbb", Note.parse("Dbb"), new Note(Pitch.D,
 				Accidental.doubleFlat, 4));
+
+		try {
+			Note.parse("W#");
+			fail("Parse should have raised exception on \"w#\"");
+		} catch (IllegalArgumentException e) {
+
+		}
+
+		try {
+			Note.parse("CSharp");
+			fail("Parse should have raised exception on \"CSharp\"");
+		} catch (IllegalArgumentException e) {
+
+		}
+	}
+
+	/**
+	 * Test that the display string is parsed correctly
+	 */
+	public void testDisplayStringParseCoherence() {
+		Note middleC = new Note(Pitch.C, Accidental.natural, 4, 1);
+
+		Note note;
+
+		note = middleC.secondMinor();
+		assertEquals("DisplayString parsed", note,
+				Note.parse(note.toDisplayString()));
+		note = middleC.secondMajor();
+		assertEquals("DisplayString parsed", note,
+				Note.parse(note.toDisplayString()));
+		note = middleC.thirdMinor();
+		assertEquals("DisplayString parsed", note,
+				Note.parse(note.toDisplayString()));
+		note = middleC.thirdMajor();
+		assertEquals("DisplayString parsed", note,
+				Note.parse(note.toDisplayString()));
+		note = middleC.fourth();
+		assertEquals("DisplayString parsed", note,
+				Note.parse(note.toDisplayString()));
+		note = middleC.fifth();
+		assertEquals("DisplayString parsed", note,
+				Note.parse(note.toDisplayString()));
+		note = middleC.sixth();
+		assertEquals("DisplayString parsed", note,
+				Note.parse(note.toDisplayString()));
+		note = middleC.seventhMinor();
+		assertEquals("DisplayString parsed", note,
+				Note.parse(note.toDisplayString()));
+		note = middleC.seventhMajor();
+
+	}
+
+	/**
+	 * Tests the offset on a staff from the C4
+	 */
+	public void testOffsetFromC4() {
+		assertEquals("OffsetFromC4 : F4", 3, new Note(Pitch.F,
+				Accidental.natural).getOffsetFromC4());
+		assertEquals("OffsetFromC4 : B♭4", 6,
+				new Note(Pitch.B, Accidental.flat).getOffsetFromC4());
+		assertEquals("OffsetFromC4 : C5", 7, new Note(Pitch.C,
+				Accidental.natural, 5).getOffsetFromC4());
+		assertEquals("OffsetFromC4 : D#3", -6, new Note(Pitch.D,
+				Accidental.sharp, 3).getOffsetFromC4());
+		assertEquals("OffsetFromC4 : c3", -7, new Note(Pitch.C,
+				Accidental.natural, 3).getOffsetFromC4());
 	}
 
 }
