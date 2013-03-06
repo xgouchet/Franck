@@ -5,7 +5,7 @@
 Franck is an Open Source, Ad-free, lightweight music helper for Android. 
 
 The official Franck app will soon be available on the [Google Play Store](https://play.google.com/store/).
-
+In the meantime you can try the [beta APK ](https://github.com/xgouchet/Franck/raw/master/builds/franck_1.0.apk) (if you do and have any relevant remark, constructive criticism or feature idea, please [contact me](mailto:github@xgouchet.fr)). 
 
 # LICENCE
 
