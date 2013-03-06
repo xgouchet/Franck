@@ -4,6 +4,12 @@
     <string name="app_name">Franck</string>
     <string name="title_chord">Franck - %1$s</string>
 
+    <!-- UI -->
+    <string name="ui_piano_keyboard">Piano Keyboard</string>
+    <string name="ui_grand_staff">Grand Staff</string>
+    <string name="ui_staff">Staff</string>
+    <string name="ui_guitar_tabs">Guitar Tabs</string>
+
     <!-- MENUS -->
     <string name="menu_search_chord">Search chord</string>
     <string name="menu_chord">Chord</string>

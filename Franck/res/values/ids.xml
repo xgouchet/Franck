@@ -4,6 +4,8 @@
     <!-- VIEWS -->
     <item name="textPlaceHolder" type="id"/>
     <item name="staffView" type="id"/>
+    <item name="trebleStaffView" type="id"/>
+    <item name="bassStaffView" type="id"/>
     <item name="pianoView" type="id"/>
 
     <!-- MENUS -->

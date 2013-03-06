@@ -1,8 +1,5 @@
 package fr.xgouchet.musichelper;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -21,17 +18,22 @@ import android.view.View;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
+
+import com.fima.cardsui.objects.CardStack;
+import com.fima.cardsui.views.CardUI;
+
 import de.neofonie.mobile.app.android.widget.crouton.Crouton;
 import de.neofonie.mobile.app.android.widget.crouton.Style;
 import fr.xgouchet.musichelper.common.Settings;
 import fr.xgouchet.musichelper.model.Chord;
+import fr.xgouchet.musichelper.model.Key;
 import fr.xgouchet.musichelper.model.Note;
-import fr.xgouchet.musichelper.model.Tuning;
-import fr.xgouchet.musichelper.ui.view.PianoView;
-import fr.xgouchet.musichelper.ui.view.StaffView;
+import fr.xgouchet.musichelper.ui.card.GrandStaffCard;
+import fr.xgouchet.musichelper.ui.card.PianoCard;
+import fr.xgouchet.musichelper.ui.card.StaffCard;
 
 /**
- * 
+ *
  */
 public class FranckActivity extends Activity implements OnQueryTextListener {
 
@@ -43,6 +45,11 @@ public class FranckActivity extends Activity implements OnQueryTextListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		// Card view
+		mCardView = (CardUI) findViewById(R.id.cardsview);
+		mCardView.setSwipeable(false);
+
+		// Default values
 		generateTabs();
 		setChordType(Chord.Type.major);
 		setDominant(new Note());
@@ -164,7 +171,7 @@ public class FranckActivity extends Activity implements OnQueryTextListener {
 
 	/**
 	 * Add a tab to the action bar
-	 * 
+	 *
 	 * @param note
 	 *            the dominant note for this tab
 	 * @return the created tab
@@ -225,7 +232,7 @@ public class FranckActivity extends Activity implements OnQueryTextListener {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param chordType
 	 */
 	public void setChordType(final Chord.Type chordType) {
@@ -254,28 +261,33 @@ public class FranckActivity extends Activity implements OnQueryTextListener {
 			mChord.simplify();
 		}
 
-		int[] frets = Tuning.standardGuitarTuning().getFrets(mChord);
-
-		List<Chord> chords = new LinkedList<Chord>();
-		chords.add(mChord);
-
-		((StaffView) findViewById(R.id.staffView)).setChords(chords);
-		((PianoView) findViewById(R.id.pianoView)).setChord(mChord);
-
 		updateTitle();
+
+		mCardView.clearCards();
+
+		CardStack piano = new CardStack();
+
+		// Piano
+		mCardView.addCard(new GrandStaffCard(mChord));
+		mCardView.addCard(new PianoCard(mChord));
+
+		// Guitar
+		mCardView.addCard(new StaffCard(mChord, Key.treble));
+
 	}
 
 	/**
 	 * Update the action bar title with the current chord name
 	 */
 	private void updateTitle() {
-		((TextView) findViewById(R.id.textPlaceHolder)).setText(mChord
-				.toString());
-		setTitle(getString(R.string.title_chord, mChord.toDisplayString()));
+		// ((TextView) findViewById(R.id.textPlaceHolder)).setText(mChord
+		// .toString());
+		setTitle(getString(R.string.title_chord, mChord.toString()));
 	}
 
 	private Note mDominant;
 	private Chord.Type mChordType;
 	private Chord mChord;
 	private SearchView mSearchView;
+	private CardUI mCardView;
 }

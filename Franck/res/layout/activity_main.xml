@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:franck="http://schemas.android.com/apk/res/fr.xgouchet.musichelper"
@@ -6,34 +7,20 @@
     android:padding="4dp"
     tools:context=".FranckActivity" >
 
-    <TextView
-        android:id="@id/textPlaceHolder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:gravity="center_horizontal"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textIsSelectable="false" />
+    <!--
+         <TextView android:id="@id/textPlaceHolder" android:layout_width="wrap_content" 
+		android:layout_height="wrap_content" android:layout_alignParentLeft="true" 
+		android:layout_alignParentRight="true" android:layout_alignParentTop="true" 
+		android:gravity="center_horizontal" android:textAppearance="?android:attr/textAppearanceLarge" 
+		android:textIsSelectable="false" />  <fr.xgouchet.musichelper.ui.view.PianoView android:id="@id/pianoView" 
+		android:layout_width="wrap_content" android:layout_height="wrap_content" 
+		android:layout_below="@id/staffView" android:layout_centerHorizontal="true" 
+		android:background="#F0F8FF" android:padding="8dp" />
+    -->
 
-    <fr.xgouchet.musichelper.ui.view.StaffView
-        android:id="@id/staffView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/textPlaceHolder"
-        android:background="#FFF8F0"
-        android:padding="8dp" />
-
-    <fr.xgouchet.musichelper.ui.view.PianoView
-        android:id="@id/pianoView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/staffView"
-        android:layout_centerHorizontal="true"
-        android:background="#F0F8FF"
-        android:padding="8dp" />
+    <com.fima.cardsui.views.CardUI
+        android:id="@+id/cardsview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

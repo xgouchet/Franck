@@ -1,7 +1,5 @@
 package fr.xgouchet.musichelper.ui.view;
 
-import java.util.List;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -23,7 +21,7 @@ public class StaffView extends View {
 
 	/**
 	 * Simple constructor to use when creating a view from code.
-	 * 
+	 *
 	 * @param context
 	 *            The Context the view is running in, through which it can
 	 *            access the current theme, resources, etc.
@@ -40,10 +38,10 @@ public class StaffView extends View {
 	 * that were specified in the XML file. This version uses a default style of
 	 * 0, so the only attribute values applied are those in the Context's Theme
 	 * and the given AttributeSet.
-	 * 
+	 *
 	 * The method onFinishInflate() will be called after all children have been
 	 * added.
-	 * 
+	 *
 	 * @param context
 	 *            The Context the view is running in, through which it can
 	 *            access the current theme, resources, etc.
@@ -66,7 +64,7 @@ public class StaffView extends View {
 	 * for defStyle; this allows the theme's button style to modify all of the
 	 * base view attributes (in particular its background) as well as the Button
 	 * class's attributes.
-	 * 
+	 *
 	 * @param context
 	 *            The Context the view is running in, through which it can
 	 *            access the current theme, resources, etc.
@@ -91,29 +89,18 @@ public class StaffView extends View {
 	 * @param chords
 	 *            the chords to display
 	 */
-	public void setChords(final List<Chord> chords) {
-		mChords = chords;
+	public void setChord(final Chord chord) {
+		mChord = chord;
+		updateContent();
+	}
 
-		int highestOffset, lowestOffset, offset;
-		lowestOffset = 0;
-		highestOffset = 8;
-
-		for (Chord chord : mChords) {
-			for (Note note : chord.getNotes()) {
-				offset = note.getOffsetFromC4() + mKey.c4Offset();
-
-				if (offset < lowestOffset) {
-					lowestOffset = offset;
-				} else if (offset > highestOffset) {
-					highestOffset = offset;
-				}
-			}
-		}
-
-		mSpacesAfterStaff = 1 + Math.max(1, (1 - lowestOffset) / 2);
-		mSpacesBeforeStaff = 1 + Math.max(1, (highestOffset - 7) / 2);
-
-		invalidate();
+	/**
+	 * @param key
+	 *            the {@link Key} to use to display the chord
+	 */
+	public void setKey(final Key key) {
+		mKey = key;
+		updateContent();
 	}
 
 	/**
@@ -128,13 +115,22 @@ public class StaffView extends View {
 		final int heightSpecSize = MeasureSpec.getSize(heightMeasureSpec);
 
 		// Compute needed width
-		int neededWidth = 0, neededHeight = 0;
+		float neededWidth, neededHeight;
 
 		// staff height + spaces above and below
 		int spaces = mSpacesBeforeStaff + 4 + mSpacesAfterStaff;
 		neededHeight = (int) ((spaces * mLineSpacing) + 0.5f);
 
-		// TODO measure width
+		// key width
+		neededWidth = (mLineSpacing * 4);
+
+		// chord and alterations
+		if (mChord != null) {
+			if (mChord.hasAlteration()) {
+				neededWidth += (mLineSpacing * 2);
+			}
+			neededWidth += (mLineSpacing * 4);
+		}
 
 		neededWidth += getPaddingLeft() + getPaddingRight();
 		neededHeight += getPaddingTop() + getPaddingBottom();
@@ -168,7 +164,7 @@ public class StaffView extends View {
 			break;
 		}
 
-		setMeasuredDimension(neededWidth, neededHeight);
+		setMeasuredDimension((int) neededWidth, (int) neededHeight);
 	}
 
 	/**
@@ -183,7 +179,7 @@ public class StaffView extends View {
 		drawKey(canvas);
 
 		// draw the chords
-		if (mChords != null) {
+		if (mChord != null) {
 			drawChords(canvas);
 		}
 
@@ -191,7 +187,7 @@ public class StaffView extends View {
 
 	/**
 	 * Draws the staff lines
-	 * 
+	 *
 	 * @param canvas
 	 *            the canvas on which the view will be drawn
 	 */
@@ -215,7 +211,7 @@ public class StaffView extends View {
 
 	/**
 	 * Draws the staff key
-	 * 
+	 *
 	 * @param canvas
 	 *            the canvas on which the view will be drawn
 	 */
@@ -250,7 +246,7 @@ public class StaffView extends View {
 
 	/**
 	 * Draws the chords on the staff
-	 * 
+	 *
 	 * @param canvas
 	 *            the canvas on which the view will be drawn
 	 */
@@ -258,18 +254,16 @@ public class StaffView extends View {
 		float offsetX;
 
 		offsetX = getPaddingLeft() + (5f * mLineSpacing);
-		for (Chord chord : mChords) {
-			if (chord.hasAlteration()) {
-				offsetX += 2 * mLineSpacing;
-			}
-			drawChord(canvas, chord, offsetX);
-			offsetX += mLineSpacing * 2;
+		if (mChord.hasAlteration()) {
+			offsetX += 2 * mLineSpacing;
 		}
+		drawChord(canvas, mChord, offsetX);
+
 	}
 
 	/**
 	 * Draws the given chord on the staff at the given offset
-	 * 
+	 *
 	 * @param canvas
 	 *            the canvas on which the view will be drawn
 	 * @param chord
@@ -303,7 +297,7 @@ public class StaffView extends View {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param canvas
 	 * @param note
 	 * @param x
@@ -342,8 +336,8 @@ public class StaffView extends View {
 
 	/**
 	 * Draws extra lines, needed for a note outside of the staff
-	 * 
-	 * 
+	 *
+	 *
 	 * @param canvas
 	 *            the canvas on which the view will be drawn
 	 * @param offsetX
@@ -371,7 +365,7 @@ public class StaffView extends View {
 
 	/**
 	 * Draws a whole note at the given position
-	 * 
+	 *
 	 * @param canvas
 	 *            the canvas on which the view will be drawn
 	 * @param x
@@ -385,7 +379,7 @@ public class StaffView extends View {
 
 	/**
 	 * Draws a Sharp at the given position
-	 * 
+	 *
 	 * @param canvas
 	 *            the canvas on which the view will be drawn
 	 * @param x
@@ -399,7 +393,7 @@ public class StaffView extends View {
 
 	/**
 	 * Draws a Flat at the given position
-	 * 
+	 *
 	 * @param canvas
 	 *            the canvas on which the view will be drawn
 	 * @param x
@@ -446,7 +440,7 @@ public class StaffView extends View {
 
 	/**
 	 * Read the attributes taken from XML
-	 * 
+	 *
 	 * @param attrs
 	 *            The attributes of the XML tag that is inflating the view.
 	 */
@@ -477,12 +471,37 @@ public class StaffView extends View {
 		a.recycle();
 	}
 
+	/**
+	 * Update the calculation and invalidate the view (called when the chord,
+	 * key or another element changes the view)
+	 */
+	private void updateContent() {
+		int highestOffset, lowestOffset, offset;
+		lowestOffset = 0;
+		highestOffset = 8;
+
+		for (Note note : mChord.getNotes()) {
+			offset = note.getOffsetFromC4() + mKey.c4Offset();
+
+			if (offset < lowestOffset) {
+				lowestOffset = offset;
+			} else if (offset > highestOffset) {
+				highestOffset = offset;
+			}
+		}
+
+		mSpacesAfterStaff = 1 + Math.max(1, (1 - lowestOffset) / 2);
+		mSpacesBeforeStaff = 1 + Math.max(1, (highestOffset - 7) / 2);
+
+		invalidate();
+	}
+
 	/** Utility to convert Dip values to Pixel */
 	private float mDipToPixel;
 
 	// Drawables
 	private Drawable mTrebble, mAlto, mBass;
-	private Drawable mWhole, mHalf, mQuarter;
+	private Drawable mWhole;
 	private Drawable mSharp, mFlat;
 
 	private Paint mLinePaint;
@@ -491,7 +510,7 @@ public class StaffView extends View {
 	private float mTopOffsetToBottomLine;
 
 	// Data
-	private List<Chord> mChords;
+	private Chord mChord;
 	private Key mKey;
 
 }

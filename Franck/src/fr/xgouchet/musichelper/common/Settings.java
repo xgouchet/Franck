@@ -2,6 +2,7 @@ package fr.xgouchet.musichelper.common;
 
 public class Settings {
 
+	private static boolean sUseFrenchNotation = false;
 	private static boolean sShouldSimplify = true;
 
 	/**
@@ -11,4 +12,11 @@ public class Settings {
 		return sShouldSimplify;
 	}
 
+	/**
+	 * @return if notes should be displayed using the French notation (Do, Re,
+	 *         Mi instead of C, D, E)
+	 */
+	public static boolean useFrenchNotation() {
+		return sUseFrenchNotation;
+	}
 }
