@@ -414,4 +414,48 @@ public class ChordTest extends TestCase {
 		parsed = Chord.parse(chord.toDisplayString());
 		assertEquals("DisplayString parsed " + chord.toString(), chord, parsed);
 	}
+
+	/**
+	 * Test that the first note of a chord is always the dominant
+	 */
+	public void testFirstNoteIsDominant() {
+		Note middleC = new Note();
+		Chord chord;
+
+		chord = Chord.buildChord(Chord.Type.major, middleC);
+		assertEquals("FirstNoteIsDominant", chord.getNotes()[0],
+				chord.getDominant());
+
+		chord = Chord.buildChord(Chord.Type.minor, middleC);
+		assertEquals("FirstNoteIsDominant", chord.getNotes()[0],
+				chord.getDominant());
+
+		chord = Chord.buildChord(Chord.Type.augmented, middleC);
+		assertEquals("FirstNoteIsDominant", chord.getNotes()[0],
+				chord.getDominant());
+
+		chord = Chord.buildChord(Chord.Type.diminished, middleC);
+		assertEquals("FirstNoteIsDominant", chord.getNotes()[0],
+				chord.getDominant());
+
+		chord = Chord.buildChord(Chord.Type.dominant7, middleC);
+		assertEquals("FirstNoteIsDominant", chord.getNotes()[0],
+				chord.getDominant());
+
+		chord = Chord.buildChord(Chord.Type.major7, middleC);
+		assertEquals("FirstNoteIsDominant", chord.getNotes()[0],
+				chord.getDominant());
+
+		chord = Chord.buildChord(Chord.Type.minor7, middleC);
+		assertEquals("FirstNoteIsDominant", chord.getNotes()[0],
+				chord.getDominant());
+
+		chord = Chord.buildChord(Chord.Type.augmented7, middleC);
+		assertEquals("FirstNoteIsDominant", chord.getNotes()[0],
+				chord.getDominant());
+
+		chord = Chord.buildChord(Chord.Type.diminished7, middleC);
+		assertEquals("FirstNoteIsDominant", chord.getNotes()[0],
+				chord.getDominant());
+	}
 }
