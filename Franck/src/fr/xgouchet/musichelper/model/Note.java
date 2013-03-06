@@ -365,6 +365,19 @@ public final class Note {
 	}
 
 	/**
+	 * Test if two notes are equivalent (ie : the same note on different
+	 * octaves)
+	 * 
+	 * @param other
+	 *            the note to compare to this one
+	 * @return if they are equivalent
+	 */
+	public boolean isEquivalent(final Note other) {
+		int diff = getHalfTones() - other.getHalfTones();
+		return (diff % 12) == 0;
+	}
+
+	/**
 	 * An implementation of equals which is lenient according to
 	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
