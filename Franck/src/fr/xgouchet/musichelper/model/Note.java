@@ -46,9 +46,7 @@ public final class Note {
 			}
 		}
 
-		Accidental acc = Accidental.fromHalfTones(alterations);
-
-		return new Note(pitch, acc);
+		return new Note(pitch.halfTones() + alterations);
 	}
 
 	/**

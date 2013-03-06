@@ -3,29 +3,36 @@ package fr.xgouchet.musichelper;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.os.Build;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
+import de.neofonie.mobile.app.android.widget.crouton.Crouton;
+import de.neofonie.mobile.app.android.widget.crouton.Style;
 import fr.xgouchet.musichelper.common.Settings;
-import fr.xgouchet.musichelper.model.Accidental;
 import fr.xgouchet.musichelper.model.Chord;
 import fr.xgouchet.musichelper.model.Note;
-import fr.xgouchet.musichelper.model.Pitch;
 import fr.xgouchet.musichelper.ui.view.PianoView;
 import fr.xgouchet.musichelper.ui.view.StaffView;
 
 /**
  * 
  */
-public class FranckActivity extends Activity {
+public class FranckActivity extends Activity implements OnQueryTextListener {
 
 	/**
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -43,9 +50,21 @@ public class FranckActivity extends Activity {
 	/**
 	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
 	 */
+	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu) {
 		getMenuInflater().inflate(R.menu.chords, menu);
+
+		if (VERSION.SDK_INT >= VERSION_CODES.ICE_CREAM_SANDWICH) {
+			mSearchView = new SearchView(getActionBar().getThemedContext());
+		} else {
+			mSearchView = new SearchView(this);
+		}
+		mSearchView.setQueryHint(getString(R.string.menu_search_chord));
+		mSearchView.setOnQueryTextListener(this);
+
+		menu.findItem(R.id.menu_search_chord).setActionView(mSearchView);
+
 		return true;
 	}
 
@@ -94,17 +113,52 @@ public class FranckActivity extends Activity {
 	}
 
 	/**
+	 * @see android.widget.SearchView.OnQueryTextListener#onQueryTextChange(java.lang.String)
+	 */
+	@Override
+	public boolean onQueryTextChange(final String newText) {
+		Log.i("Franck", newText);
+		return false;
+	}
+
+	/**
+	 * @see android.widget.SearchView.OnQueryTextListener#onQueryTextSubmit(java.lang.String)
+	 */
+	@Override
+	public boolean onQueryTextSubmit(final String query) {
+		Log.i("Franck", "Query = " + query);
+
+		mSearchView.setQuery("", false);
+		mSearchView.setIconified(true);
+
+		Chord chord;
+
+		try {
+			chord = Chord.parse(query);
+		} catch (Exception e) {
+			Crouton.showText(this, "Unable to find a Chord with this name",
+					Style.ALERT);
+			chord = null;
+		}
+
+		if (chord != null) {
+			int ht = chord.getDominant().getHalfTones();
+			Tab tab = getActionBar().getTabAt(ht);
+			getActionBar().selectTab(tab);
+			setChordType(chord.getType());
+		}
+
+		return true;
+	}
+
+	/**
 	 * Generate all the Dominant note tabs
 	 */
 	private void generateTabs() {
 		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		addTab(new Note(Pitch.C, Accidental.natural, 4));
-		addTab(new Note(Pitch.D, Accidental.natural, 4));
-		addTab(new Note(Pitch.E, Accidental.natural, 4));
-		addTab(new Note(Pitch.F, Accidental.natural, 4));
-		addTab(new Note(Pitch.G, Accidental.natural, 4));
-		addTab(new Note(Pitch.A, Accidental.natural, 4));
-		addTab(new Note(Pitch.B, Accidental.natural, 4));
+		for (int i = 0; i < 12; ++i) {
+			addTab(new Note(i));
+		}
 	}
 
 	/**
@@ -220,4 +274,5 @@ public class FranckActivity extends Activity {
 	private Note mDominant;
 	private Chord.Type mChordType;
 	private Chord mChord;
+	private SearchView mSearchView;
 }
