@@ -6,7 +6,7 @@ package fr.xgouchet.musichelper.model;
  * the note), an accidental alteration (flat, sharp, ...) an octave and a
  * duration.
  * </p>
- * 
+ *
  * <p>
  * New notes can be constructed as derived from a dominant note, using the
  * {@link #secondMajor()}, {@link #secondMinor()}, {@link #thirdMajor()},
@@ -19,7 +19,7 @@ public final class Note {
 
 	/**
 	 * Parses a note from string
-	 * 
+	 *
 	 * @param noteName
 	 *            the note name (eg : "C#", "Eb", "B♭", "F", "D##", "G♭♭")
 	 * @return a Note instance of the given note, at the 4th octave, as a whole
@@ -59,7 +59,7 @@ public final class Note {
 	/**
 	 * Constructs a note by the given pitch and accidental alteration, at the
 	 * 4th octave and duration of a whole
-	 * 
+	 *
 	 * @param pitch
 	 * @param accidental
 	 */
@@ -70,7 +70,7 @@ public final class Note {
 	/**
 	 * Constructs a note by the given pitch and accidental alteration, at the
 	 * given octave and duration of a whole
-	 * 
+	 *
 	 * @param pitch
 	 * @param accidental
 	 * @param octave
@@ -82,7 +82,7 @@ public final class Note {
 	/**
 	 * Constructs a note by the given pitch and accidental alteration, at the
 	 * given octave and duration as fraction of a whole
-	 * 
+	 *
 	 * @param pitch
 	 * @param accidental
 	 * @param octave
@@ -99,7 +99,7 @@ public final class Note {
 	/**
 	 * Constructs a note by the number of halftones from a natural C on the 4th
 	 * octave
-	 * 
+	 *
 	 * @param halfTones
 	 */
 	public Note(final int halfTones) {
@@ -109,7 +109,7 @@ public final class Note {
 	/**
 	 * Constructs a note by the number of halftones from a natural C 4, at the
 	 * given duration
-	 * 
+	 *
 	 * @param halfTones
 	 * @param fraction
 	 */
@@ -120,7 +120,7 @@ public final class Note {
 	/**
 	 * Constructs a note by the number of halftones from a natural C, at the
 	 * given octave and duration as fraction of a whole
-	 * 
+	 *
 	 * @param halfTones
 	 * @param octave
 	 * @param fraction
@@ -342,7 +342,7 @@ public final class Note {
 	 */
 	public String toDisplayString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append(mPitch.name());
+		builder.append(mPitch.toDisplayString());
 		builder.append(mAccidental.toString());
 		return builder.toString();
 	}
@@ -367,7 +367,7 @@ public final class Note {
 	/**
 	 * Test if two notes are equivalent (ie : the same note on different
 	 * octaves)
-	 * 
+	 *
 	 * @param other
 	 *            the note to compare to this one
 	 * @return if they are equivalent
@@ -379,7 +379,7 @@ public final class Note {
 
 	/**
 	 * An implementation of equals which is lenient according to
-	 * 
+	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

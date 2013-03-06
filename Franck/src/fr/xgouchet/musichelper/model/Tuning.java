@@ -1,65 +1,13 @@
 package fr.xgouchet.musichelper.model;
 
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 
+/**
+ * A {@link Tuning} describes how a String instrument (let's say, a guitar) is
+ * tuned. It containes an array of {@link Note} objects, corresponding to each
+ * string.
+ */
 public class Tuning {
-
-	public static final int MAX_FRET = 20;
-
-	/**
-	 * A combo (for lack of a better name) is a pair of int, describing a string
-	 * and fret to produce a Note
-	 */
-	public class Combo {
-
-		/**
-		 * @param string
-		 *            the string this combo is on
-		 * @param fret
-		 *            the fret to press
-		 * @param note
-		 *            the exact note produced
-		 */
-		public Combo(final int string, final int fret, final Note note) {
-			mString = string;
-			mFret = fret;
-			mNote = note;
-		}
-
-		/**
-		 * @return
-		 */
-		public int getFret() {
-			return mFret;
-		}
-
-		/**
-		 * @return the string
-		 */
-		public int getString() {
-			return mString;
-		}
-
-		/**
-		 * 
-		 */
-		@Override
-		public String toString() {
-			StringBuilder builder = new StringBuilder();
-			builder.append(mNote.toDisplayString());
-			builder.append(" : Str ");
-			builder.append(mString);
-			builder.append(", Fret ");
-			builder.append(mFret);
-
-			return builder.toString();
-		}
-
-		private final int mString, mFret;
-		private final Note mNote;
-	}
 
 	/**
 	 * @return a standard guitar tuning (E-A-d-g-b-e')
@@ -90,31 +38,27 @@ public class Tuning {
 		mStringsCount = mTuning.length;
 	}
 
-	public int[] getFrets(final Chord chord) {
-		// get dominant on all strings
-		List<Combo> dominantCombos = listCombos(chord.getDominant());
-
-		return null;
+	/**
+	 * @return the tuning
+	 */
+	public Note[] getTuning() {
+		return mTuning;
 	}
 
-	private List<Combo> listCombos(final Note note) {
-		List<Combo> combos = new LinkedList<Tuning.Combo>();
+	/**
+	 * @param string
+	 *            the string number
+	 * @return the note on the empty n<sup>th</sup> string
+	 */
+	public Note getNote(final int string) {
+		return mTuning[string];
+	}
 
-		Note fretNote, baseNote;
-		// search the given note on all strings
-		for (int string = 0; string < mStringsCount; string++) {
-			baseNote = mTuning[string];
-
-			// search the given note on all frets
-			for (int fret = 0; fret < MAX_FRET; ++fret) {
-				fretNote = new Note(baseNote.getHalfTones() + fret);
-				if (fretNote.isEquivalent(note)) {
-					combos.add(new Combo(string, fret, fretNote));
-				}
-			}
-		}
-
-		return combos;
+	/**
+	 * @return the stringsCount
+	 */
+	public int getStringsCount() {
+		return mStringsCount;
 	}
 
 	private final Note[] mTuning;
