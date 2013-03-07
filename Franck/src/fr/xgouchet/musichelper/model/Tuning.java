@@ -61,6 +61,51 @@ public class Tuning {
 		return mStringsCount;
 	}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder("Tuning [");
+		for (Note note : mTuning) {
+			builder.append(note.toFullDisplayString());
+			builder.append(" | ");
+		}
+
+		builder.setLength(builder.length() - 3);
+		builder.append("]");
+
+		return builder.toString();
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(final Object other) {
+		// check for self-comparison
+		if (this == other) {
+			return true;
+		}
+
+		// check for type
+		if (!(other instanceof Tuning)) {
+			return false;
+		}
+		Tuning tuning = (Tuning) other;
+
+		// check fields
+		return Arrays.equals(mTuning, tuning.getTuning());
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return mTuning.hashCode();
+	}
+
 	private final Note[] mTuning;
 	private final int mStringsCount;
 }

@@ -347,6 +347,14 @@ public final class Note {
 		return builder.toString();
 	}
 
+	public String toFullDisplayString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(mPitch.toDisplayString());
+		builder.append(mAccidental.toString());
+		builder.append(mOctave);
+		return builder.toString();
+	}
+
 	/**
 	 * @see java.lang.Object#toString()
 	 */

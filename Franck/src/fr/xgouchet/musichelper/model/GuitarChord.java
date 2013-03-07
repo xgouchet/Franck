@@ -14,6 +14,13 @@ public class GuitarChord {
 		mChord = generateGuitarChords(chord);
 	}
 
+	/**
+	 * @return the combos (ie : the frets to pinch on each string)
+	 */
+	public Combo[] getCombos() {
+		return mCombos;
+	}
+
 	private Chord generateGuitarChords(final Chord chord) {
 
 		return null;

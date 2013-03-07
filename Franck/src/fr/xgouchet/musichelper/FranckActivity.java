@@ -53,6 +53,7 @@ public class FranckActivity extends Activity implements OnQueryTextListener {
 		generateTabs();
 		setChordType(Chord.Type.major);
 		setDominant(new Note());
+
 	}
 
 	/**
@@ -144,6 +145,7 @@ public class FranckActivity extends Activity implements OnQueryTextListener {
 		try {
 			chord = Chord.parse(query);
 		} catch (Exception e) {
+			Log.i("alert", "alert");
 			Crouton.showText(this, "Unable to find a Chord with this name",
 					Style.ALERT);
 			chord = null;
