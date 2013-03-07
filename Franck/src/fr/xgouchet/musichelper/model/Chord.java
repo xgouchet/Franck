@@ -8,18 +8,20 @@ import android.text.TextUtils;
 
 /**
  * TODO write equals / hash
- * 
+ *
  * A chord has 3 elements :
  * <ul>
  * <li>a dominant Note;</li>
  * <li>a chord type (major, minor, ...);</li>
  * <li>a corresponding list of notes</li>
  * </ul>
+ *
+ * @author Xavier Gouchet
  */
 public class Chord {
 
 	/**
-	 * 
+	 *
 	 */
 	public enum Type {
 		// triad chords
@@ -103,7 +105,7 @@ public class Chord {
 
 	/**
 	 * Parses a string with a chord name
-	 * 
+	 *
 	 * Here are sample notations based on a C dominant. Replacing C by any note
 	 * will work accordingly.
 	 * <ul>
@@ -119,7 +121,7 @@ public class Chord {
 	 * <dd>C°, Cdim</dd>
 	 * </dl>
 	 * </li>
-	 * 
+	 *
 	 * <li>7th chords :
 	 * <dl>
 	 * <dt>Diminished 7th</dt>
@@ -141,7 +143,7 @@ public class Chord {
 	 * </dl>
 	 * </li>
 	 * </ul>
-	 * 
+	 *
 	 * @param value
 	 *            any non null String value (see examples above)
 	 * @return the parse Chord as a list of Tones
@@ -313,7 +315,7 @@ public class Chord {
 
 	/**
 	 * Builds a Chord object
-	 * 
+	 *
 	 * @param dominant
 	 *            the dominant tone
 	 * @param type
@@ -383,7 +385,7 @@ public class Chord {
 
 	/**
 	 * Describes this chord (eg: "Am [A - C - E]", "E7 [E - G# - B - D]"
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

@@ -2,6 +2,11 @@ package fr.xgouchet.musichelper.model;
 
 import fr.xgouchet.musichelper.common.Settings;
 
+/**
+ * Describes the 7 different base pitches known in music
+ * 
+ * @author Xavier Gouchet
+ */
 public enum Pitch {
 	C, D, E, F, G, A, B;
 

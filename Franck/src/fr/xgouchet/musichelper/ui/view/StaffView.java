@@ -15,6 +15,11 @@ import fr.xgouchet.musichelper.model.Chord;
 import fr.xgouchet.musichelper.model.Key;
 import fr.xgouchet.musichelper.model.Note;
 
+/**
+ * A Staff view draws a Staff with the given Chord as wholes
+ *
+ * @author Xavier Gouchet
+ */
 public class StaffView extends View {
 
 	public static final int LINES = 5;

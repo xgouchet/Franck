@@ -6,6 +6,8 @@ import java.util.Arrays;
  * A {@link Tuning} describes how a String instrument (let's say, a guitar) is
  * tuned. It containes an array of {@link Note} objects, corresponding to each
  * string.
+ *
+ * @author Xavier Gouchet
  */
 public class Tuning {
 

@@ -1,13 +1,13 @@
 package fr.xgouchet.musichelper.model;
 
 /**
- * 
+ * @author Xavier Gouchet
  */
 public enum Accidental {
 	natural, sharp, flat, doubleSharp, doubleFlat;
 
 	private static final int[] ACCIDENTAL_HALFTONES = new int[] { 0, 1, -1, 2,
-		-2 };
+			-2 };
 
 	/**
 	 * @return the added (positive or negative) halftones from this accidental

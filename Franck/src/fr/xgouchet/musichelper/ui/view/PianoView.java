@@ -15,6 +15,12 @@ import fr.xgouchet.musichelper.model.Accidental;
 import fr.xgouchet.musichelper.model.Chord;
 import fr.xgouchet.musichelper.model.Note;
 
+/**
+ * A {@link PianoView} draws a Piano keyboard and highlights the keys to play a
+ * given {@link Chord}
+ *
+ * @author Xavier Gouchet
+ */
 public class PianoView extends View {
 
 	private static final int[] BLACK_KEYS_OFFSET = new int[] { 0, 1, 3, 4, 5 };
@@ -23,7 +29,7 @@ public class PianoView extends View {
 
 	/**
 	 * Simple constructor to use when creating a view from code.
-	 * 
+	 *
 	 * @param context
 	 *            The Context the view is running in, through which it can
 	 *            access the current theme, resources, etc.
@@ -40,10 +46,10 @@ public class PianoView extends View {
 	 * that were specified in the XML file. This version uses a default style of
 	 * 0, so the only attribute values applied are those in the Context's Theme
 	 * and the given AttributeSet.
-	 * 
+	 *
 	 * The method onFinishInflate() will be called after all children have been
 	 * added.
-	 * 
+	 *
 	 * @param context
 	 *            The Context the view is running in, through which it can
 	 *            access the current theme, resources, etc.
@@ -66,7 +72,7 @@ public class PianoView extends View {
 	 * for defStyle; this allows the theme's button style to modify all of the
 	 * base view attributes (in particular its background) as well as the Button
 	 * class's attributes.
-	 * 
+	 *
 	 * @param context
 	 *            The Context the view is running in, through which it can
 	 *            access the current theme, resources, etc.
@@ -181,7 +187,7 @@ public class PianoView extends View {
 	/**
 	 * Draws an octave of a piano keyboard from the C to the following B
 	 * (including flats and bemols)
-	 * 
+	 *
 	 * @param canvas
 	 *            the canvas to draw onto
 	 * @param x
@@ -208,7 +214,7 @@ public class PianoView extends View {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param canvas
 	 *            the canvas to draw onto
 	 * @param firstNoteOffset
@@ -317,7 +323,7 @@ public class PianoView extends View {
 
 	/**
 	 * Read the attributes taken from XML
-	 * 
+	 *
 	 * @param attrs
 	 *            The attributes of the XML tag that is inflating the view.
 	 */

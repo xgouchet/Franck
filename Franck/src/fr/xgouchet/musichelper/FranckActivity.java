@@ -26,14 +26,18 @@ import de.neofonie.mobile.app.android.widget.crouton.Crouton;
 import de.neofonie.mobile.app.android.widget.crouton.Style;
 import fr.xgouchet.musichelper.common.Settings;
 import fr.xgouchet.musichelper.model.Chord;
+import fr.xgouchet.musichelper.model.GuitarChord;
 import fr.xgouchet.musichelper.model.Key;
 import fr.xgouchet.musichelper.model.Note;
+import fr.xgouchet.musichelper.model.Tuning;
 import fr.xgouchet.musichelper.ui.card.GrandStaffCard;
 import fr.xgouchet.musichelper.ui.card.PianoCard;
 import fr.xgouchet.musichelper.ui.card.StaffCard;
 
 /**
  *
+ *
+ * @author Xavier Gouchet
  */
 public class FranckActivity extends Activity implements OnQueryTextListener {
 
@@ -54,6 +58,8 @@ public class FranckActivity extends Activity implements OnQueryTextListener {
 		setChordType(Chord.Type.major);
 		setDominant(new Note());
 
+		GuitarChord test = new GuitarChord(Chord.parse("C"),
+				Tuning.standardGuitarTuning());
 	}
 
 	/**

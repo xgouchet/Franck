@@ -2,6 +2,8 @@ package fr.xgouchet.musichelper.model;
 
 /**
  * Defines the different possible keys on a staff
+ *
+ * @author Xavier Gouchet
  */
 public enum Key {
 	treble, bass, alto;

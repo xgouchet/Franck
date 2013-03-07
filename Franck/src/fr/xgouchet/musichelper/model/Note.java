@@ -14,6 +14,8 @@ package fr.xgouchet.musichelper.model;
  * {@link #seventhMajor()} and {@link #seventhMinor()} method, as well as the
  * {@link #diminished()} and {@link #augmented()} methods.
  * </p>
+ *
+ * @author Xavier Gouchet
  */
 public final class Note {
 

@@ -1,5 +1,8 @@
 package fr.xgouchet.musichelper.common;
 
+/**
+ * @author Xavier Gouchet
+ */
 public class Settings {
 
 	private static boolean sUseFrenchNotation = false;
