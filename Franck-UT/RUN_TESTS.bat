@@ -1,7 +1,14 @@
+REM Uninstall existing app on test device
 adb uninstall fr.xgouchet.musichelper
 adb uninstall fr.xgouchet.musichelper.test 
-call ant emma clean debug install 
+
+REM build and install the test app on device
+call ant emma clean debug install > build.log
+
+REM launch the test and write the output to test.log
 call ant emma test emma-reports > test.log
+
+REM 
 findstr "Failure expected" test.log > test-failures.log
 
 @echo off
@@ -14,9 +21,9 @@ IF %size% LEQ 0 goto okay
 	echo msgbox "Some Unit Tests failed",vbOKOnly,"Franck UT" > %tmp%\tmp.vbs
 	wscript %tmp%\tmp.vbs
 	del %tmp%\tmp.vbs
-	mv test-failures.log ..\reports\failures.log
 :okay
 
-rm -f "test.log"
+rm test-failures.log
+mv test.log ..\reports\test-output.log
+mv build.log ..\reports\build-output.log
 @echo on
-

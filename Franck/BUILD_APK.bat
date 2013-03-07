@@ -1,1 +1,1 @@
-ant clean release apk-version-release
+ant clean release apk-version-release > build-output.log
