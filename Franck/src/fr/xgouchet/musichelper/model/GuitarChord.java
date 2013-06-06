@@ -4,14 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import choco.Choco;
-import choco.cp.model.CPModel;
-import choco.cp.solver.CPSolver;
-import choco.cp.solver.constraints.integer.ModuloXYC2;
-import choco.kernel.model.Model;
-import choco.kernel.model.constraints.Constraint;
-import choco.kernel.model.variables.integer.IntegerVariable;
-import choco.kernel.solver.Solver;
+import android.util.Log;
+import fr.xgouchet.musichelper.solver.GuitarSolver;
 
 /**
  * @author Xavier Gouchet
@@ -29,9 +23,8 @@ public class GuitarChord {
 		mAllCombos = new LinkedList<Set<Combo>>();
 		mTuning = tuning;
 
-		mChord = null;
-
-		generateGuitarChords(chord);
+		mChord = chord;
+		generateGuitarChords();
 	}
 
 	/**
@@ -46,74 +39,16 @@ public class GuitarChord {
 	/**
 	 * @param chord
 	 */
-	protected void generateGuitarChords(final Chord chord) {
+	protected void generateGuitarChords() {
 
-		// The Model
-		Model model = new CPModel();
+		GuitarSolver solver = new GuitarSolver();
+		solver.setTuning(mTuning);
+		solver.setChord(mChord);
 
-		// The variables
-		IntegerVariable[] strings = new IntegerVariable[mTuning
-				.getStringsCount()];
-		for (int i = 0; i < strings.length; i++) {
-			strings[i] = Choco.makeIntVar(STR_VAR + i, -1, MAX_FRET);
+		if (solver.solve()) {
+			Log.i("Franck", "YEAH!");
 		}
 
-		// the constraints
-		generateChordConstraints(model, strings, chord);
-
-		// solve
-		Solver solver = new CPSolver();
-		solver.read(model);
-		solver.solve();
-
-		for (int i = 0; i < strings.length; i++) {
-			System.out.print(solver.getVar(strings[i]).getVal() + " ");
-		}
-	}
-
-	/**
-	 * Generates constraints for each string to produce a note in the given
-	 * chord, or not be played
-	 * 
-	 * @param store
-	 * @param vars
-	 * @param chord
-	 */
-	private void generateChordConstraints(final Model model,
-			final IntegerVariable[] vars, final Chord chord) {
-
-		List<Constraint> constraints = new LinkedList<Constraint>();
-		IntegerVariable var;
-
-		// we need at least one string for each note
-		for (Note note : chord.getNotes()) {
-			if (note.equals(chord.getDominant())) {
-				// addDominantConstraints(store, vars, note);
-				addNoteConstraints(model, vars, note);
-			} else {
-				addNoteConstraints(model, vars, note);
-			}
-		}
-	}
-
-	/**
-	 * 
-	 * @param model
-	 * @param vars
-	 * @param note
-	 */
-	private void addNoteConstraints(final Model model,
-			final IntegerVariable[] vars, final Note note) {
-		Constraint consts[] = new Constraint[vars.length];
-		int base, tones;
-		tones = note.getHalfTones();
-
-		for (int i = 0; i < vars.length; ++i) {
-			base = mTuning.getNote(i).getHalfTones();
-			consts[i] = Choco.mod(vars[i], Choco.constant(tones - base), 12);
-		}
-
-		model.addConstraint(Choco.or(consts));
 	}
 
 	protected final List<Set<Combo>> mAllCombos;

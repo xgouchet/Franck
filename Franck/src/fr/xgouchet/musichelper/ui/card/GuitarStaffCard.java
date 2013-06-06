@@ -11,13 +11,13 @@ import fr.xgouchet.musichelper.model.Chord;
 import fr.xgouchet.musichelper.model.Key;
 import fr.xgouchet.musichelper.ui.view.StaffView;
 
-public class StaffCard extends Card {
+public class GuitarStaffCard extends Card {
 
 	/**
 	 * @param chord
 	 * @param key
 	 */
-	public StaffCard(final Chord chord, final Key key) {
+	public GuitarStaffCard(final Chord chord, final Key key) {
 		mChord = chord;
 		mKey = key;
 	}

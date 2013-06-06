@@ -18,12 +18,11 @@ import android.view.View;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fima.cardsui.objects.CardStack;
 import com.fima.cardsui.views.CardUI;
 
-import de.neofonie.mobile.app.android.widget.crouton.Crouton;
-import de.neofonie.mobile.app.android.widget.crouton.Style;
 import fr.xgouchet.musichelper.common.Settings;
 import fr.xgouchet.musichelper.model.Chord;
 import fr.xgouchet.musichelper.model.GuitarChord;
@@ -32,11 +31,11 @@ import fr.xgouchet.musichelper.model.Note;
 import fr.xgouchet.musichelper.model.Tuning;
 import fr.xgouchet.musichelper.ui.card.GrandStaffCard;
 import fr.xgouchet.musichelper.ui.card.PianoCard;
-import fr.xgouchet.musichelper.ui.card.StaffCard;
+import fr.xgouchet.musichelper.ui.card.GuitarStaffCard;
 
 /**
- *
- *
+ * 
+ * 
  * @author Xavier Gouchet
  */
 public class FranckActivity extends Activity implements OnQueryTextListener {
@@ -151,9 +150,8 @@ public class FranckActivity extends Activity implements OnQueryTextListener {
 		try {
 			chord = Chord.parse(query);
 		} catch (Exception e) {
-			Log.i("alert", "alert");
-			Crouton.showText(this, "Unable to find a Chord with this name",
-					Style.ALERT);
+			Toast.makeText(this, "Unable to create such a chord",
+					Toast.LENGTH_LONG).show();
 			chord = null;
 		}
 
@@ -179,7 +177,7 @@ public class FranckActivity extends Activity implements OnQueryTextListener {
 
 	/**
 	 * Add a tab to the action bar
-	 *
+	 * 
 	 * @param note
 	 *            the dominant note for this tab
 	 * @return the created tab
@@ -240,7 +238,7 @@ public class FranckActivity extends Activity implements OnQueryTextListener {
 	}
 
 	/**
-	 *
+	 * 
 	 * @param chordType
 	 */
 	public void setChordType(final Chord.Type chordType) {
@@ -280,7 +278,7 @@ public class FranckActivity extends Activity implements OnQueryTextListener {
 		mCardView.addCard(new PianoCard(mChord));
 
 		// Guitar
-		mCardView.addCard(new StaffCard(mChord, Key.treble));
+		mCardView.addCard(new GuitarStaffCard(mChord, Key.treble));
 
 	}
 
