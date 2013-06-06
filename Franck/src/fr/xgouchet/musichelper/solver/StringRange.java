@@ -58,7 +58,7 @@ public class StringRange implements Iterable<Combo> {
 
 	}
 
-	public static final int MAX_FRET = 24;
+	public static final int MAX_FRET = 15;
 
 	/**
 	 * Builds a default range where all frets are enabled

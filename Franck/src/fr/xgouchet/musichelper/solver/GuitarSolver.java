@@ -111,6 +111,12 @@ public class GuitarSolver {
 					continue;
 				}
 
+				// Prevent last 3 strings from being X'ed
+				if ((combo.getFret() < 0)
+						&& (combo.getString() >= (mStrings.length - 3))) {
+					continue;
+				}
+
 				list.add(combo);
 				hasValid |= checkAndGenerateCombos(list, level + 1);
 				list.remove(combo);
@@ -201,15 +207,19 @@ public class GuitarSolver {
 	 */
 	private boolean checkHumanHand(List<Combo> list) {
 		int min, max, fret;
-
+		boolean allowBarred = true;
 		min = StringRange.MAX_FRET + 1;
 		max = -1;
 
 		for (Combo combo : list) {
 			fret = combo.getFret();
-			if (fret <= 0) {
+			if (fret < 0) {
+				continue;
+			} else if (fret == 0) {
+				allowBarred = false;
 				continue;
 			}
+			
 			if (fret < min) {
 				min = fret;
 			}
@@ -218,7 +228,13 @@ public class GuitarSolver {
 			}
 		}
 
-		return (max - min) < 5;
+		// Check finger span
+		if ((max - min) >= 4) {
+			return false;
+		}
+		
+		
+
 	}
 
 	/**
