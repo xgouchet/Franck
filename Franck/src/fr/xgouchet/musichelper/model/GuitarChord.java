@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import android.util.Log;
 import fr.xgouchet.musichelper.solver.GuitarSolver;
 
 /**
@@ -45,10 +44,7 @@ public class GuitarChord {
 		solver.setTuning(mTuning);
 		solver.setChord(mChord);
 
-		if (solver.solve()) {
-			Log.i("Franck", "YEAH!");
-		}
-
+	//	solver.execute();
 	}
 
 	protected final List<Set<Combo>> mAllCombos;

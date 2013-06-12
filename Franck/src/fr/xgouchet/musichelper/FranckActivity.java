@@ -32,6 +32,7 @@ import fr.xgouchet.musichelper.model.Tuning;
 import fr.xgouchet.musichelper.ui.card.GrandStaffCard;
 import fr.xgouchet.musichelper.ui.card.PianoCard;
 import fr.xgouchet.musichelper.ui.card.GuitarStaffCard;
+import fr.xgouchet.musichelper.ui.card.SoundCard;
 
 /**
  * 
@@ -57,8 +58,6 @@ public class FranckActivity extends Activity implements OnQueryTextListener {
 		setChordType(Chord.Type.major);
 		setDominant(new Note());
 
-		GuitarChord test = new GuitarChord(Chord.parse("C"),
-				Tuning.standardGuitarTuning());
 	}
 
 	/**
@@ -271,7 +270,8 @@ public class FranckActivity extends Activity implements OnQueryTextListener {
 
 		mCardView.clearCards();
 
-		CardStack piano = new CardStack();
+		// Sound
+		mCardView.addCard(new SoundCard(mChord));
 
 		// Piano
 		mCardView.addCard(new GrandStaffCard(mChord));
@@ -279,6 +279,8 @@ public class FranckActivity extends Activity implements OnQueryTextListener {
 
 		// Guitar
 		mCardView.addCard(new GuitarStaffCard(mChord, Key.treble));
+		GuitarChord test = new GuitarChord(mChord,
+				Tuning.standardGuitarTuning());
 
 	}
 

@@ -9,6 +9,9 @@
     <string name="ui_grand_staff">Grand Staff</string>
     <string name="ui_guitar_staff">Guitar Staff</string>
     <string name="ui_guitar_tabs">Guitar Tabs</string>
+    <string name="ui_sounds">Sounds</string>
+    <string name="ui_chord">Chord</string>
+    <string name="ui_arpeggio">Arpeggio</string>
 
     <!-- MENUS -->
     <string name="menu_search_chord">Search chord</string>

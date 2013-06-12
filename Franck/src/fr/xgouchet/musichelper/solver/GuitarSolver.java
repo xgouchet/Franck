@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import android.os.AsyncTask;
 import android.util.Log;
 import fr.xgouchet.musichelper.model.Chord;
 import fr.xgouchet.musichelper.model.Combo;
@@ -16,7 +17,7 @@ import fr.xgouchet.musichelper.model.Tuning;
  * @author Xavier Gouchet
  * 
  */
-public class GuitarSolver {
+public class GuitarSolver extends AsyncTask<Void, Void, Void> {
 
 	public GuitarSolver() {
 		mAllCombos = new ArrayList<List<Combo>>();
@@ -31,13 +32,27 @@ public class GuitarSolver {
 	}
 
 	/**
+	 * @see android.os.AsyncTask#doInBackground(Params[])
+	 */
+	@Override
+	protected Void doInBackground(Void... params) {
+		solve();
+		return null;
+	}
+
+	@Override
+	protected void onPostExecute(Void result) {
+		super.onPostExecute(result);
+		printSolvedChords();
+	}
+
+	/**
 	 * @return if at least one solution was found for the given chord and tuning
 	 */
-	public boolean solve() {
+	private void solve() {
 		mAllCombos.clear();
 
 		long start = System.currentTimeMillis();
-		Log.i("Franck", "Starting solver");
 
 		generateStrings();
 		generateConstraints();
@@ -46,20 +61,6 @@ public class GuitarSolver {
 
 		Log.i("Franck", "Found " + mAllCombos.size() + " solutions in "
 				+ (System.currentTimeMillis() - start) + " ms");
-
-		StringBuilder builder = new StringBuilder();
-		for (List<Combo> list : mAllCombos) {
-			builder.append('-');
-			for (Combo combo : list) {
-				builder.append(combo.getFretString());
-				builder.append('-');
-			}
-
-			Log.i("Franck", builder.toString());
-			builder.setLength(0);
-		}
-
-		return false;
 	}
 
 	/**
@@ -179,6 +180,19 @@ public class GuitarSolver {
 	}
 
 	/**
+	 * Check that the chord does not copy another valid chord with just an X
+	 * somewhere.
+	 * This test can be quite 
+	 * 
+	 * @param list
+	 *            the list to test
+	 * @return if this chord is valid
+	 */
+	private boolean checkUnnecessaryX(List<Combo> list) {
+		return false;
+	}
+
+	/**
 	 * Check that the lowest note is the dominant
 	 * 
 	 * @param list
@@ -219,7 +233,7 @@ public class GuitarSolver {
 				allowBarred = false;
 				continue;
 			}
-			
+
 			if (fret < min) {
 				min = fret;
 			}
@@ -232,9 +246,24 @@ public class GuitarSolver {
 		if ((max - min) >= 4) {
 			return false;
 		}
-		
-		
 
+		// check number of fingers needed
+		int fingers = allowBarred ? 1 : 0;
+		for (Combo combo : list) {
+			fret = combo.getFret();
+			if (fret <= 0) {
+				continue;
+			}
+			if (allowBarred && (fret == min)) {
+				continue;
+			}
+			if (allowBarred && (combo.getString() == 0)) {
+				return false;
+			}
+			fingers++;
+		}
+
+		return (fingers <= 4);
 	}
 
 	/**
@@ -274,11 +303,32 @@ public class GuitarSolver {
 		}
 
 		// average on each note
-		if ((max - 1) > (mStrings.length * 1.0) / (mNotes.length * 1.0f)) {
-			return false;
+		double average = ((mStrings.length * 1.0) / (mNotes.length * 1.0f));
+		for (int note : notes) {
+			if ((note < average - 1) || (note > average + 1)) {
+				return false;
+			}
 		}
 
 		return true;
+	}
+
+	/**
+	 * Prints the solved chords to the log cat
+	 */
+	private void printSolvedChords() {
+
+		StringBuilder builder = new StringBuilder();
+		for (List<Combo> list : mAllCombos) {
+			builder.append('-');
+			for (Combo combo : list) {
+				builder.append(combo.getFretString());
+				builder.append('-');
+			}
+
+			Log.i("Franck", builder.toString());
+			builder.setLength(0);
+		}
 	}
 
 	protected final List<List<Combo>> mAllCombos;

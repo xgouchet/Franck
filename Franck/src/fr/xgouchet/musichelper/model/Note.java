@@ -19,6 +19,11 @@ package fr.xgouchet.musichelper.model;
  */
 public final class Note {
 
+	/** The constant used to compute notes frequencies (~ 1,059463) */
+	private static final double A_FREQ = Math.pow(2, (1.0 / 12.0));
+	/** The Reference frequency (A4, which is 440.0 Hz) */
+	private static final double F0_FREQ = 440.0;
+
 	/**
 	 * Parses a note from string
 	 * 
@@ -337,6 +342,24 @@ public final class Note {
 	 */
 	public Pitch getPitch() {
 		return mPitch;
+	}
+
+	/**
+	 * The frequency of a note is given by the formula :
+	 * 
+	 * <pre>
+	 * f<sub>n</sub> = f<sub>0</sub> * a<sup>n</sup>
+	 * </pre>
+	 * 
+	 * Where f<sub>0</sub> is the frequency of a reference note (eg : A4, at
+	 * 440.0Hz) and a is equal to 2<sup><small>1/12</small></sup>
+	 * 
+	 * @return the current note's frequency (in hertz)
+	 */
+	public double getFrequency() {
+		// get half tones from A4
+		int n = getHalfTones() - 9;
+		return F0_FREQ * Math.pow(A_FREQ, n);
 	}
 
 	/**
