@@ -1,17 +1,15 @@
 package fr.xgouchet.musichelper.ui.card;
 
 import android.content.Context;
-import android.media.AudioFormat;
-import android.media.AudioManager;
-import android.media.AudioTrack;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.fima.cardsui.objects.Card;
 
-import fr.xgouchet.musichelper.AsyncSoundTask;
 import fr.xgouchet.musichelper.R;
+import fr.xgouchet.musichelper.audio.AsyncSoundTask;
+import fr.xgouchet.musichelper.audio.AsyncSoundTask.Type;
 import fr.xgouchet.musichelper.model.Chord;
 
 public class SoundCard extends Card implements OnClickListener {
@@ -52,8 +50,7 @@ public class SoundCard extends Card implements OnClickListener {
 	}
 
 	private void playChord() {
-		AsyncSoundTask sound = new AsyncSoundTask();
-
+		AsyncSoundTask sound = new AsyncSoundTask(mChord, Type.chord);
 		sound.execute();
 	}
 
