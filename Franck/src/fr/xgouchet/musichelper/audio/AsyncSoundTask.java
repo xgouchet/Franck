@@ -20,9 +20,6 @@ public class AsyncSoundTask extends AsyncTask<Void, Void, Void> {
 	private final Chord mChord;
 	private final Type mType;
 
-	// TODO find a nice sounding overtone
-	private double[] mOvertones = new double[] { 0.05, 0.25, 0.1 };
-
 	/**
 	 * 
 	 * @param chord
@@ -89,7 +86,7 @@ public class AsyncSoundTask extends AsyncTask<Void, Void, Void> {
 		double twopi = Math.PI * 2;
 		int amplitude = 7500;
 
-		int notes = 1;// mChord.getNotes().length;
+		int notes = mChord.getNotes().length;
 		double[] phases = new double[notes];
 		double[] frequencies = new double[notes];
 
@@ -106,12 +103,8 @@ public class AsyncSoundTask extends AsyncTask<Void, Void, Void> {
 			for (int i = 0; i < remaining; i++) {
 				mSamples[i] = 0;
 				for (int n = 0; n < notes; ++n) {
-					mSamples[i] += (short) (amplitude * Math.sin(phases[n]));
-
-					for (int o = 0; o < mOvertones.length; ++o) {
-						mSamples[i] += (amplitude * mOvertones[o] * Math
-								.sin(phases[n] * (o + 3)));
-					}
+					mSamples[i] += (short) amplitude
+							* ((Math.sin(phases[n]) > 0) ? 1 : -1);
 
 					phases[n] += twopi * frequencies[n] / mSamplingRate;
 
