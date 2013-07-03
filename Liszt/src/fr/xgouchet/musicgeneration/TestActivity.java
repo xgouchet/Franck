@@ -6,11 +6,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
-import fr.xgouchet.musicgeneration.source.SineSource;
 import fr.xgouchet.musicgeneration.source.SoundSource;
-import fr.xgouchet.musicgeneration.source.SquareSource;
-import fr.xgouchet.musicgeneration.source.TriangleSource;
 import fr.xgouchet.musicgeneration.source.filters.FadeOut;
+import fr.xgouchet.musicgeneration.source.raw.SineSource;
+import fr.xgouchet.musicgeneration.source.raw.SquareSource;
+import fr.xgouchet.musicgeneration.source.raw.TriangleSource;
 import fr.xgouchet.musicgeneration.task.AsyncSoundPlayer;
 import fr.xgouchet.musicgeneration.task.AsyncSoundPlayer.Quality;
 

@@ -7,42 +7,67 @@ import android.os.AsyncTask;
 import fr.xgouchet.musicgeneration.source.SoundSource;
 
 /**
- * An async task playing several sound sources at the same time
+ * An async task playing several sound sources at the same time.
  * 
+ * Some sources are real source, generating sound, other are filters or effects
+ * using other sources as input
+ * 
+ * @author Xavier Gouchet
  */
 public class AsyncSoundPlayer extends AsyncTask<SoundSource, Void, Void> {
 
+	/**
+	 * The Sound Quality.
+	 * 
+	 * @author Xavier Gouchet
+	 */
 	public enum Quality {
-		lowest, low, medium, high, highest
+
+		/** The lowest. */
+		lowest,
+		/** The low. */
+		low,
+		/** The medium. */
+		medium,
+		/** The high. */
+		high,
+		/** The highest. */
+		highest
 	}
 
-	/** */
+	/** The Maximum sound Amplitude */
 	private static final double MAX_AMPLITUDE = 7000.0;
 
-	/** Size of the buffer sent to the Audio track */
+	/** Size of the buffer sent to the Audio track. */
 	private final int mBufferSize;
-	/** Sampling rate of the sound signal */
+
+	/** Sampling rate of the sound signal. */
 	private final int mSamplingRate;
-	/** Duration (in ms) of a sample */
+
+	/** Duration (in ms) of a sample. */
 	private final double mSampleDuration;
-	/**  */
+
+	/** The samples buffer */
 	private final short mSamples[];
 
-	/** the Audio track linked to this task */
+	/** the Audio track linked to this task. */
 	private AudioTrack mTrack;
 
 	/**
-	 * Creates a sound player
+	 * Creates a sound player.
+	 * 
+	 * @return the async sound player
 	 */
 	public static AsyncSoundPlayer createAsyncSoundPlayer() {
 		return new AsyncSoundPlayer(44100);
 	}
 
 	/**
-	 * Creates a sound player
+	 * Creates a sound player.
 	 * 
 	 * @param quality
 	 *            the quality of the sound sampling
+	 * @return the async sound player
 	 */
 	public static AsyncSoundPlayer createAsyncSoundPlayer(final Quality quality) {
 
@@ -70,6 +95,8 @@ public class AsyncSoundPlayer extends AsyncTask<SoundSource, Void, Void> {
 	}
 
 	/**
+	 * Instantiates a new async sound player.
+	 * 
 	 * @param samplingRate
 	 *            the sound sampling rate (default is 44100)
 	 */
@@ -84,6 +111,8 @@ public class AsyncSoundPlayer extends AsyncTask<SoundSource, Void, Void> {
 	}
 
 	/**
+	 * On pre execute.
+	 * 
 	 * @see android.os.AsyncTask#onPreExecute()
 	 */
 	@Override
@@ -96,11 +125,16 @@ public class AsyncSoundPlayer extends AsyncTask<SoundSource, Void, Void> {
 	}
 
 	/**
+	 * Plays the given SoundSource instance simultaneously
+	 * 
+	 * @param sources
+	 *            The sound sources to play
+	 * @return
 	 * @see android.os.AsyncTask#doInBackground(Params[])
 	 */
 	@Override
-	protected Void doInBackground(final SoundSource... params) {
-		int neededSamples = (int) (mSamplingRate * getDuration(params));
+	protected Void doInBackground(final SoundSource... sources) {
+		int neededSamples = (int) (mSamplingRate * getDuration(sources));
 		int playedSamples = 0, remaining;
 		double value, time = 0;
 
@@ -112,11 +146,11 @@ public class AsyncSoundPlayer extends AsyncTask<SoundSource, Void, Void> {
 				time += mSampleDuration;
 				value = 0;
 				//
-				for (SoundSource source : params) {
+				for (SoundSource source : sources) {
 					value += source.getValue(time);
 				}
 
-				value /= params.length;
+				value /= sources.length;
 				mSamples[i] = (short) (value * MAX_AMPLITUDE);
 			}
 
@@ -128,6 +162,10 @@ public class AsyncSoundPlayer extends AsyncTask<SoundSource, Void, Void> {
 	}
 
 	/**
+	 * On post execute.
+	 * 
+	 * @param result
+	 *            the result
 	 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
 	 */
 	@Override
@@ -138,7 +176,7 @@ public class AsyncSoundPlayer extends AsyncTask<SoundSource, Void, Void> {
 	}
 
 	/**
-	 * Computes the total duration of the sounds to play
+	 * Computes the total duration of the sounds to play.
 	 * 
 	 * @param params
 	 *            the list of sound sources
