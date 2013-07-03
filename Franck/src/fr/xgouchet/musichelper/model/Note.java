@@ -9,10 +9,11 @@ package fr.xgouchet.musichelper.model;
  * 
  * <p>
  * New notes can be constructed as derived from a dominant note, using the
- * {@link #secondMajor()}, {@link #secondMinor()}, {@link #thirdMajor()},
- * {@link #thirdMinor()}, {@link #fourth()}, {@link #fifth()}, {@link #sixth()},
- * {@link #seventhMajor()} and {@link #seventhMinor()} method, as well as the
- * {@link #diminished()} and {@link #augmented()} methods.
+ * {@link #wholetone()}, {@link #semitone()}, {@link #thirdMajor()},
+ * {@link #thirdMinor()}, {@link #fourth()}, {@link #fifth()},
+ * {@link #sixthMajor()}, {@link #seventhMajor()} and {@link #seventhMinor()}
+ * method, as well as the {@link #diminished()} and {@link #augmented()}
+ * methods.
  * </p>
  * 
  * @author Xavier Gouchet
@@ -158,17 +159,17 @@ public final class Note {
 	}
 
 	/**
-	 * @return the major 2nd note based on this dominant
+	 * @return the whole tone note based on this dominant
 	 */
-	public Note secondMajor() {
+	public Note wholetone() {
 		return new Note(getHalfTones() + 2, mFraction);
 	}
 
 	/**
-	 * @return the minor 2nd note based on this dominant
+	 * @return the semitone note based on this dominant
 	 */
-	public Note secondMinor() {
-		return secondMajor().diminished();
+	public Note semitone() {
+		return new Note(getHalfTones() + 1, mFraction);
 	}
 
 	/**
@@ -193,6 +194,13 @@ public final class Note {
 	}
 
 	/**
+	 * @return the tritone note based on this dominant
+	 */
+	public Note tritone() {
+		return new Note(getHalfTones() + 6, mFraction);
+	}
+
+	/**
 	 * @return the perfect 5th note based on this dominant
 	 */
 	public Note fifth() {
@@ -200,10 +208,24 @@ public final class Note {
 	}
 
 	/**
+	 * @return the minor 6th note based on this dominant
+	 */
+	public Note sixthMinor() {
+		return new Note(getHalfTones() + 8, mFraction);
+	}
+
+	/**
 	 * @return the 6th note based on this dominant
 	 */
-	public Note sixth() {
+	public Note sixthMajor() {
 		return new Note(getHalfTones() + 9, mFraction);
+	}
+
+	/**
+	 * @return the minor 7th note based on this dominant
+	 */
+	public Note seventhMinor() {
+		return new Note(getHalfTones() + 10, mFraction);
 	}
 
 	/**
@@ -211,13 +233,6 @@ public final class Note {
 	 */
 	public Note seventhMajor() {
 		return new Note(getHalfTones() + 11, mFraction);
-	}
-
-	/**
-	 * @return the minor 7th note based on this dominant
-	 */
-	public Note seventhMinor() {
-		return seventhMajor().diminished();
 	}
 
 	/**
@@ -345,13 +360,13 @@ public final class Note {
 	}
 
 	/**
-	 * The frequency of a note is given by the formula :
+	 * The frequency of a note is given by the formula (in the equally tempered scale) :
 	 * 
 	 * <pre>
 	 * f<sub>n</sub> = f<sub>0</sub> * a<sup>n</sup>
 	 * </pre>
 	 * 
-	 * Where f<sub>0</sub> is the frequency of a reference note (eg : A4, at
+	 * Where f<sub>0</sub> is the frequency of a reference note (eg : A<sub>4</sub> =
 	 * 440.0Hz) and a is equal to 2<sup><small>1/12</small></sup>
 	 * 
 	 * @return the current note's frequency (in hertz)

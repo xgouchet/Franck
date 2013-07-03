@@ -108,41 +108,7 @@ public class Chord {
 	 *
 	 * Here are sample notations based on a C dominant. Replacing C by any note
 	 * will work accordingly.
-	 * <ul>
-	 * <li>Basic chords :
-	 * <dl>
-	 * <dt>Major</dt>
-	 * <dd>C, CM, Cma, Cmaj</dd>
-	 * <dt>Minor</dt>
-	 * <dd>Cm, Cmi, Cmin</dd>
-	 * <dt>Augmented</dt>
-	 * <dd>C+, Caug</dd>
-	 * <dt>Diminished</dt>
-	 * <dd>C°, Cdim</dd>
-	 * </dl>
-	 * </li>
-	 *
-	 * <li>7th chords :
-	 * <dl>
-	 * <dt>Diminished 7th</dt>
-	 * <dd>C°7, Cdim7</dd>
-	 * <dt>Half Diminished 7th</dt>
-	 * <dd>Cm7b5</dd>
-	 * <dt>Minor 7th</dt>
-	 * <dd>Cm7, Cmin7</dd>
-	 * <dt>Minor Major 7th</dt>
-	 * <dd>Cm(M7), Cm maj7</dd>
-	 * <dt>Dominant 7th</dt>
-	 * <dd>C7</dd>
-	 * <dt>Major 7th</dt>
-	 * <dd>CM7, Cmaj7</dd>
-	 * <dt>Augmented 7th</dt>
-	 * <dd>C+7, Caug7, C7+5</dd>
-	 * <dt>Augmented Major 7th</dt>
-	 * <dd>C+(M7), CM7+5</dd>
-	 * </dl>
-	 * </li>
-	 * </ul>
+	
 	 *
 	 * @param value
 	 *            any non null String value (see examples above)
