@@ -131,6 +131,32 @@ public class Note {
 	}
 
 	/**
+	 * @return a new Note with a simplified representation of the current note
+	 *         (eg : E# -> F, Cbb -> Bb)
+	 */
+	public Note simplify() {
+		switch (mAccidental) {
+		case doubleFlat:
+		case doubleSharp:
+			return new Note(getSemiTones());
+		default:
+			break;
+		}
+
+		switch (mPitch) {
+		case E:
+		case B:
+		case C:
+		case F:
+			return new Note(getSemiTones());
+		default:
+			break;
+		}
+
+		return this;
+	}
+
+	/**
 	 * @return the pitch
 	 */
 	public Pitch getPitch() {

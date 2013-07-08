@@ -8,15 +8,16 @@ import fr.xgouchet.musicgeneration.source.SoundSource;
 public class SquareSource implements SoundSource {
 
 	private final double mPeriod;
-	private final int mFrequency;
+	private final double mFrequency;
 	private final double mDuration;
 	private final double mDuty;
+	
 
-	public SquareSource(final int frequency, final double duration) {
+	public SquareSource(final double frequency, final double duration) {
 		this(frequency, duration, 0.5);
 	}
 
-	public SquareSource(final int frequency, final double duration,
+	public SquareSource(final double frequency, final double duration,
 			final double duty) {
 		mFrequency = frequency;
 		mPeriod = 1000.0 / mFrequency;

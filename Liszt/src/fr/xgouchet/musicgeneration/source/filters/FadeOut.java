@@ -4,7 +4,7 @@ import fr.xgouchet.musicgeneration.source.SoundSource;
 
 public class FadeOut implements SoundSource {
 
-	/** Fade in duration in seconds */
+	/** Fade out duration in ms */
 	private final double mDuration, mTotal;
 	private final SoundSource mSource;
 
@@ -12,6 +12,7 @@ public class FadeOut implements SoundSource {
 		this(source, 1000);
 	}
 
+	/** Fade out duration in ms */
 	public FadeOut(final SoundSource source, final double duration) {
 		mSource = source;
 		mDuration = duration;

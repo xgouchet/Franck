@@ -1,5 +1,6 @@
 package fr.xgouchet.musicgeneration.source.raw;
 
+import fr.xgouchet.musicgeneration.model.Note;
 import fr.xgouchet.musicgeneration.source.SoundSource;
 
 /**
@@ -8,10 +9,14 @@ import fr.xgouchet.musicgeneration.source.SoundSource;
 public class SineSource implements SoundSource {
 
 	private final double mPeriod;
-	private final int mFrequency;
+	private final double mFrequency;
 	private final double mDuration;
 
-	public SineSource(final int frequency, final double duration) {
+	public SineSource(final Note note, final double duration) {
+		this(note.getEqualTemperredFrequency(), duration);
+	}
+
+	public SineSource(final double frequency, final double duration) {
 		mFrequency = frequency;
 		mPeriod = 1000.0 / mFrequency;
 		mDuration = duration;

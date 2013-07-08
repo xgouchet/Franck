@@ -4,6 +4,7 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.os.AsyncTask;
+import android.util.Log;
 import fr.xgouchet.musicgeneration.source.SoundSource;
 
 /**
@@ -191,6 +192,8 @@ public class AsyncSoundPlayer extends AsyncTask<SoundSource, Void, Void> {
 				max = duration;
 			}
 		}
+		
+		Log.i("", "Playing " + max + " seconds");
 		return max;
 	}
 }

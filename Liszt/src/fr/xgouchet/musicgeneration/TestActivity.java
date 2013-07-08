@@ -2,12 +2,15 @@ package fr.xgouchet.musicgeneration;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
+import fr.xgouchet.musicgeneration.model.Chord;
+import fr.xgouchet.musicgeneration.model.ChordFactory;
+import fr.xgouchet.musicgeneration.model.Note;
 import fr.xgouchet.musicgeneration.source.SoundSource;
 import fr.xgouchet.musicgeneration.source.filters.FadeOut;
+import fr.xgouchet.musicgeneration.source.filters.TimeOffset;
 import fr.xgouchet.musicgeneration.source.raw.SineSource;
 import fr.xgouchet.musicgeneration.source.raw.SquareSource;
 import fr.xgouchet.musicgeneration.source.raw.TriangleSource;
@@ -31,28 +34,39 @@ public class TestActivity extends Activity {
 	}
 
 	public void playSound(final View v) {
-		int duration = mSeekDuration.getProgress();
-		int frequency = mSeekFrequency.getProgress();
 
-		SoundSource sound;
-		switch (mSoundType.getCheckedRadioButtonId()) {
-		case R.id.radio1:
-			sound = new SquareSource(frequency, duration);
-			break;
-		case R.id.radio2:
-			sound = new TriangleSource(frequency, duration);
-			break;
-		case R.id.radio0:
-		default:
-			sound = new SineSource(frequency, duration);
-			break;
+		int duration = mSeekDuration.getProgress();
+
+		Chord chord = ChordFactory.buildMajorChord(new Note());
+		Note[] notes = chord.getNotes();
+		SoundSource[] sources = new SoundSource[notes.length];
+
+		for (int i = 0; i < notes.length; ++i) {
+
+			SoundSource raw;
+
+			switch (mSoundType.getCheckedRadioButtonId()) {
+
+			case R.id.radio1:
+				raw = new SquareSource(notes[i].getEqualTemperredFrequency(),
+						duration);
+				break;
+			case R.id.radio2:
+				raw = new TriangleSource(notes[i].getEqualTemperredFrequency(),
+						duration);
+				break;
+			case R.id.radio0:
+			default:
+				raw = new SineSource(notes[i].getEqualTemperredFrequency(),
+						duration);
+				break;
+			}
+
+			sources[i] = new TimeOffset(new FadeOut(raw), i * 50);
 		}
 
-		FadeOut  fade = new FadeOut(sound);
-		
-		AsyncSoundPlayer.createAsyncSoundPlayer(Quality.medium).execute(fade);
-		Log.i("Liszt", "Playing sound at " + frequency + "Hz for " + duration
-				+ "seconds");
+		AsyncSoundPlayer.createAsyncSoundPlayer(Quality.medium)
+				.execute(sources);
 
 	}
 }

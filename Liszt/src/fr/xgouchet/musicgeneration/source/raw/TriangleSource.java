@@ -9,14 +9,14 @@ public class TriangleSource implements SoundSource {
 
 	private final double mDuty;
 	private final double mPeriod;
-	private final int mFrequency;
+	private final double mFrequency;
 	private final double mDuration;
 
-	public TriangleSource(final int frequency, final double duration) {
-		this(frequency, duration, 0.5);
+	public TriangleSource(final double frequency, final double duration) {
+		this(frequency, duration, 0.05);
 	}
 
-	public TriangleSource(final int frequency, final double duration,
+	public TriangleSource(final double frequency, final double duration,
 			final double duty) {
 		mDuty = duty;
 		mFrequency = frequency;
