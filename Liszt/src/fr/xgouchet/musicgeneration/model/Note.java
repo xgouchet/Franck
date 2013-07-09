@@ -69,7 +69,7 @@ public class Note {
 			octaveOffset -= 1;
 		}
 
-		switch (semitones) {
+		switch (st) {
 		case 0:
 		case 1:
 			mPitch = Pitch.C;
@@ -196,6 +196,33 @@ public class Note {
 	}
 
 	/**
+	 * @return if the current note should display an alteration
+	 */
+	public boolean isAltered() {
+		return (!mAccidental.equals(Accidental.natural));
+	}
+
+	/**
+	 * Verify that the given note is equivalent to this one (ie : they both have
+	 * the same pitch, even on different octaves).
+	 * 
+	 * For example checks that a B# on the 2nd octave is equivalent to a middle
+	 * C.
+	 * 
+	 * @param other
+	 *            the note to check
+	 * @return if the given note is equivalent
+	 */
+	public boolean isEquivalent(final Note other) {
+		if (other == null) {
+			return false;
+		} else {
+			int diff = getSemiTones() - other.getSemiTones();
+			return (diff % 12) == 0;
+		}
+	}
+
+	/**
 	 * <p>
 	 * The frequency of a note is given by the formula (in the equally tempered
 	 * scale) : f<sub>n</sub> = f<sub>0</sub> * a<sup>n</sup>
@@ -277,12 +304,18 @@ public class Note {
 				mPitch.getPitchName(notation));
 	}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return String.format("%s %s (%d)", mPitch.toString(),
 				mAccidental.toString(), mOctave);
 	}
 
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(final Object other) {
 		// check for self-comparison
@@ -301,6 +334,9 @@ public class Note {
 		return (this.getSemiTones() == that.getSemiTones());
 	}
 
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		return getSemiTones();

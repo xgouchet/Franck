@@ -67,6 +67,63 @@ public class Chord {
 	}
 
 	/**
+	 * @param notation
+	 *            the notation to use
+	 * @return the note name in the given notation
+	 */
+	public String getChordName(final Notation notation) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(mDominant.getNoteName(notation));
+		builder.append(mType.asSuffix());
+		return builder.toString();
+	}
+
+	/**
+	 * @param notation
+	 *            the notation to use
+	 * @return the note name in the given notation
+	 */
+	public String getChordFullName(final Notation notation) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(mDominant.getNoteName(notation));
+		builder.append(' ');
+		builder.append(mType.getChordName());
+		return builder.toString();
+	}
+
+	/**
+	 * @param notation
+	 *            the notation to use
+	 * @return the names of all notes in this chord
+	 */
+	public String getChordNotesNames(final Notation notation) {
+		StringBuilder builder = new StringBuilder();
+
+		for (Note note : mNotes) {
+			builder.append(note.getNoteName(notation));
+			builder.append(" - ");
+		}
+
+		if (builder.length() >= 3) {
+			builder.setLength(builder.length() - 3);
+		}
+		return builder.toString();
+	}
+
+	/**
+	 * @return if any note in this chord has an alteration
+	 */
+	public boolean hasAlteration() {
+		for (Note note : mNotes) {
+			if (note.isAltered()) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -97,5 +154,16 @@ public class Chord {
 		hash = (37 * hash) + mDominant.hashCode();
 		hash = (37 * hash) + Arrays.hashCode(mNotes);
 		return hash;
+	}
+
+	@Override
+	public String toString() {
+
+		StringBuilder builder = new StringBuilder();
+		builder.append(mDominant);
+		builder.append(' ');
+		builder.append(mType);
+
+		return builder.toString();
 	}
 }

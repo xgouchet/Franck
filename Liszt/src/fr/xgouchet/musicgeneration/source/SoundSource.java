@@ -21,7 +21,7 @@ public interface SoundSource {
 	/**
 	 * Gets the duration.
 	 * 
-	 * @return the duration of this sound source (in seconds)
+	 * @return the duration of this sound source (in ms)
 	 */
 	double getDuration();
 

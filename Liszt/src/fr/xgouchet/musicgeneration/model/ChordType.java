@@ -16,29 +16,20 @@ public enum ChordType {
 	// advanced 7th chords
 	halfDiminishedSeventh, minorMajorSeventh, augmentedMajorSeventh;
 
+	private static final String[] SUFFIXES = new String[] { "", "m", "aug",
+			"dim", "7", "M7", "m7", "aug7", "dim7", "m7b5", "m(M7)", "+(M7)" };
+
+	private static final String[] CHORD_NAME = new String[] { "Major", "Minor",
+			"Augmented", "Diminished", "Dominant 7th", "Major 7th",
+			"Minor 7th", "Augmented 7th", "Diminished 7th",
+			"Half Diminished 7th", "Minor Major 7th", "Augmented Major 7th" };
+
 	public String asSuffix() {
-		switch (this) {
-		case major:
-			return "";
-		case minor:
-			return "m";
-		case augmented:
-			return "aug";
-		case diminished:
-			return "dim";
-		case dominant7:
-			return "7";
-		case major7:
-			return "M7";
-		case minor7:
-			return "m7";
-		case diminished7:
-			return "dim7";
-		case augmented7:
-			return "aug7";
-		default:
-			return toString();
-		}
+		return SUFFIXES[ordinal()];
+	}
+	
+	public String getChordName() {
+		return CHORD_NAME[ordinal()];
 	}
 
 	/**

@@ -5,7 +5,10 @@ import fr.xgouchet.musicgeneration.source.SoundSource;
 public class FadeOut implements SoundSource {
 
 	/** Fade out duration in ms */
-	private final double mDuration, mTotal;
+	private final double mDuration;
+	/** Total duration in ms */
+	private final double mTotal;
+	/** SoundSource to fade out */
 	private final SoundSource mSource;
 
 	public FadeOut(final SoundSource source) {
@@ -16,7 +19,7 @@ public class FadeOut implements SoundSource {
 	public FadeOut(final SoundSource source, final double duration) {
 		mSource = source;
 		mDuration = duration;
-		mTotal = mSource.getDuration() * 1000.0;
+		mTotal = mSource.getDuration();
 	}
 
 	@Override
@@ -28,6 +31,10 @@ public class FadeOut implements SoundSource {
 	@Override
 	public double getValue(final double time) {
 		double value = mSource.getValue(time);
+
+		if (time > mTotal) {
+			return 0;
+		}
 
 		if (time > (mTotal - mDuration)) {
 			double t = time - (mTotal - mDuration);

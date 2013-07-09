@@ -27,6 +27,10 @@ public class FadeIn implements SoundSource {
 	public double getValue(final double time) {
 		double value = mSource.getValue(time);
 
+		if (time < 0) {
+			return 0;
+		}
+
 		if (time < mDuration) {
 			value = (value * time) / mDuration;
 		}

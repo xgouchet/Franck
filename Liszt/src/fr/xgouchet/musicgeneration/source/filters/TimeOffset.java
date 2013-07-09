@@ -20,7 +20,7 @@ public class TimeOffset implements SoundSource {
 
 	@Override
 	public double getDuration() {
-		return mSource.getDuration() + (mOffset / 1000.0);
+		return mSource.getDuration() + mOffset;
 	}
 
 	@Override
@@ -28,7 +28,7 @@ public class TimeOffset implements SoundSource {
 		if (time < mOffset) {
 			return 0;
 		}
-
+		
 		return mSource.getValue(time - mOffset);
 	}
 }

@@ -135,7 +135,7 @@ public class AsyncSoundPlayer extends AsyncTask<SoundSource, Void, Void> {
 	 */
 	@Override
 	protected Void doInBackground(final SoundSource... sources) {
-		int neededSamples = (int) (mSamplingRate * getDuration(sources));
+		int neededSamples = (int) ((mSamplingRate * getDuration(sources)) / 1000.0);
 		int playedSamples = 0, remaining;
 		double value, time = 0;
 
@@ -181,7 +181,7 @@ public class AsyncSoundPlayer extends AsyncTask<SoundSource, Void, Void> {
 	 * 
 	 * @param params
 	 *            the list of sound sources
-	 * @return the sound duration in seconds
+	 * @return the sound duration in ms
 	 */
 	private double getDuration(final SoundSource... params) {
 		double max = 0.0;
@@ -192,8 +192,8 @@ public class AsyncSoundPlayer extends AsyncTask<SoundSource, Void, Void> {
 				max = duration;
 			}
 		}
-		
-		Log.i("", "Playing " + max + " seconds");
+
+		Log.i("", "Playing " + max + " milliseconds");
 		return max;
 	}
 }
