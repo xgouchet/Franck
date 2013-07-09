@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import fr.xgouchet.musicgeneration.model.Chord;
 import fr.xgouchet.musichelper.solver.GuitarSolver;
 
 /**
@@ -44,7 +45,7 @@ public class GuitarChord {
 		solver.setTuning(mTuning);
 		solver.setChord(mChord);
 
-	//	solver.execute();
+		// solver.execute();
 	}
 
 	protected final List<Set<Combo>> mAllCombos;

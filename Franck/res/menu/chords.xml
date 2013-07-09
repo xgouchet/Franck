@@ -8,6 +8,7 @@
     <item
         android:id="@id/menu_current_chord"
         android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_chord"
         android:title="@string/menu_chord">
         <menu>
             <item

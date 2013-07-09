@@ -6,8 +6,7 @@
 
     <!-- UI -->
     <string name="ui_piano_keyboard">Piano Keyboard</string>
-    <string name="ui_grand_staff">Grand Staff</string>
-    <string name="ui_guitar_staff">Guitar Staff</string>
+    <string name="ui_staff">Staff</string>
     <string name="ui_guitar_tabs">Guitar Tabs</string>
     <string name="ui_sounds">Sounds</string>
     <string name="ui_chord">Chord</string>

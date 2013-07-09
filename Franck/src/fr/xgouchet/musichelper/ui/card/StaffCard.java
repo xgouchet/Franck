@@ -6,20 +6,20 @@ import android.view.View;
 
 import com.fima.cardsui.objects.Card;
 
+import fr.xgouchet.musicgeneration.model.Chord;
 import fr.xgouchet.musichelper.R;
-import fr.xgouchet.musichelper.model.Chord;
-import fr.xgouchet.musichelper.model.Key;
 import fr.xgouchet.musichelper.ui.view.StaffView;
 
-public class GuitarStaffCard extends Card {
+public class StaffCard extends Card {
+
+	private final Chord mChord;
+	private StaffView mStaffView;
 
 	/**
 	 * @param chord
-	 * @param key
 	 */
-	public GuitarStaffCard(final Chord chord, final Key key) {
+	public StaffCard(final Chord chord) {
 		mChord = chord;
-		mKey = key;
 	}
 
 	/**
@@ -32,12 +32,8 @@ public class GuitarStaffCard extends Card {
 
 		mStaffView = (StaffView) view.findViewById(R.id.staffView);
 		mStaffView.setChord(mChord);
-		mStaffView.setKey(mKey);
 
 		return view;
 	}
 
-	private final Chord mChord;
-	private final Key mKey;
-	private StaffView mStaffView;
 }

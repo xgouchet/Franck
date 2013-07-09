@@ -10,15 +10,17 @@ import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.View;
+import fr.xgouchet.musicgeneration.model.Accidental;
+import fr.xgouchet.musicgeneration.model.Chord;
+import fr.xgouchet.musicgeneration.model.ChordFactory;
+import fr.xgouchet.musicgeneration.model.Note;
 import fr.xgouchet.musichelper.R;
-import fr.xgouchet.musichelper.model.Accidental;
-import fr.xgouchet.musichelper.model.Chord;
-import fr.xgouchet.musichelper.model.Note;
+import fr.xgouchet.musichelper.common.MusicUtils;
 
 /**
  * A {@link PianoView} draws a Piano keyboard and highlights the keys to play a
  * given {@link Chord}
- *
+ * 
  * @author Xavier Gouchet
  */
 public class PianoView extends View {
@@ -27,9 +29,21 @@ public class PianoView extends View {
 
 	private static Path sPathC, sPathD, sPathE, sPathBlack;
 
+	/** Utility to convert Dip values to Pixel */
+	private float mDipToPixel;
+
+	// Drawable
+	private Paint mBlack, mWhite, mHighlight;
+	private float mKeyWidth, mKeyHeight;
+	private float mBlackKeyWidth, mBlackKeyHeight, mBlackKeyDecal;
+
+	// Data
+	private Chord mChord;
+	private int mMinOffset, mMaxOffset, mMediumOffset;
+
 	/**
 	 * Simple constructor to use when creating a view from code.
-	 *
+	 * 
 	 * @param context
 	 *            The Context the view is running in, through which it can
 	 *            access the current theme, resources, etc.
@@ -46,10 +60,10 @@ public class PianoView extends View {
 	 * that were specified in the XML file. This version uses a default style of
 	 * 0, so the only attribute values applied are those in the Context's Theme
 	 * and the given AttributeSet.
-	 *
+	 * 
 	 * The method onFinishInflate() will be called after all children have been
 	 * added.
-	 *
+	 * 
 	 * @param context
 	 *            The Context the view is running in, through which it can
 	 *            access the current theme, resources, etc.
@@ -72,7 +86,7 @@ public class PianoView extends View {
 	 * for defStyle; this allows the theme's button style to modify all of the
 	 * base view attributes (in particular its background) as well as the Button
 	 * class's attributes.
-	 *
+	 * 
 	 * @param context
 	 *            The Context the view is running in, through which it can
 	 *            access the current theme, resources, etc.
@@ -187,7 +201,7 @@ public class PianoView extends View {
 	/**
 	 * Draws an octave of a piano keyboard from the C to the following B
 	 * (including flats and bemols)
-	 *
+	 * 
 	 * @param canvas
 	 *            the canvas to draw onto
 	 * @param x
@@ -214,7 +228,7 @@ public class PianoView extends View {
 	}
 
 	/**
-	 *
+	 * 
 	 * @param canvas
 	 *            the canvas to draw onto
 	 * @param firstNoteOffset
@@ -235,7 +249,7 @@ public class PianoView extends View {
 
 		for (Note note : notes) {
 			simpleNote = note.simplify();
-			noteOffset = simpleNote.getOffsetFromC4();
+			noteOffset = MusicUtils.getOffsetFromC4(simpleNote);
 			if ((noteOffset >= firstNoteOffset) && (noteOffset < maxNoteOffset)) {
 				notePos = noteOffset - firstNoteOffset;
 				offsetX = x + (notePos * mKeyWidth);
@@ -279,7 +293,7 @@ public class PianoView extends View {
 		mMaxOffset = Integer.MIN_VALUE;
 
 		for (Note note : mChord.getNotes()) {
-			offset = note.getOffsetFromC4();
+			offset = MusicUtils.getOffsetFromC4(note);
 
 			if (offset < mMinOffset) {
 				mMinOffset = offset;
@@ -317,13 +331,13 @@ public class PianoView extends View {
 
 		if (!isInEditMode()) {
 			// Get drawables
-			mChord = Chord.buildDominant7thChord(new Note());
+			mChord = ChordFactory.buildDominant7thChord(new Note());
 		}
 	}
 
 	/**
 	 * Read the attributes taken from XML
-	 *
+	 * 
 	 * @param attrs
 	 *            The attributes of the XML tag that is inflating the view.
 	 */
@@ -419,15 +433,4 @@ public class PianoView extends View {
 		return sPathBlack;
 	}
 
-	/** Utility to convert Dip values to Pixel */
-	private float mDipToPixel;
-
-	// Drawable
-	private Paint mBlack, mWhite, mHighlight;
-	private float mKeyWidth, mKeyHeight;
-	private float mBlackKeyWidth, mBlackKeyHeight, mBlackKeyDecal;
-
-	// Data
-	private Chord mChord;
-	private int mMinOffset, mMaxOffset, mMediumOffset;
 }

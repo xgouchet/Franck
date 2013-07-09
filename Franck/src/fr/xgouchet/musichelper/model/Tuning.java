@@ -2,11 +2,15 @@ package fr.xgouchet.musichelper.model;
 
 import java.util.Arrays;
 
+import fr.xgouchet.musicgeneration.model.Accidental;
+import fr.xgouchet.musicgeneration.model.Note;
+import fr.xgouchet.musicgeneration.model.Pitch;
+
 /**
  * A {@link Tuning} describes how a String instrument (let's say, a guitar) is
  * tuned. It containes an array of {@link Note} objects, corresponding to each
  * string.
- *
+ * 
  * @author Xavier Gouchet
  */
 public class Tuning {
@@ -70,11 +74,14 @@ public class Tuning {
 	public String toString() {
 		StringBuilder builder = new StringBuilder("Tuning [");
 		for (Note note : mTuning) {
-			builder.append(note.toFullDisplayString());
+			builder.append(note.toString());
 			builder.append(" | ");
 		}
 
-		builder.setLength(builder.length() - 3);
+		if (builder.length() >= 3) {
+			builder.setLength(builder.length() - 3);
+		}
+		
 		builder.append("]");
 
 		return builder.toString();

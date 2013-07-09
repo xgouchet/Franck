@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import fr.xgouchet.musicgeneration.model.Note;
 import fr.xgouchet.musichelper.model.Combo;
-import fr.xgouchet.musichelper.model.Note;
 
 /**
  * A string range is used to solve a chord generation, by setting the possible
@@ -63,7 +63,7 @@ public class StringRange implements Iterable<Combo> {
 	/**
 	 * Builds a default range where all frets are enabled
 	 */
-	public StringRange(Note base, int index) {
+	public StringRange(final Note base, final int index) {
 		mBase = base;
 		mRange = new ArrayList<Integer>(MAX_FRET);
 		mStringIndex = index;
@@ -75,7 +75,7 @@ public class StringRange implements Iterable<Combo> {
 	 * @param notes
 	 *            the list of notes this string should be doing
 	 */
-	public void limitNotes(Note[] notes) {
+	public void limitNotes(final Note[] notes) {
 		Note temp;
 
 		for (int i = 0; i <= MAX_FRET; ++i) {
@@ -110,11 +110,11 @@ public class StringRange implements Iterable<Combo> {
 	 * @param fret
 	 * @return
 	 */
-	private Note getNote(int fret) {
+	private Note getNote(final int fret) {
 		if (fret < 0) {
 			return null;
 		} else {
-			return new Note(mBase.getHalfTones() + fret);
+			return new Note(mBase.getSemiTones() + fret);
 		}
 	}
 

@@ -1,11 +1,13 @@
 package fr.xgouchet.musichelper.common;
 
+import fr.xgouchet.musicgeneration.model.Notation;
+
 /**
  * @author Xavier Gouchet
  */
 public class Settings {
 
-	private static boolean sUseFrenchNotation = false;
+	private static Notation sNotation = Notation.english;
 	private static boolean sShouldSimplify = true;
 
 	/**
@@ -15,11 +17,7 @@ public class Settings {
 		return sShouldSimplify;
 	}
 
-	/**
-	 * @return if notes should be displayed using the French notation (Do, Re,
-	 *         Mi instead of C, D, E)
-	 */
-	public static boolean useFrenchNotation() {
-		return sUseFrenchNotation;
+	public static Notation getNotation() {
+		return sNotation;
 	}
 }

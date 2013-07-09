@@ -20,19 +20,18 @@ import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fima.cardsui.objects.CardStack;
 import com.fima.cardsui.views.CardUI;
 
+import fr.xgouchet.musicgeneration.model.Chord;
+import fr.xgouchet.musicgeneration.model.ChordFactory;
+import fr.xgouchet.musicgeneration.model.ChordType;
+import fr.xgouchet.musicgeneration.model.Notation;
+import fr.xgouchet.musicgeneration.model.Note;
 import fr.xgouchet.musichelper.common.Settings;
-import fr.xgouchet.musichelper.model.Chord;
-import fr.xgouchet.musichelper.model.GuitarChord;
-import fr.xgouchet.musichelper.model.Key;
-import fr.xgouchet.musichelper.model.Note;
-import fr.xgouchet.musichelper.model.Tuning;
-import fr.xgouchet.musichelper.ui.card.GrandStaffCard;
+import fr.xgouchet.musichelper.ui.card.ChordCard;
 import fr.xgouchet.musichelper.ui.card.PianoCard;
-import fr.xgouchet.musichelper.ui.card.GuitarStaffCard;
 import fr.xgouchet.musichelper.ui.card.SoundCard;
+import fr.xgouchet.musichelper.ui.card.StaffCard;
 
 /**
  * 
@@ -40,6 +39,12 @@ import fr.xgouchet.musichelper.ui.card.SoundCard;
  * @author Xavier Gouchet
  */
 public class FranckActivity extends Activity implements OnQueryTextListener {
+
+	private Note mDominant;
+	private ChordType mChordType;
+	private Chord mChord;
+	private SearchView mSearchView;
+	private CardUI mCardView;
 
 	/**
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -55,7 +60,7 @@ public class FranckActivity extends Activity implements OnQueryTextListener {
 
 		// Default values
 		generateTabs();
-		setChordType(Chord.Type.major);
+		setChordType(ChordType.major);
 		setDominant(new Note());
 
 	}
@@ -91,31 +96,31 @@ public class FranckActivity extends Activity implements OnQueryTextListener {
 
 		switch (item.getItemId()) {
 		case R.id.menu_major:
-			setChordType(Chord.Type.major);
+			setChordType(ChordType.major);
 			break;
 		case R.id.menu_minor:
-			setChordType(Chord.Type.minor);
+			setChordType(ChordType.minor);
 			break;
 		case R.id.menu_augmented:
-			setChordType(Chord.Type.augmented);
+			setChordType(ChordType.augmented);
 			break;
 		case R.id.menu_diminished:
-			setChordType(Chord.Type.diminished);
+			setChordType(ChordType.diminished);
 			break;
 		case R.id.menu_dominant7:
-			setChordType(Chord.Type.dominant7);
+			setChordType(ChordType.dominant7);
 			break;
 		case R.id.menu_major7:
-			setChordType(Chord.Type.major7);
+			setChordType(ChordType.major7);
 			break;
 		case R.id.menu_minor7:
-			setChordType(Chord.Type.minor7);
+			setChordType(ChordType.minor7);
 			break;
 		case R.id.menu_augmented7:
-			setChordType(Chord.Type.augmented7);
+			setChordType(ChordType.augmented7);
 			break;
 		case R.id.menu_diminished7:
-			setChordType(Chord.Type.diminished7);
+			setChordType(ChordType.diminished7);
 			break;
 		default:
 			res = super.onOptionsItemSelected(item);
@@ -147,7 +152,8 @@ public class FranckActivity extends Activity implements OnQueryTextListener {
 		Chord chord;
 
 		try {
-			chord = Chord.parse(query);
+			// chord = Chord.parse(query);
+			chord = null;
 		} catch (Exception e) {
 			Toast.makeText(this, "Unable to create such a chord",
 					Toast.LENGTH_LONG).show();
@@ -155,7 +161,7 @@ public class FranckActivity extends Activity implements OnQueryTextListener {
 		}
 
 		if (chord != null) {
-			int ht = chord.getDominant().getHalfTones();
+			int ht = chord.getDominant().getSemiTones();
 			Tab tab = getActionBar().getTabAt(ht);
 			getActionBar().selectTab(tab);
 			setChordType(chord.getType());
@@ -182,7 +188,7 @@ public class FranckActivity extends Activity implements OnQueryTextListener {
 	 * @return the created tab
 	 */
 	private Tab addTab(final Note note) {
-		String name = note.toDisplayString();
+		String name = note.getNoteName(Notation.english);
 
 		Tab tab = getActionBar().newTab();
 		tab.setText(name);
@@ -240,7 +246,7 @@ public class FranckActivity extends Activity implements OnQueryTextListener {
 	 * 
 	 * @param chordType
 	 */
-	public void setChordType(final Chord.Type chordType) {
+	public void setChordType(final ChordType chordType) {
 		mChordType = chordType;
 		updateContent();
 	}
@@ -261,7 +267,7 @@ public class FranckActivity extends Activity implements OnQueryTextListener {
 			return;
 		}
 
-		mChord = Chord.buildChord(mChordType, mDominant);
+		mChord = ChordFactory.buildChord(mChordType, mDominant);
 		if (Settings.shouldSimplify()) {
 			mChord.simplify();
 		}
@@ -270,17 +276,22 @@ public class FranckActivity extends Activity implements OnQueryTextListener {
 
 		mCardView.clearCards();
 
+		// Chord
+		mCardView.addCard(new ChordCard(mChord));
+
 		// Sound
 		mCardView.addCard(new SoundCard(mChord));
 
-		// Piano
-		mCardView.addCard(new GrandStaffCard(mChord));
-		mCardView.addCard(new PianoCard(mChord));
+		// Staff
+		mCardView.addCard(new StaffCard(mChord));
 
-		// Guitar
-		mCardView.addCard(new GuitarStaffCard(mChord, Key.treble));
-		GuitarChord test = new GuitarChord(mChord,
-				Tuning.standardGuitarTuning());
+		// Piano
+		mCardView.addCard(new PianoCard(mChord));
+		//
+		// // Guitar
+		// mCardView.addCard(new GuitarStaffCard(mChord, Key.treble));
+		// GuitarChord test = new GuitarChord(mChord,
+		// Tuning.standardGuitarTuning());
 
 	}
 
@@ -288,14 +299,8 @@ public class FranckActivity extends Activity implements OnQueryTextListener {
 	 * Update the action bar title with the current chord name
 	 */
 	private void updateTitle() {
-		// ((TextView) findViewById(R.id.textPlaceHolder)).setText(mChord
-		// .toString());
-		setTitle(getString(R.string.title_chord, mChord.toString()));
+		String chord = mChord.getChordName(Settings.getNotation());
+		setTitle(getString(R.string.title_chord, chord));
 	}
 
-	private Note mDominant;
-	private Chord.Type mChordType;
-	private Chord mChord;
-	private SearchView mSearchView;
-	private CardUI mCardView;
 }

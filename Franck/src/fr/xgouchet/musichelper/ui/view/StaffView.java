@@ -10,14 +10,15 @@ import android.graphics.Paint.Style;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
+import fr.xgouchet.musicgeneration.model.Chord;
+import fr.xgouchet.musicgeneration.model.Note;
 import fr.xgouchet.musichelper.R;
-import fr.xgouchet.musichelper.model.Chord;
+import fr.xgouchet.musichelper.common.MusicUtils;
 import fr.xgouchet.musichelper.model.Key;
-import fr.xgouchet.musichelper.model.Note;
 
 /**
  * A Staff view draws a Staff with the given Chord as wholes
- *
+ * 
  * @author Xavier Gouchet
  */
 public class StaffView extends View {
@@ -26,7 +27,7 @@ public class StaffView extends View {
 
 	/**
 	 * Simple constructor to use when creating a view from code.
-	 *
+	 * 
 	 * @param context
 	 *            The Context the view is running in, through which it can
 	 *            access the current theme, resources, etc.
@@ -43,10 +44,10 @@ public class StaffView extends View {
 	 * that were specified in the XML file. This version uses a default style of
 	 * 0, so the only attribute values applied are those in the Context's Theme
 	 * and the given AttributeSet.
-	 *
+	 * 
 	 * The method onFinishInflate() will be called after all children have been
 	 * added.
-	 *
+	 * 
 	 * @param context
 	 *            The Context the view is running in, through which it can
 	 *            access the current theme, resources, etc.
@@ -69,7 +70,7 @@ public class StaffView extends View {
 	 * for defStyle; this allows the theme's button style to modify all of the
 	 * base view attributes (in particular its background) as well as the Button
 	 * class's attributes.
-	 *
+	 * 
 	 * @param context
 	 *            The Context the view is running in, through which it can
 	 *            access the current theme, resources, etc.
@@ -192,7 +193,7 @@ public class StaffView extends View {
 
 	/**
 	 * Draws the staff lines
-	 *
+	 * 
 	 * @param canvas
 	 *            the canvas on which the view will be drawn
 	 */
@@ -216,7 +217,7 @@ public class StaffView extends View {
 
 	/**
 	 * Draws the staff key
-	 *
+	 * 
 	 * @param canvas
 	 *            the canvas on which the view will be drawn
 	 */
@@ -251,7 +252,7 @@ public class StaffView extends View {
 
 	/**
 	 * Draws the chords on the staff
-	 *
+	 * 
 	 * @param canvas
 	 *            the canvas on which the view will be drawn
 	 */
@@ -268,7 +269,7 @@ public class StaffView extends View {
 
 	/**
 	 * Draws the given chord on the staff at the given offset
-	 *
+	 * 
 	 * @param canvas
 	 *            the canvas on which the view will be drawn
 	 * @param chord
@@ -286,7 +287,7 @@ public class StaffView extends View {
 
 		prevOffset = -256;
 		for (Note note : chord.getNotes()) {
-			offset = note.getOffsetFromC4() + mKey.c4Offset();
+			offset = MusicUtils.getOffsetFromC4(note) + mKey.c4Offset();
 
 			overlap = ((offset - prevOffset) <= 1);
 
@@ -302,7 +303,7 @@ public class StaffView extends View {
 	}
 
 	/**
-	 *
+	 * 
 	 * @param canvas
 	 * @param note
 	 * @param x
@@ -341,8 +342,8 @@ public class StaffView extends View {
 
 	/**
 	 * Draws extra lines, needed for a note outside of the staff
-	 *
-	 *
+	 * 
+	 * 
 	 * @param canvas
 	 *            the canvas on which the view will be drawn
 	 * @param offsetX
@@ -370,7 +371,7 @@ public class StaffView extends View {
 
 	/**
 	 * Draws a whole note at the given position
-	 *
+	 * 
 	 * @param canvas
 	 *            the canvas on which the view will be drawn
 	 * @param x
@@ -384,7 +385,7 @@ public class StaffView extends View {
 
 	/**
 	 * Draws a Sharp at the given position
-	 *
+	 * 
 	 * @param canvas
 	 *            the canvas on which the view will be drawn
 	 * @param x
@@ -398,7 +399,7 @@ public class StaffView extends View {
 
 	/**
 	 * Draws a Flat at the given position
-	 *
+	 * 
 	 * @param canvas
 	 *            the canvas on which the view will be drawn
 	 * @param x
@@ -445,7 +446,7 @@ public class StaffView extends View {
 
 	/**
 	 * Read the attributes taken from XML
-	 *
+	 * 
 	 * @param attrs
 	 *            The attributes of the XML tag that is inflating the view.
 	 */
@@ -486,7 +487,7 @@ public class StaffView extends View {
 		highestOffset = 8;
 
 		for (Note note : mChord.getNotes()) {
-			offset = note.getOffsetFromC4() + mKey.c4Offset();
+			offset = MusicUtils.getOffsetFromC4(note) + mKey.c4Offset();
 
 			if (offset < lowestOffset) {
 				lowestOffset = offset;

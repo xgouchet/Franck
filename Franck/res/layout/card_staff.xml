@@ -11,7 +11,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:text="@string/ui_guitar_staff" />
+        android:text="@string/ui_staff" />
 
     <View
         android:layout_width="fill_parent"

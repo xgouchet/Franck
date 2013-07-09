@@ -7,10 +7,15 @@ import android.view.View.OnClickListener;
 
 import com.fima.cardsui.objects.Card;
 
+import fr.xgouchet.musicgeneration.model.Chord;
+import fr.xgouchet.musicgeneration.model.Note;
+import fr.xgouchet.musicgeneration.source.SoundSource;
+import fr.xgouchet.musicgeneration.source.filters.FadeOut;
+import fr.xgouchet.musicgeneration.source.filters.TimeOffset;
+import fr.xgouchet.musicgeneration.source.raw.SineSource;
+import fr.xgouchet.musicgeneration.task.AsyncSoundPlayer;
+import fr.xgouchet.musicgeneration.task.AsyncSoundPlayer.Quality;
 import fr.xgouchet.musichelper.R;
-import fr.xgouchet.musichelper.audio.AsyncSoundTask;
-import fr.xgouchet.musichelper.audio.AsyncSoundTask.Type;
-import fr.xgouchet.musichelper.model.Chord;
 
 public class SoundCard extends Card implements OnClickListener {
 
@@ -30,7 +35,6 @@ public class SoundCard extends Card implements OnClickListener {
 	public View getCardContent(final Context context) {
 		View view = LayoutInflater.from(context).inflate(R.layout.card_sound,
 				null);
-
 		view.findViewById(R.id.chordSound).setOnClickListener(this);
 		view.findViewById(R.id.arpeggioSound).setOnClickListener(this);
 
@@ -38,7 +42,7 @@ public class SoundCard extends Card implements OnClickListener {
 	}
 
 	@Override
-	public void onClick(View v) {
+	public void onClick(final View v) {
 		switch (v.getId()) {
 		case R.id.arpeggioSound:
 			playArpeggio();
@@ -50,13 +54,27 @@ public class SoundCard extends Card implements OnClickListener {
 	}
 
 	private void playChord() {
-		AsyncSoundTask sound = new AsyncSoundTask(mChord, Type.chord);
-		sound.execute();
+		Note[] notes = mChord.getNotes();
+		SoundSource sources[] = new SoundSource[notes.length];
+
+		for (int n = 0; n < notes.length; ++n) {
+			sources[n] = new TimeOffset(new FadeOut(new SineSource(
+					notes[n].getEqualTemperredFrequency(), 1500)), (n * 25));
+		}
+
+		AsyncSoundPlayer.createAsyncSoundPlayer(Quality.high).execute(sources);
 	}
 
 	private void playArpeggio() {
-		// TODO Auto-generated method stub
+		Note[] notes = mChord.getNotes();
+		SoundSource sources[] = new SoundSource[notes.length];
 
+		for (int n = 0; n < notes.length; ++n) {
+			sources[n] = new TimeOffset(new FadeOut(new SineSource(
+					notes[n].getEqualTemperredFrequency(), 1500)), (n * 750));
+		}
+
+		AsyncSoundPlayer.createAsyncSoundPlayer(Quality.high).execute(sources);
 	}
 
 }

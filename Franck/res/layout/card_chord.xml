@@ -11,7 +11,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:text="@string/ui_grand_staff" />
+        android:text="@string/ui_piano_keyboard" />
 
     <View
         android:layout_width="fill_parent"
@@ -20,21 +20,16 @@
         android:layout_marginTop="4dp"
         android:background="@color/stroke" />
 
-    <fr.xgouchet.musichelper.ui.view.StaffView
-        android:id="@id/trebleStaffView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@android:id/title"
-        android:layout_margin="8dp"
-        android:padding="8dp" />
-
-    <fr.xgouchet.musichelper.ui.view.StaffView
-        android:id="@id/bassStaffView"
+    <TextView
+        android:id="@android:id/text1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_below="@id/trebleStaffView"
+        android:layout_below="@android:id/title"
         android:layout_margin="8dp"
-        android:padding="8dp" />
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="C - E - G"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

@@ -1,5 +1,7 @@
 package fr.xgouchet.musichelper.model;
 
+import fr.xgouchet.musicgeneration.model.Note;
+
 /**
  * <p>
  * A combo (for lack of a better name) is a pair of int, describing a string and
@@ -61,7 +63,7 @@ public class Combo implements Comparable<Combo> {
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
 	@Override
-	public int compareTo(Combo another) {
+	public int compareTo(final Combo another) {
 		return mString - another.mString;
 	}
 
@@ -71,7 +73,7 @@ public class Combo implements Comparable<Combo> {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append(mNote.toDisplayString());
+		builder.append(mNote.toString());
 		builder.append(" : Str ");
 		builder.append(mString);
 		builder.append(", Fret ");

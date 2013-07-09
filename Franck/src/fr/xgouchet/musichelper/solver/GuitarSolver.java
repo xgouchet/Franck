@@ -6,9 +6,9 @@ import java.util.List;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import fr.xgouchet.musichelper.model.Chord;
+import fr.xgouchet.musicgeneration.model.Chord;
+import fr.xgouchet.musicgeneration.model.Note;
 import fr.xgouchet.musichelper.model.Combo;
-import fr.xgouchet.musichelper.model.Note;
 import fr.xgouchet.musichelper.model.Tuning;
 
 /**
@@ -23,11 +23,11 @@ public class GuitarSolver extends AsyncTask<Void, Void, Void> {
 		mAllCombos = new ArrayList<List<Combo>>();
 	}
 
-	public void setTuning(Tuning tuning) {
+	public void setTuning(final Tuning tuning) {
 		mTuning = tuning;
 	}
 
-	public void setChord(Chord chord) {
+	public void setChord(final Chord chord) {
 		mNotes = chord.getNotes();
 	}
 
@@ -35,13 +35,13 @@ public class GuitarSolver extends AsyncTask<Void, Void, Void> {
 	 * @see android.os.AsyncTask#doInBackground(Params[])
 	 */
 	@Override
-	protected Void doInBackground(Void... params) {
+	protected Void doInBackground(final Void... params) {
 		solve();
 		return null;
 	}
 
 	@Override
-	protected void onPostExecute(Void result) {
+	protected void onPostExecute(final Void result) {
 		super.onPostExecute(result);
 		printSolvedChords();
 	}
@@ -100,7 +100,7 @@ public class GuitarSolver extends AsyncTask<Void, Void, Void> {
 	 * @param level
 	 *            the level to try out
 	 */
-	private boolean generateCombos(List<Combo> list, int level) {
+	private boolean generateCombos(final List<Combo> list, final int level) {
 		if (level == mStrings.length) {
 			return checkValidCombosAndAddToList(list);
 		} else {
@@ -131,7 +131,7 @@ public class GuitarSolver extends AsyncTask<Void, Void, Void> {
 	 *            the list to test
 	 * @return if this chord is valid
 	 */
-	private boolean checkXsCount(List<Combo> list) {
+	private boolean checkXsCount(final List<Combo> list) {
 		int count = 0;
 		for (Combo combo : list) {
 			if (combo.getFret() < 0) {
@@ -149,7 +149,8 @@ public class GuitarSolver extends AsyncTask<Void, Void, Void> {
 	 * @param level
 	 *            the level
 	 */
-	private boolean checkAndGenerateCombos(List<Combo> list, int level) {
+	private boolean checkAndGenerateCombos(final List<Combo> list,
+			final int level) {
 		if (!checkFirstStringIsDominant(list)) {
 			return false;
 		}
@@ -169,7 +170,7 @@ public class GuitarSolver extends AsyncTask<Void, Void, Void> {
 	 *            the list to test
 	 * @return if this chord is valid
 	 */
-	private boolean checkValidCombosAndAddToList(List<Combo> list) {
+	private boolean checkValidCombosAndAddToList(final List<Combo> list) {
 
 		if (!checkCombosSpansFullChord(list)) {
 			return false;
@@ -181,14 +182,13 @@ public class GuitarSolver extends AsyncTask<Void, Void, Void> {
 
 	/**
 	 * Check that the chord does not copy another valid chord with just an X
-	 * somewhere.
-	 * This test can be quite 
+	 * somewhere. This test can be quite
 	 * 
 	 * @param list
 	 *            the list to test
 	 * @return if this chord is valid
 	 */
-	private boolean checkUnnecessaryX(List<Combo> list) {
+	private boolean checkUnnecessaryX(final List<Combo> list) {
 		return false;
 	}
 
@@ -199,7 +199,7 @@ public class GuitarSolver extends AsyncTask<Void, Void, Void> {
 	 *            the list to test
 	 * @return if this chord is valid
 	 */
-	private boolean checkFirstStringIsDominant(List<Combo> list) {
+	private boolean checkFirstStringIsDominant(final List<Combo> list) {
 		for (Combo combo : list) {
 			if (combo.getFret() < 0) {
 				continue;
@@ -219,7 +219,7 @@ public class GuitarSolver extends AsyncTask<Void, Void, Void> {
 	 *            the list to test
 	 * @return if this chord is valid
 	 */
-	private boolean checkHumanHand(List<Combo> list) {
+	private boolean checkHumanHand(final List<Combo> list) {
 		int min, max, fret;
 		boolean allowBarred = true;
 		min = StringRange.MAX_FRET + 1;
@@ -274,7 +274,7 @@ public class GuitarSolver extends AsyncTask<Void, Void, Void> {
 	 *            the list to test
 	 * @return if this chord is valid
 	 */
-	private boolean checkCombosSpansFullChord(List<Combo> list) {
+	private boolean checkCombosSpansFullChord(final List<Combo> list) {
 		int[] notes = new int[mNotes.length];
 		int max = 0;
 		Arrays.fill(notes, 0);
@@ -305,7 +305,7 @@ public class GuitarSolver extends AsyncTask<Void, Void, Void> {
 		// average on each note
 		double average = ((mStrings.length * 1.0) / (mNotes.length * 1.0f));
 		for (int note : notes) {
-			if ((note < average - 1) || (note > average + 1)) {
+			if ((note < (average - 1)) || (note > (average + 1))) {
 				return false;
 			}
 		}
