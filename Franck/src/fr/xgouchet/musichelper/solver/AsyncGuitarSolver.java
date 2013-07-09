@@ -2,6 +2,8 @@ package fr.xgouchet.musichelper.solver;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import android.os.AsyncTask;
@@ -14,19 +16,75 @@ import fr.xgouchet.musichelper.model.Tuning;
 /**
  * Guitar Solver is a CSP solver to generate a chord
  * 
+ * 
+ * Reminder, nothing to do with anything but ...
+ * 
+ * F = (1 / (2L)) √ (T / µ)
+ * 
+ * where L = String length, T = Tension µ = radius * density
+ * 
  * @author Xavier Gouchet
  * 
  */
-public class GuitarSolver extends AsyncTask<Void, Void, Void> {
+public class AsyncGuitarSolver extends AsyncTask<Void, Void, Void> {
 
-	public GuitarSolver() {
+	private final List<List<Combo>> mAllCombos;
+	private Tuning mTuning;
+	private Note[] mNotes;
+	private StringRange[] mStrings;
+
+	private final Comparator<List<Combo>> mComparator = new Comparator<List<Combo>>() {
+
+		@Override
+		public int compare(final List<Combo> lhs, final List<Combo> rhs) {
+			double diff = getAveragePosition(lhs) - getAveragePosition(rhs);
+
+			if (diff < 0) {
+				return -1;
+			} else if (diff > 0) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}
+	};
+
+	/**
+	 * A Solver listener with callback on solver events
+	 */
+	public static interface SolverListener {
+		void onSolved(List<List<Combo>> allCombos);
+	}
+
+	private SolverListener mListener;
+
+	/**
+	 * 
+	 */
+	public AsyncGuitarSolver() {
 		mAllCombos = new ArrayList<List<Combo>>();
 	}
 
+	/**
+	 * @param listener
+	 *            the solver listener
+	 */
+	public void setSolverListener(final SolverListener listener) {
+		mListener = listener;
+	}
+
+	/**
+	 * @param tuning
+	 *            the guitar tuning
+	 */
 	public void setTuning(final Tuning tuning) {
 		mTuning = tuning;
 	}
 
+	/**
+	 * @param chord
+	 *            the chord to solve
+	 */
 	public void setChord(final Chord chord) {
 		mNotes = chord.getNotes();
 	}
@@ -40,10 +98,16 @@ public class GuitarSolver extends AsyncTask<Void, Void, Void> {
 		return null;
 	}
 
+	/**
+	 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+	 */
 	@Override
 	protected void onPostExecute(final Void result) {
 		super.onPostExecute(result);
 		printSolvedChords();
+		if (mListener != null) {
+			mListener.onSolved(mAllCombos);
+		}
 	}
 
 	/**
@@ -55,16 +119,19 @@ public class GuitarSolver extends AsyncTask<Void, Void, Void> {
 		long start = System.currentTimeMillis();
 
 		generateStrings();
+
 		generateConstraints();
 
 		generateCombos();
+
+		Collections.sort(mAllCombos, mComparator);
 
 		Log.i("Franck", "Found " + mAllCombos.size() + " solutions in "
 				+ (System.currentTimeMillis() - start) + " ms");
 	}
 
 	/**
-	 * Generates the string ranges for this solver
+	 * Generates the base string ranges for this solver
 	 */
 	private void generateStrings() {
 		int count = mTuning.getStringsCount();
@@ -176,20 +243,48 @@ public class GuitarSolver extends AsyncTask<Void, Void, Void> {
 			return false;
 		}
 
+		if (!checkUnnecessaryX(list)) {
+			Log.i("GUITAR", "Xs in combo... ");
+			return false;
+		}
+
 		mAllCombos.add(new ArrayList<Combo>(list));
 		return true;
 	}
 
 	/**
 	 * Check that the chord does not copy another valid chord with just an X
-	 * somewhere. This test can be quite
+	 * somewhere. This test can be quite long though
 	 * 
 	 * @param list
 	 *            the list to test
 	 * @return if this chord is valid
 	 */
 	private boolean checkUnnecessaryX(final List<Combo> list) {
-		return false;
+
+		int count = list.size();
+		boolean hasXs = false;
+
+		previousloop: for (List<Combo> previous : mAllCombos) {
+
+			hasXs = false;
+			comboloop: for (int c = 0; c < count; ++c) {
+				if (list.get(c).getFret() == previous.get(c).getFret()) {
+					continue comboloop;
+				} else if (list.get(c).getFret() == -1) {
+					hasXs = true;
+				} else {
+					// different frets, then it must be valid!
+					continue previousloop;
+				}
+			}
+
+			if (hasXs) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -331,9 +426,28 @@ public class GuitarSolver extends AsyncTask<Void, Void, Void> {
 		}
 	}
 
-	protected final List<List<Combo>> mAllCombos;
-	protected Tuning mTuning;
-	private Note[] mNotes;
+	/**
+	 * @param list
+	 *            the list of combos
+	 * @return the average fret position in the combo
+	 */
+	private double getAveragePosition(final List<Combo> list) {
+		double sum;
+		int count;
 
-	private StringRange[] mStrings;
+		sum = count = 0;
+
+		for (Combo combo : list) {
+			if (combo.getFret() >= 0) {
+				sum += combo.getFret();
+				count++;
+			}
+		}
+
+		if (sum == 0) {
+			sum = 1;
+		}
+
+		return sum / count;
+	}
 }

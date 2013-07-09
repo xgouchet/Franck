@@ -7,7 +7,7 @@
     <item name="trebleStaffView" type="id"/>
     <item name="bassStaffView" type="id"/>
     <item name="pianoView" type="id"/>
-    <item name="chordSound" type="id"/>
+    <item name="tabView" type="id"/>
     <item name="chordSound" type="id"/>
     <item name="arpeggioSound" type="id"/>
 

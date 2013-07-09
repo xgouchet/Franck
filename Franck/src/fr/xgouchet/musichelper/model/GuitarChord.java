@@ -5,11 +5,12 @@ import java.util.List;
 import java.util.Set;
 
 import fr.xgouchet.musicgeneration.model.Chord;
-import fr.xgouchet.musichelper.solver.GuitarSolver;
+import fr.xgouchet.musichelper.solver.AsyncGuitarSolver;
 
 /**
  * @author Xavier Gouchet
  */
+@Deprecated
 public class GuitarChord {
 	public static final String STR_VAR = "str";
 
@@ -41,11 +42,11 @@ public class GuitarChord {
 	 */
 	protected void generateGuitarChords() {
 
-		GuitarSolver solver = new GuitarSolver();
+		AsyncGuitarSolver solver = new AsyncGuitarSolver();
 		solver.setTuning(mTuning);
 		solver.setChord(mChord);
 
-		// solver.execute();
+		solver.execute();
 	}
 
 	protected final List<Set<Combo>> mAllCombos;

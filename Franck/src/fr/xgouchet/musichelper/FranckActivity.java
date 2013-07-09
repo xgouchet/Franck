@@ -29,6 +29,7 @@ import fr.xgouchet.musicgeneration.model.Notation;
 import fr.xgouchet.musicgeneration.model.Note;
 import fr.xgouchet.musichelper.common.Settings;
 import fr.xgouchet.musichelper.ui.card.ChordCard;
+import fr.xgouchet.musichelper.ui.card.GuitarCard;
 import fr.xgouchet.musichelper.ui.card.PianoCard;
 import fr.xgouchet.musichelper.ui.card.SoundCard;
 import fr.xgouchet.musichelper.ui.card.StaffCard;
@@ -152,8 +153,7 @@ public class FranckActivity extends Activity implements OnQueryTextListener {
 		Chord chord;
 
 		try {
-			// chord = Chord.parse(query);
-			chord = null;
+			chord = ChordFactory.buildMajor7thChord(new Note());// ChordFactory.parse(query);
 		} catch (Exception e) {
 			Toast.makeText(this, "Unable to create such a chord",
 					Toast.LENGTH_LONG).show();
@@ -287,11 +287,9 @@ public class FranckActivity extends Activity implements OnQueryTextListener {
 
 		// Piano
 		mCardView.addCard(new PianoCard(mChord));
-		//
-		// // Guitar
-		// mCardView.addCard(new GuitarStaffCard(mChord, Key.treble));
-		// GuitarChord test = new GuitarChord(mChord,
-		// Tuning.standardGuitarTuning());
+
+		// Guitar
+		mCardView.addCard(new GuitarCard(mChord));
 
 	}
 

@@ -369,7 +369,7 @@ public class PianoView extends View {
 	}
 
 	/**
-	 * @return
+	 * @return the path to draw a key shaped like the C key (ie : an L shape)
 	 */
 	private Path getPathC() {
 		if (sPathC == null) {
@@ -386,7 +386,7 @@ public class PianoView extends View {
 	}
 
 	/**
-	 * @return
+	 * @return the path to draw a key shaped like the D key (ie : an upside down T shape)
 	 */
 	private Path getPathD() {
 		if (sPathD == null) {
@@ -405,7 +405,7 @@ public class PianoView extends View {
 	}
 
 	/**
-	 * @return
+	 * @return the path to draw a key shaped like the E key (ie : a mirrored L shape)
 	 */
 	private Path getPathE() {
 		if (sPathE == null) {

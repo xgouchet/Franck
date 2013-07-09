@@ -78,7 +78,7 @@ public class StringRange implements Iterable<Combo> {
 	public void limitNotes(final Note[] notes) {
 		Note temp;
 
-		for (int i = 0; i <= MAX_FRET; ++i) {
+		for (int i = 0; i < MAX_FRET; ++i) {
 
 			temp = getNote(i);
 

@@ -1,5 +1,6 @@
 package fr.xgouchet.musichelper.model;
 
+import fr.xgouchet.musicgeneration.model.Notation;
 import fr.xgouchet.musicgeneration.model.Note;
 
 /**
@@ -73,11 +74,18 @@ public class Combo implements Comparable<Combo> {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append(mNote.toString());
-		builder.append(" : Str ");
+
+		builder.append("Str ");
 		builder.append(mString);
 		builder.append(", Fret ");
 		builder.append(mFret);
+		builder.append(" = ");
+		
+		if (mNote == null) {
+			builder.append("X");
+		} else {
+			builder.append(mNote.getNoteName(Notation.english));
+		}
 
 		return builder.toString();
 	}
