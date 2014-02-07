@@ -1,4 +1,6 @@
-package fr.xgouchet.music.core.model;
+package fr.xgouchet.music.core.utils;
+
+import fr.xgouchet.music.core.model.Note;
 
 /**
  * 

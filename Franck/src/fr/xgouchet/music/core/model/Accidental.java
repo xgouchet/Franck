@@ -1,5 +1,7 @@
 package fr.xgouchet.music.core.model;
 
+import fr.xgouchet.music.core.utils.Symbols;
+
 /**
  * Describes the different accidentals a base {@link Pitch} can have
  * 

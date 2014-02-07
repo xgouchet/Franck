@@ -1,4 +1,4 @@
-package fr.xgouchet.music.core.model;
+package fr.xgouchet.music.core.utils;
 
 /**
  * 
@@ -13,5 +13,6 @@ public class Symbols {
 
 	public static final char QUARTER_NOTE = 0x2669;
 	public static final char EIGTH_NOTE = 0x266A;
+	public static final char _EIGTH_NOTE = 0x266B;
 
 }

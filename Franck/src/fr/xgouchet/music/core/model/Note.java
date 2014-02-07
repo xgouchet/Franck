@@ -31,8 +31,8 @@ public class Note {
 	 * @param halfTones
 	 *            the number of half tones from a middle C
 	 */
-	public Note(final int semitones) {
-		this(semitones, 4);
+	public Note(final int halfTones) {
+		this(halfTones, 4);
 	}
 
 	/**
