@@ -23,3 +23,7 @@ local.properties
 # Build
 *.log
 reports/
+.gradle/
+.idea/
+*.iml
+**/build/
