@@ -32,8 +32,8 @@ public enum Accidental {
     /**
      *
      */
-    private Accidental(int halfTones) {
-        mHalfTones = halfTones;
+    private Accidental(int semiTones) {
+        mHalfTones = semiTones;
     }
 
     /**
@@ -44,12 +44,12 @@ public enum Accidental {
     }
 
     /**
-     * @param halfTones the number of half tones alteration (must be between -2 and 2)
+     * @param semiTones the number of half tones alteration (must be between -2 and 2)
      * @return the alteration corresponding to the given number of half tones
      */
-    public static Accidental fromHalfTones(final int halfTones) {
+    public static Accidental fromHalfTones(final int semiTones) {
 
-        switch (halfTones) {
+        switch (semiTones) {
             case 0:
                 return natural;
             case 1:

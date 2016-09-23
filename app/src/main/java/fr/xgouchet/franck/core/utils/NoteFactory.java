@@ -44,7 +44,7 @@ public final class NoteFactory {
 		case doubleFlat:
 			return new Note(note.getPitch(), Accidental.flat, note.getOctave());
 		case doubleSharp:
-			return new Note(note.getHalfTones() + 1);
+			return new Note(note.getSemiTones() + 1);
 		default:
 			throw new IllegalArgumentException();
 		}
@@ -66,7 +66,7 @@ public final class NoteFactory {
 			return new Note(note.getPitch(), Accidental.doubleFlat,
 					note.getOctave());
 		case doubleFlat:
-			return new Note(note.getHalfTones() - 1);
+			return new Note(note.getSemiTones() - 1);
 		default:
 			throw new IllegalArgumentException();
 		}
@@ -77,7 +77,7 @@ public final class NoteFactory {
 	 *         Eb)
 	 */
 	public static Note minorThird(final Note note) {
-		return new Note(note.getHalfTones() + 3);
+		return new Note(note.getSemiTones() + 3);
 	}
 
 	/**
@@ -85,21 +85,21 @@ public final class NoteFactory {
 	 *         E)
 	 */
 	public static Note majorThird(final Note note) {
-		return new Note(note.getHalfTones() + 4);
+		return new Note(note.getSemiTones() + 4);
 	}
 
 	/**
 	 * @return the 4<sup>th</sup> note based on this dominant (eg : C -> F)
 	 */
 	public static Note fourth(final Note note) {
-		return new Note(note.getHalfTones() + 5);
+		return new Note(note.getSemiTones() + 5);
 	}
 
 	/**
 	 * @return the tritone note based on this dominant (eg : C -> F#)
 	 */
 	public static Note tritone(final Note note) {
-		return new Note(note.getHalfTones() + 6);
+		return new Note(note.getSemiTones() + 6);
 	}
 
 	/**
@@ -107,7 +107,7 @@ public final class NoteFactory {
 	 *         G)
 	 */
 	public static Note perfectFifth(final Note note) {
-		return new Note(note.getHalfTones() + 7);
+		return new Note(note.getSemiTones() + 7);
 	}
 
 	/**
@@ -115,7 +115,7 @@ public final class NoteFactory {
 	 *         Ab)
 	 */
 	public static Note minorSixth(final Note note) {
-		return new Note(note.getHalfTones() + 8);
+		return new Note(note.getSemiTones() + 8);
 	}
 
 	/**
@@ -123,7 +123,7 @@ public final class NoteFactory {
 	 *         A)
 	 */
 	public static Note majorSixth(final Note note) {
-		return new Note(note.getHalfTones() + 9);
+		return new Note(note.getSemiTones() + 9);
 	}
 
 	/**
@@ -131,7 +131,7 @@ public final class NoteFactory {
 	 *         Bb)
 	 */
 	public static Note minorSeventh(final Note note) {
-		return new Note(note.getHalfTones() + 10);
+		return new Note(note.getSemiTones() + 10);
 	}
 
 	/**
@@ -139,35 +139,35 @@ public final class NoteFactory {
 	 *         B)
 	 */
 	public static Note majorSeventh(final Note note) {
-		return new Note(note.getHalfTones() + 11);
+		return new Note(note.getSemiTones() + 11);
 	}
 
 	/**
 	 * @return the 9<sup>th</sup> note based on this dominant (eg : C4 -> D5)
 	 */
 	public static Note nineth(final Note note) {
-		return new Note(note.getHalfTones() + 14);
+		return new Note(note.getSemiTones() + 14);
 	}
 
 	/**
 	 * @return the 11<sup>th</sup> note based on this dominant (eg : C4 -> F5)
 	 */
 	public static Note eleventh(final Note note) {
-		return new Note(note.getHalfTones() + 17);
+		return new Note(note.getSemiTones() + 17);
 	}
 
 	/**
 	 * @return the 12<sup>th</sup> note based on this dominant (eg : C4 -> G5)
 	 */
 	public static Note twelveth(final Note note) {
-		return new Note(note.getHalfTones() + 17);
+		return new Note(note.getSemiTones() + 17);
 	}
 
 	/**
 	 * @return the 13<sup>th</sup> note based on this dominant (eg : C4 -> A5)
 	 */
 	public static Note thirteenth(final Note note) {
-		return new Note(note.getHalfTones() + 17);
+		return new Note(note.getSemiTones() + 17);
 	}
 
 	/**

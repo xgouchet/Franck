@@ -28,13 +28,13 @@ public enum Pitch {
 	/** The neolatin name of the pitch */
 	private final String mNeoLatinName;
 
-	private Pitch(int halfTones, String neoLatinName) {
-		mHalfTones = halfTones;
+	private Pitch(int semiTones, String neoLatinName) {
+		mHalfTones = semiTones;
 		mNeoLatinName = neoLatinName;
 	}
 
 	/**
-	 * @return the halftones count from a natural C to this pitch (assuming they
+	 * @return the semiTones count from a natural C to this pitch (assuming they
 	 *         are in the same octave)
 	 */
 	public int getHalfTones() {

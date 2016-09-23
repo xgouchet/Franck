@@ -69,7 +69,7 @@ public class FrequencyFactory {
 	 */
 	public static double getEqualTemperredFrequency(Note note) {
 
-		int halfTonesFromA4 = note.getHalfTones() - 9;
+		int halfTonesFromA4 = note.getSemiTones() - 9;
 
 		return A4_FREQ * Math.pow(EQUAL_FACTOR, halfTonesFromA4);
 	}
@@ -87,16 +87,16 @@ public class FrequencyFactory {
 		double naturalCFreq = C4_FREQ * Math.pow(2, note.getOctave() - 4);
 
 		// get the half tones between a C and the note (in the same octave)
-		int halfTones = note.getPitch().getHalfTones()
+		int semiTones = note.getPitch().getHalfTones()
 				+ note.getAccidental().getHalfTones();
 
 		//
-		while (halfTones < 0) {
+		while (semiTones < 0) {
 			naturalCFreq /= 2;
-			halfTones += 12;
+			semiTones += 12;
 		}
 
-		return naturalCFreq * JUST_INTONATION_RATIOS[halfTones];
+		return naturalCFreq * JUST_INTONATION_RATIOS[semiTones];
 	}
 
 	/**
@@ -112,16 +112,16 @@ public class FrequencyFactory {
 		double naturalCFreq = C4_FREQ * Math.pow(2, note.getOctave() - 4);
 
 		// get the half tones between a C and the note (in the same octave)
-		int halfTones = note.getPitch().getHalfTones()
+		int semiTones = note.getPitch().getHalfTones()
 				+ note.getAccidental().getHalfTones();
 
 		//
-		while (halfTones < 0) {
+		while (semiTones < 0) {
 			naturalCFreq /= 2;
-			halfTones += 12;
+			semiTones += 12;
 		}
 
-		return naturalCFreq * PYTHAGOREAN_RATIOS[halfTones];
+		return naturalCFreq * PYTHAGOREAN_RATIOS[semiTones];
 	}
 
 }

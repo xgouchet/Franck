@@ -10,6 +10,7 @@ import java.util.Locale;
  */
 public class Note {
 
+    private static final int SEMI_TONES_PER_OCTAVE = 12;
     /**
      * the base pitch of the note (eg : C, E, B, ...)
      */
@@ -34,34 +35,27 @@ public class Note {
      * Constructs a note by the number of half tones from a natural C on the
      * 4<sup>th</sup> octave (ie : middle C)
      *
-     * @param halfTones the number of half tones from a middle C
+     * @param semiTones the number of half tones from a middle C
      */
-    public Note(final int halfTones) {
-        this(halfTones, 4);
+    public Note(final int semiTones) {
+        this(semiTones, 4);
     }
 
     /**
      * Constructs a note by the number of half tones from a natural C, at the
      * given octave
      *
-     * @param halfTones the number of half tones from a natural C
+     * @param semiTones the number of half tones from a natural C
      * @param octave
      */
-    public Note(final int halfTones, final int octave) {
-        int octaveOffset = 0;
-        int st = halfTones;
-
-        while (st < 0) {
-            st += 12;
-            octaveOffset--;
+    public Note(final int semiTones, final int octave) {
+        int localSemiTones = semiTones % SEMI_TONES_PER_OCTAVE;
+        if (localSemiTones < 0){
+            localSemiTones += SEMI_TONES_PER_OCTAVE;
         }
+        int octaveOffset = (semiTones - localSemiTones) / SEMI_TONES_PER_OCTAVE;
 
-        while (st >= 12) {
-            st -= 12;
-            octaveOffset++;
-        }
-
-        switch (st) {
+        switch (localSemiTones) {
             case 0:
             case 1:
                 mPitch = Pitch.C;
@@ -92,7 +86,7 @@ public class Note {
                 throw new IllegalStateException();
         }
 
-        mAccidental = Accidental.fromHalfTones(st - mPitch.getHalfTones());
+        mAccidental = Accidental.fromHalfTones(localSemiTones - mPitch.getHalfTones());
 
         mOctave = octave + octaveOffset;
     }
@@ -130,7 +124,7 @@ public class Note {
         switch (mAccidental) {
             case doubleFlat:
             case doubleSharp:
-                return new Note(getHalfTones());
+                return new Note(getSemiTones());
             default:
                 break;
         }
@@ -140,7 +134,7 @@ public class Note {
             case B:
             case C:
             case F:
-                return new Note(getHalfTones());
+                return new Note(getSemiTones());
             default:
                 break;
         }
@@ -170,21 +164,21 @@ public class Note {
     }
 
     /**
-     * @return the number of half tones from a Middle C to this note
+     * @return the number of semi tones from a Middle C to this note
      */
-    public int getHalfTones() {
-        int halfTones = 0;
+    public int getSemiTones() {
+        int semiTones = 0;
 
         // half tones from natural pitch to this note
-        halfTones += mAccidental.getHalfTones();
+        semiTones += mAccidental.getHalfTones();
 
         // half tones from natural C to natural pitch
-        halfTones += mPitch.getHalfTones();
+        semiTones += mPitch.getHalfTones();
 
         // half tones from middle C to natural C in same octave
-        halfTones += (mOctave - 4) * 12;
+        semiTones += (mOctave - 4) * SEMI_TONES_PER_OCTAVE;
 
-        return halfTones;
+        return semiTones;
     }
 
     /**
@@ -208,8 +202,8 @@ public class Note {
         if (other == null) {
             return false;
         } else {
-            int diff = getHalfTones() - other.getHalfTones();
-            return (diff % 12) == 0;
+            int diff = getSemiTones() - other.getSemiTones();
+            return (diff % SEMI_TONES_PER_OCTAVE) == 0;
         }
     }
 
@@ -225,14 +219,14 @@ public class Note {
         if (other == null) {
             return false;
         } else {
-            return getHalfTones() == other.getHalfTones();
+            return getSemiTones() == other.getSemiTones();
         }
     }
 
     /**
      * @param neoLatinNames if it should use the neolatin names (do-re-mi).
      *                      If false, the anglo-saxon names will be used (C-D-E)
-     * @return the note name in the given notation
+     * @return the note name in the given notation (without the octave)
      */
     public String getNoteName(boolean neoLatinNames, boolean showNatural) {
         return String.format("%s%s", mPitch.getPitchName(neoLatinNames),
@@ -267,6 +261,6 @@ public class Note {
 
     @Override
     public int hashCode() {
-        return getHalfTones();
+        return getSemiTones();
     }
 }

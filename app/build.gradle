@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.2"
 
     defaultConfig {
         applicationId "fr.xgouchet.franck"
-        minSdkVersion 15
-        targetSdkVersion 23
+        minSdkVersion 16
+        targetSdkVersion 24
         versionCode 1
         versionName "1.0"
     }
@@ -26,19 +26,19 @@ android {
 
 dependencies {
     // SUPPORT LIBS
-    compile 'com.android.support:support-v4:23.4.0'
-    compile 'com.android.support:appcompat-v7:23.4.0'
-    compile 'com.android.support:cardview-v7:23.4.0'
-    compile 'com.android.support:recyclerview-v7:23.4.0'
-    compile 'com.android.support:support-annotations:23.4.0'
-    compile 'com.android.support:design:23.4.0'
+    compile 'com.android.support:support-v4:24.2.1'
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:cardview-v7:24.2.1'
+    compile 'com.android.support:recyclerview-v7:24.2.1'
+    compile 'com.android.support:support-annotations:24.2.1'
+    compile 'com.android.support:design:24.2.1'
 
     //  UNIT TESTS
     testCompile 'junit:junit:4.12'
     testCompile 'org.assertj:assertj-core:1.7.0'
     testCompile 'com.squareup.assertj:assertj-android:1.0.0'
     testCompile 'org.mockito:mockito-core:1.10.19'
-    testCompile 'com.android.support:support-annotations:23.4.0'
+    testCompile 'com.android.support:support-annotations:24.2.1'
 
 //    testCompile('org.robolectric:robolectric:3.0') {
 //        exclude module: 'classworlds'
@@ -65,7 +65,9 @@ dependencies {
 apply plugin: "pl.droidsonroids.pitest"
 
 pitest{
-    targetClasses = ['fr.*']
-    verbose true
+    targetClasses = ['fr.xgouchet.*']
+//    verbose true
     outputFormats = ['XML', 'HTML']
+    maxMutationsPerClass = 300
+    detectInlinedCode = true
 }

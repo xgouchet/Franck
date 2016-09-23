@@ -26,4 +26,4 @@ reports/
 .gradle/
 .idea/
 *.iml
-**/build/
+build/
