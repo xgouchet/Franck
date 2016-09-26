@@ -1,55 +1,35 @@
 package fr.xgouchet.franck.core.model;
 
 /**
- * Describes the 7 different base pitches known in music
- * 
+ * Describes the 7 different base pitches known in (occidental) music
+ *
  * @author Xavier Gouchet
  */
 public enum Pitch {
 
-	/** */
-	C(0, "Do"),
-	/** */
-	D(2, "Re"),
-	/** */
-	E(4, "Mi"),
-	/** */
-	F(5, "Fa"),
-	/** */
-	G(7, "Sol"),
-	/** */
-	A(9, "La"),
-	/** */
-	B(11, "Si");
+    C(0),
+    D(2),
+    E(4),
+    F(5),
+    G(7),
+    A(9),
+    B(11);
 
-	/** The number of half tones between this pitch and the natural C */
-	private final int mHalfTones;
+    /**
+     * The number of half tones between this pitch and the natural C
+     */
+    private final int semiTones;
 
-	/** The neolatin name of the pitch */
-	private final String mNeoLatinName;
+    Pitch(int semiTones) {
+        this.semiTones = semiTones;
+    }
 
-	private Pitch(int semiTones, String neoLatinName) {
-		mHalfTones = semiTones;
-		mNeoLatinName = neoLatinName;
-	}
-
-	/**
-	 * @return the semiTones count from a natural C to this pitch (assuming they
-	 *         are in the same octave)
-	 */
-	public int getHalfTones() {
-		return mHalfTones;
-	}
-
-	/**
-	 * @return the name of the current pitch in the given notation
-	 */
-	public String getPitchName(boolean neolatinName) {
-		if (neolatinName) {
-			return mNeoLatinName;
-		} else {
-			return name();
-		}
-	}
+    /**
+     * @return the semiTones count from a natural C to this pitch (assuming they
+     * are in the same octave)
+     */
+    public int getSemiTones() {
+        return semiTones;
+    }
 
 }

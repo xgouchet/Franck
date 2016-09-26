@@ -1,6 +1,15 @@
 package fr.xgouchet.franck.core.model;
 
-import java.util.Locale;
+import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
+
+import static fr.xgouchet.franck.core.model.Accidental.doubleFlat;
+import static fr.xgouchet.franck.core.model.Accidental.doubleSharp;
+import static fr.xgouchet.franck.core.model.Accidental.flat;
+import static fr.xgouchet.franck.core.model.Accidental.natural;
+import static fr.xgouchet.franck.core.model.Accidental.sharp;
+import static fr.xgouchet.franck.core.model.Pitch.B;
+import static fr.xgouchet.franck.core.model.Pitch.C;
 
 /**
  * An immutable class representing a Note, including a Pitch (eg : C, G, A), an
@@ -11,18 +20,14 @@ import java.util.Locale;
 public class Note {
 
     private static final int SEMI_TONES_PER_OCTAVE = 12;
-    /**
-     * the base pitch of the note (eg : C, E, B, ...)
-     */
-    private final Pitch mPitch;
-    /**
-     * the accidental (eg: flat, sharp, natural, ...)
-     */
-    private final Accidental mAccidental;
-    /**
-     * the octave this note is played on (default is 4<sup>th</sup> )
-     */
-    private final int mOctave;
+    public static final int MIDDLE_OCTAVE = 4;
+
+    @NonNull
+    private final Pitch pitch;
+    @NonNull
+    private final Accidental accidental;
+    @IntRange(from = 0, to = 16)
+    private final int octave;
 
     /**
      * Constructs a Middle C (natural C on the 4<sup>th</sup> octave)
@@ -37,8 +42,8 @@ public class Note {
      *
      * @param semiTones the number of half tones from a middle C
      */
-    public Note(final int semiTones) {
-        this(semiTones, 4);
+    public Note(int semiTones) {
+        this(semiTones, MIDDLE_OCTAVE);
     }
 
     /**
@@ -46,11 +51,11 @@ public class Note {
      * given octave
      *
      * @param semiTones the number of half tones from a natural C
-     * @param octave
+     * @param octave    the octave to use as reference
      */
-    public Note(final int semiTones, final int octave) {
+    public Note(int semiTones, int octave) {
         int localSemiTones = semiTones % SEMI_TONES_PER_OCTAVE;
-        if (localSemiTones < 0){
+        if (localSemiTones < 0) {
             localSemiTones += SEMI_TONES_PER_OCTAVE;
         }
         int octaveOffset = (semiTones - localSemiTones) / SEMI_TONES_PER_OCTAVE;
@@ -58,109 +63,93 @@ public class Note {
         switch (localSemiTones) {
             case 0:
             case 1:
-                mPitch = Pitch.C;
+                pitch = C;
                 break;
             case 2:
-                mPitch = Pitch.D;
+                pitch = Pitch.D;
                 break;
             case 3:
             case 4:
-                mPitch = Pitch.E;
+                pitch = Pitch.E;
                 break;
             case 5:
             case 6:
-                mPitch = Pitch.F;
+                pitch = Pitch.F;
                 break;
             case 7:
             case 8:
-                mPitch = Pitch.G;
+                pitch = Pitch.G;
                 break;
             case 9:
-                mPitch = Pitch.A;
+                pitch = Pitch.A;
                 break;
             case 10:
             case 11:
-                mPitch = Pitch.B;
+                pitch = B;
                 break;
             default:
                 throw new IllegalStateException();
         }
 
-        mAccidental = Accidental.fromHalfTones(localSemiTones - mPitch.getHalfTones());
+        accidental = Accidental.fromSemiTones(localSemiTones - pitch.getSemiTones());
 
-        mOctave = octave + octaveOffset;
+        this.octave = octave + octaveOffset;
     }
 
     /**
      * Constructs a note by the given pitch and accidental alteration, at the
      * 4<sup>th</sup> octave
      *
-     * @param pitch
-     * @param accidental
+     * @param pitch      the pitch (C, D, E, ...)
+     * @param accidental the accidental (♮, ♯, ♭, ...)
      */
-    public Note(final Pitch pitch, final Accidental accidental) {
-        this(pitch, accidental, 4);
+    public Note(@NonNull Pitch pitch, @NonNull Accidental accidental) {
+        this(pitch, accidental, MIDDLE_OCTAVE);
     }
 
     /**
      * Constructs a note by the given pitch and accidental alteration, at the
      * given octave
      *
-     * @param pitch
-     * @param accidental
-     * @param octave
+     * @param pitch      the pitch (C, D, E, ...)
+     * @param accidental the accidental (♮, ♯, ♭, ...)
+     * @param octave     the octabe (0 .. 16)
      */
-    public Note(final Pitch pitch, final Accidental accidental, final int octave) {
-        mPitch = pitch;
-        mAccidental = accidental;
-        mOctave = octave;
+    public Note(@NonNull Pitch pitch, @NonNull Accidental accidental, int octave) {
+        this.pitch = pitch;
+        this.accidental = accidental;
+        this.octave = octave;
     }
 
     /**
-     * @return a new Note with a simplified representation of the current note
-     * (eg : E# -> F, Cbb -> Bb)
+     * Constructs a note identical to the given one
+     *
+     * @param note the note to copy
      */
-    public Note simplify() {
-        switch (mAccidental) {
-            case doubleFlat:
-            case doubleSharp:
-                return new Note(getSemiTones());
-            default:
-                break;
-        }
+    public Note(Note note) {
+        this(note.getPitch(), note.getAccidental(), note.getOctave());
+    }
 
-        switch (mPitch) {
-            case E:
-            case B:
-            case C:
-            case F:
-                return new Note(getSemiTones());
-            default:
-                break;
-        }
 
-        return this;
+    /**
+     * @return the pitch (C, D, E, ...)
+     */
+    @NonNull public Pitch getPitch() {
+        return pitch;
     }
 
     /**
-     * @return the pitch
+     * @return the accidental (♮, ♯, ♭, ...)
      */
-    public Pitch getPitch() {
-        return mPitch;
-    }
-
-    /**
-     * @return the accidental
-     */
-    public Accidental getAccidental() {
-        return mAccidental;
+    @NonNull public Accidental getAccidental() {
+        return accidental;
     }
 
     /**
      * @return the octave
      */
     public int getOctave() {
-        return mOctave;
+        return octave;
     }
 
     /**
@@ -170,13 +159,13 @@ public class Note {
         int semiTones = 0;
 
         // half tones from natural pitch to this note
-        semiTones += mAccidental.getHalfTones();
+        semiTones += accidental.getSemiTones();
 
         // half tones from natural C to natural pitch
-        semiTones += mPitch.getHalfTones();
+        semiTones += pitch.getSemiTones();
 
         // half tones from middle C to natural C in same octave
-        semiTones += (mOctave - 4) * SEMI_TONES_PER_OCTAVE;
+        semiTones += (octave - MIDDLE_OCTAVE) * SEMI_TONES_PER_OCTAVE;
 
         return semiTones;
     }
@@ -185,7 +174,7 @@ public class Note {
      * @return if the current note should display an alteration
      */
     public boolean isAltered() {
-        return (!mAccidental.equals(Accidental.natural));
+        return (!accidental.equals(natural));
     }
 
     /**
@@ -198,13 +187,9 @@ public class Note {
      * @param other the note to check
      * @return if the given note is equivalent
      */
-    public boolean isEquivalent(final Note other) {
-        if (other == null) {
-            return false;
-        } else {
-            int diff = getSemiTones() - other.getSemiTones();
-            return (diff % SEMI_TONES_PER_OCTAVE) == 0;
-        }
+    public boolean isSimilar(@NonNull Note other) {
+        int diff = getSemiTones() - other.getSemiTones();
+        return (diff % SEMI_TONES_PER_OCTAVE) == 0;
     }
 
     /**
@@ -215,32 +200,171 @@ public class Note {
      * @param other the note to check
      * @return if the given note is the same
      */
-    public boolean isSame(final Note other) {
-        if (other == null) {
-            return false;
-        } else {
-            return getSemiTones() == other.getSemiTones();
+    public boolean isEquivalent(@NonNull Note other) {
+        return getSemiTones() == other.getSemiTones();
+    }
+
+    /**
+     * @param full if true, will try to simplify unusual alterations (B♯ → C, F♭ → E, …)
+     * @return a new Note with a simplified representation of the current note
+     * (eg : G♯♯ -> A, D♭♭ -> C)
+     */
+    @NonNull public Note simplify(boolean full) {
+        switch (accidental) {
+            case doubleFlat:
+            case doubleSharp:
+                return new Note(getSemiTones());
+            default:
+                break;
+        }
+
+        if (full) {
+            switch (pitch) {
+                case E:
+                case B:
+                case C:
+                case F:
+                    return new Note(getSemiTones());
+                default:
+                    break;
+            }
+        }
+
+        return new Note(this);
+    }
+
+
+    /**
+     * @return the same note at a lower octave (eg : C4 -> C3)
+     */
+    @NonNull public Note lowerOctave() {
+        return new Note(pitch, accidental, octave - 1);
+    }
+
+    /**
+     * @return the same note at a lower octave (eg : C4 -> C5)
+     */
+    @NonNull public Note higherOctave() {
+        return new Note(pitch, accidental, octave + 1);
+    }
+
+    /**
+     * @return the augmented note based on this dominant (eg : C -> C#)
+     */
+    @NonNull public Note augmented() {
+        switch (accidental) {
+            case sharp:
+                return new Note(pitch, doubleSharp, octave);
+            case natural:
+                return new Note(pitch, sharp, octave);
+            case flat:
+                return new Note(pitch, natural,
+                        octave);
+            case doubleFlat:
+                return new Note(pitch, flat, octave);
+            case doubleSharp:
+                return new Note(getSemiTones() + 1);
+            default:
+                throw new IllegalArgumentException();
         }
     }
 
     /**
-     * @param neoLatinNames if it should use the neolatin names (do-re-mi).
-     *                      If false, the anglo-saxon names will be used (C-D-E)
-     * @return the note name in the given notation (without the octave)
+     * @return the diminished note based on this dominant (eg : C -> B)
      */
-    public String getNoteName(boolean neoLatinNames, boolean showNatural) {
-        return String.format("%s%s", mPitch.getPitchName(neoLatinNames),
-                mAccidental.getSymbol(showNatural));
+    @NonNull public Note diminished() {
+        switch (accidental) {
+            case doubleSharp:
+                return new Note(pitch, sharp, octave);
+            case sharp:
+                return new Note(pitch, natural,
+                        octave);
+            case natural:
+                return new Note(pitch, flat, octave);
+            case flat:
+                return new Note(pitch, doubleFlat,
+                        octave);
+            case doubleFlat:
+                return new Note(getSemiTones() - 1);
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 
-    @Override
-    public String toString() {
-        return String.format(Locale.US, "%s %s (%d)", mPitch.toString(),
-                mAccidental.toString(), mOctave);
+    /**
+     * @return the minor 3<sup>rd</sup> note based on this dominant (eg : C ->
+     * Eb)
+     */
+    @NonNull public Note second() {
+        return new Note(getSemiTones() + 2);
     }
 
+    /**
+     * @return the minor 3<sup>rd</sup> note based on this dominant (eg : C ->
+     * Eb)
+     */
+    @NonNull public Note minorThird() {
+        return new Note(getSemiTones() + 4).diminished().simplify(false);
+    }
+
+    /**
+     * @return the major 3<sup>rd</sup> note based on this dominant (eg : C ->
+     * E)
+     */
+    @NonNull public Note majorThird() {
+        return new Note(getSemiTones() + 3).augmented().simplify(false);
+    }
+
+    /**
+     * @return the 4<sup>th</sup> note based on this dominant (eg : C -> F)
+     */
+    @NonNull public Note fourth() {
+        return new Note(getSemiTones() + 5);
+    }
+
+    /**
+     * @return the perfect 5<sup>th</sup> note based on this dominant (eg : C ->
+     * G)
+     */
+    @NonNull public Note perfectFifth() {
+        return new Note(getSemiTones() + 7);
+    }
+
+    /**
+     * @return the minor 6<sup>th</sup> note based on this dominant (eg : C ->
+     * Ab)
+     */
+    @NonNull public Note minorSixth() {
+        return new Note(getSemiTones() + 9).diminished().simplify(false);
+    }
+
+    /**
+     * @return the major 6<sup>th</sup> note based on this dominant (eg : C ->
+     * A)
+     */
+    @NonNull public Note majorSixth() {
+        return new Note(getSemiTones() + 8).augmented().simplify(false);
+    }
+
+    /**
+     * @return the minor 7<sup>th</sup> note based on this dominant (eg : C ->
+     * Bb)
+     */
+    @NonNull public Note minorSeventh() {
+        return new Note(getSemiTones() + 11).diminished().simplify(false);
+    }
+
+    /**
+     * @return the major 7<sup>th</sup> note based on this dominant (eg : C ->
+     * B)
+     */
+    @NonNull public Note majorSeventh() {
+        return new Note(getSemiTones() + 10).augmented().simplify(false);
+    }
+
+
     @Override
-    public boolean equals(final Object other) {
+    public boolean equals(Object other) {
         // check for self-comparison
         if (this == other) {
             return true;
@@ -262,5 +386,10 @@ public class Note {
     @Override
     public int hashCode() {
         return getSemiTones();
+    }
+
+    @Override
+    public String toString() {
+        return pitch.name() + " " + accidental.name() + " (" + octave + ")";
     }
 }

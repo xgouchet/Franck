@@ -1,8 +1,6 @@
 package fr.xgouchet.franck.core.model;
 
 
-import fr.xgouchet.franck.core.utils.Symbols;
-
 /**
  * Describes the different accidentals a base {@link Pitch} can have
  *
@@ -10,44 +8,30 @@ import fr.xgouchet.franck.core.utils.Symbols;
  */
 public enum Accidental {
 
-    /** */
     natural(0),
-    /** */
     sharp(1),
-    /** */
     flat(-1),
-    /** */
     doubleSharp(2),
-    /** */
     doubleFlat(-2);
 
-    /**
-     * The common names of accidentals
-     */
-    public static final String[] COMMON_NAMES = new String[]{"%s", "%s#",
-            "%s♭", "%s##", "%s♭♭"};
+    private final int semiTones;
 
-    private final int mHalfTones;
-
-    /**
-     *
-     */
-    private Accidental(int semiTones) {
-        mHalfTones = semiTones;
+    Accidental(int semiTones) {
+        this.semiTones = semiTones;
     }
 
     /**
-     * @return the half tones added by this accidental
+     * @return the semi tones added by this accidental
      */
-    public int getHalfTones() {
-        return mHalfTones;
+    public int getSemiTones() {
+        return semiTones;
     }
 
     /**
-     * @param semiTones the number of half tones alteration (must be between -2 and 2)
+     * @param semiTones the number of semi tones alteration (must be between -2 and 2)
      * @return the alteration corresponding to the given number of half tones
      */
-    public static Accidental fromHalfTones(final int semiTones) {
+    public static Accidental fromSemiTones(final int semiTones) {
 
         switch (semiTones) {
             case 0:
@@ -65,34 +49,4 @@ public enum Accidental {
         }
     }
 
-    public String getSymbol(boolean showNatural) {
-        StringBuilder builder = new StringBuilder(2);
-
-        switch (this) {
-            case natural:
-                if (showNatural) {
-                    builder.append(Symbols.NATURAL_SIGN);
-                }
-                break;
-            case doubleFlat:
-                builder.append(Symbols.FLAT_SIGN);
-                builder.append(Symbols.FLAT_SIGN);
-                break;
-            case doubleSharp:
-                builder.append(Symbols.SHARP_SIGN);
-                builder.append(Symbols.SHARP_SIGN);
-                break;
-            case flat:
-                builder.append(Symbols.FLAT_SIGN);
-                break;
-            case sharp:
-                builder.append(Symbols.SHARP_SIGN);
-                break;
-            default:
-                break;
-
-        }
-
-        return builder.toString();
-    }
 }

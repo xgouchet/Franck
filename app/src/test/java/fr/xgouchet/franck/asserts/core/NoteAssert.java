@@ -24,9 +24,9 @@ public class NoteAssert extends AbstractAssert<NoteAssert, Note> {
         isNotNull();
 
         if (actual.getOctave() != expected) {
-            failWithMessage("Expected note's octave to be <%d> but was <%d>",
-                    expected,
-                    actual.getOctave());
+            failWithMessage("Expected note's octave to be <%s> but was <%s>",
+                    Integer.toString(expected),
+                    Integer.toString(actual.getOctave()));
         }
 
         return this;
@@ -68,22 +68,48 @@ public class NoteAssert extends AbstractAssert<NoteAssert, Note> {
         return this;
     }
 
-    public NoteAssert isEquivalent(Note expected) {
+    public NoteAssert isSimilarTo(Note expected) {
         isNotNull();
 
-        if (!actual.isEquivalent(expected)) {
-            failWithMessage("Expected note to be equivalent to <%s> but was not",
+        if (!actual.isSimilar(expected)) {
+            failWithMessage("Expected note <%s> to be similar to <%s> but was not",
+                    actual,
                     expected);
         }
 
         return this;
     }
 
-    public NoteAssert isNotEquivalent(Note expected) {
+    public NoteAssert isNotSimilarTo(Note expected) {
+        isNotNull();
+
+        if (actual.isSimilar(expected)) {
+            failWithMessage("Expected note <%s> to not be similar to <%s> but was",
+                    actual,
+                    expected);
+        }
+
+        return this;
+    }
+
+    public NoteAssert isEquivalentTo(Note expected) {
+        isNotNull();
+
+        if (!actual.isEquivalent(expected)) {
+            failWithMessage("Expected note <%s> to be equivalent to <%s> but was not",
+                    actual,
+                    expected);
+        }
+
+        return this;
+    }
+
+    public NoteAssert isNotEquivalentTo(Note expected) {
         isNotNull();
 
         if (actual.isEquivalent(expected)) {
-            failWithMessage("Expected note to not be equivalent to <%s> but was",
+            failWithMessage("Expected note <%s> to not be equivalent to <%s> but was",
+                    actual,
                     expected);
         }
 

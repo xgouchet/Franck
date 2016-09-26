@@ -65,7 +65,7 @@ public class FrequencyFactory {
 	 * with a 440.0Hz frequency.
 	 * </p>
 	 * 
-	 * @return the current note's frequency (in hertz)
+	 * @return the given note's frequency (in hertz)
 	 */
 	public static double getEqualTemperredFrequency(Note note) {
 
@@ -79,7 +79,7 @@ public class FrequencyFactory {
 	 * numbers (eg : <sup>3</sup>/<sub>2</sub> for a perfect 5<sup>th</sup>,
 	 * exactly 1.5, instead of 1.49830 in equal temperament).
 	 * 
-	 * @return the current note's frequency (in hertz)
+	 * @return the given note's frequency (in hertz)
 	 */
 	public static double getJustIntonationFrequency(Note note) {
 
@@ -87,8 +87,8 @@ public class FrequencyFactory {
 		double naturalCFreq = C4_FREQ * Math.pow(2, note.getOctave() - 4);
 
 		// get the half tones between a C and the note (in the same octave)
-		int semiTones = note.getPitch().getHalfTones()
-				+ note.getAccidental().getHalfTones();
+		int semiTones = note.getPitch().getSemiTones()
+				+ note.getAccidental().getSemiTones();
 
 		//
 		while (semiTones < 0) {
@@ -104,7 +104,7 @@ public class FrequencyFactory {
 	 * numbers (eg : <sup>243</sup>/<sub>128</sub> for a major 7<sup>th</sup>,
 	 * instead of <sup>15</sup>/<sub>8</sub> in just intonation).
 	 * 
-	 * @return the current note's frequency (in hertz)
+	 * @return the given note's frequency (in hertz)
 	 */
 	public static double getPythagoreanFrequency(Note note) {
 
@@ -112,8 +112,8 @@ public class FrequencyFactory {
 		double naturalCFreq = C4_FREQ * Math.pow(2, note.getOctave() - 4);
 
 		// get the half tones between a C and the note (in the same octave)
-		int semiTones = note.getPitch().getHalfTones()
-				+ note.getAccidental().getHalfTones();
+		int semiTones = note.getPitch().getSemiTones()
+				+ note.getAccidental().getSemiTones();
 
 		//
 		while (semiTones < 0) {
